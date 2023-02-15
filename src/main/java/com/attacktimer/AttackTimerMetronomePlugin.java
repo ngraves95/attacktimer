@@ -109,7 +109,7 @@ public class AttackTimerMetronomePlugin extends Plugin
         ItemEquipmentStats e = weaponStats.getEquipment();
 
         int speed = e.getAspeed();
-        if (getAttackStyle() == AttackStyle.RANGING &&
+        if ((getAttackStyle() == AttackStyle.RANGING || getAttackStyle() == AttackStyle.CASTING) &&
             client.getVarpValue(VarPlayer.ATTACK_STYLE) == 1) { // Hack for index 1 => rapid
             speed -= 1; // Assume ranging == rapid.
         }
