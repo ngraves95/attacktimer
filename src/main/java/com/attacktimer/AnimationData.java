@@ -105,6 +105,11 @@ public enum AnimationData
     MELEE_CRYSTAL_HALBERD_SPEC(1203, AttackStyle.SLASH, true),
     MELEE_SOULREAPER_AXE(10172, AttackStyle.SLASH, true),
     MELEE_SOULREAPER_AXE_SPEC(10173, AttackStyle.SLASH, true),
+    MELEE_GUTHANS_LUNGE(2080, AttackStyle.STAB),
+    MELEE_GUTHANS_SWIPE(2081, AttackStyle.STAB),
+    MELEE_GUTHANS_POUNDMA(2082, AttackStyle.CRUSH),
+    MELEE_TORAG_HAMMERS(2068, AttackStyle.CRUSH),
+    MELEE_VERACS_FLAIL(2062, AttackStyle.STAB),
 
 
     // RANGED
@@ -114,7 +119,7 @@ public enum AnimationData
     RANGED_MAGIC_SHORTBOW_SPEC(1074, AttackStyle.RANGED, true),
     RANGED_CROSSBOW_PVP(4230, AttackStyle.RANGED), // Tested RCB & ACB w/ dragonstone bolts (e) & diamond bolts (e)
     RANGED_BLOWPIPE(5061, AttackStyle.RANGED), // tested in PvP with all styles. Has 1 tick delay between animations in pvp.
-    RANGED_DARTS(6600, AttackStyle.RANGED), // tested w/ addy darts. Seems to be constant animation but sometimes stalls and doesn't animate
+    RANGED_DARTS(7554, AttackStyle.RANGED), // tested w/ addy darts. Seems to be constant animation but sometimes stalls and doesn't animate
     RANGED_BALLISTA(7218, AttackStyle.RANGED), // Tested w/ dragon javelins.
     RANGED_DRAGON_THROWNAXE_SPEC(7521, AttackStyle.RANGED, true),
     RANGED_RUNE_CROSSBOW(7552, AttackStyle.RANGED),
@@ -122,10 +127,14 @@ public enum AnimationData
     RANGED_BALLISTA_2(7555, AttackStyle.RANGED), // tested w/ light & heavy ballista, dragon & iron javelins.
     RANGED_RUNE_KNIFE(7617, AttackStyle.RANGED), // 1 tick animation, has 1 tick delay between attacks. Also d thrownaxe
     RANGED_DRAGON_KNIFE(8194, AttackStyle.RANGED),
+    RANGED_DRAGON_KNIFE_SPEC(8291, AttackStyle.RANGED, true),
     RANGED_DRAGON_KNIFE_POISONED(8195, AttackStyle.RANGED), // tested w/ d knife p++
-    RANGED_DRAGON_KNIFE_SPEC(8292, AttackStyle.RANGED, true),
+    RANGED_DRAGON_KNIFE_POISONED_SPEC(8292, AttackStyle.RANGED, true),
     RANGED_ZARYTE_CROSSBOW(9168, AttackStyle.RANGED),
     RANGED_ZARYTE_CROSSBOW_PVP(9166, AttackStyle.RANGED),
+    RANGED_BLAZING_BLOWPIPE(10656, AttackStyle.RANGED),
+    RANGED_VENATOR_BOW(9858, AttackStyle.RANGED),
+    RANGED_KARIL_CROSSBOW(2075, AttackStyle.RANGED),
 
     // MAGIC - uses highest base damage available when animations are re-used. No damage = 0 damage.
     // for example, strike/bolt/blast animation will be fire blast base damage, multi target ancient spells will be ice barrage.
