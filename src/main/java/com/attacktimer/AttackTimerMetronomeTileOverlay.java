@@ -60,11 +60,13 @@ public class AttackTimerMetronomeTileOverlay extends Overlay
             final int height = client.getLocalPlayer().getLogicalHeight()+20;
             final LocalPoint localLocation = client.getLocalPlayer().getLocalLocation();
             final Point playerPoint = Perspective.localToCanvas(client, localLocation, client.getPlane(), height);
+            assert playerPoint != null;
+            final Point finalPoint = new Point(playerPoint.getX() + config.xOffset(), playerPoint.getY() - config.yOffset());
 
             // Countdown ticks instead of up.
             // plugin.tickCounter => ticksRemaining
             int ticksRemaining = plugin.getTicksUntilNextAttack();
-            OverlayUtil.renderTextLocation(graphics, playerPoint, String.valueOf(ticksRemaining), config.NumberColor());
+            OverlayUtil.renderTextLocation(graphics, finalPoint, String.valueOf(ticksRemaining), config.NumberColor());
         }
 
         return null;
