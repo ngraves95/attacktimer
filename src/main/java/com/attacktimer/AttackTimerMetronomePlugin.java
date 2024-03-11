@@ -13,6 +13,9 @@ import net.runelite.client.ui.overlay.OverlayManager;
 import javax.inject.Inject;
 import net.runelite.http.api.item.ItemEquipmentStats;
 import net.runelite.http.api.item.ItemStats;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Arrays;
 
 import java.awt.*;
 
@@ -171,7 +174,9 @@ public class AttackTimerMetronomePlugin extends Plugin
     {
         boolean isPlayerCasting = isPlayerCasting();
         int itemId = getWeaponId();
-        if (isPlayerCasting && itemId != 11907 && itemId != 12899) {
+        // Added id array of the following items: tridents, CG staves, and sanguinesti staff + kit.
+        Set<Integer> itemIds = new HashSet<>(Arrays.asList(11907, 12899, 23898, 23899, 23900, 25731, 22323, 23852, 23853, 23854));
+        if (isPlayerCasting && !itemIds.contains(itemId)) {
             // Unfortunately, the trident and toxic trident share animations with wave-tier spells.
             //
             // Assume that if the user is not wielding a trident and isCasting, they are autocasting
