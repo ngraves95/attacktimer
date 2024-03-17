@@ -152,7 +152,9 @@ public enum AnimationData
     MAGIC_TUMEKENS_SHADOW(9493, AttackStyle.MAGIC),
     MAGIC_ARCEUUS_GRASP(8972, AttackStyle.MAGIC),
     MAGIC_ARCEUUS_DEMONBANE(8977, AttackStyle.MAGIC),
-    MAGIC_WARPED_SCEPTRE(10501, AttackStyle.MAGIC);
+    MAGIC_WARPED_SCEPTRE(10501, AttackStyle.MAGIC),
+    MAGIC_ACCURSED_SCEPTRE(1167, AttackStyle.MAGIC),
+    MAGIC_ACCURSED_SCEPTRE_SPEC(9961, AttackStyle.MAGIC);
 
     private static final Map<Integer, AnimationData> DATA;
 
