@@ -91,6 +91,7 @@ public enum AnimationData
     MELEE_DRAGON_CLAWS_SPEC(7514, AttackStyle.SLASH, true),
     MELEE_VLS_SPEC(7515, AttackStyle.SLASH, true), // both VLS and dragon sword spec
     MELEE_ELDER_MAUL(7516, AttackStyle.CRUSH),
+    MELEE_ELDER_MAUL_SPEC(11124, AttackStyle.CRUSH),
     MELEE_ZAMORAK_GODSWORD_SPEC(7638, AttackStyle.SLASH, true), // tested zgs spec
     MELEE_ZAMORAK_GODSWORD_OR_SPEC(7639, AttackStyle.SLASH, true), // UNTESTED, assumed due to ags(or)
     MELEE_SARADOMIN_GODSWORD_SPEC(7640, AttackStyle.SLASH, true), // tested sgs spec
