@@ -79,24 +79,28 @@ public enum AnimationData
     MELEE_DHAROKS_GREATAXE_SLASH(2067, AttackStyle.SLASH),
     MELEE_AHRIMS_STAFF_CRUSH(2078, AttackStyle.CRUSH),
     MELEE_OBBY_MAUL_CRUSH(2661, AttackStyle.CRUSH),
-    MELEE_ABYSSAL_DAGGER_STAB(3297, AttackStyle.STAB),
+    MELEE_ABYSSAL_DAGGER_STAB(3297, AttackStyle.STAB), // spec un-tested
     MELEE_ABYSSAL_BLUDGEON_CRUSH(3298, AttackStyle.CRUSH),
+    MELEE_ABYSSAL_BLUDGEON_SPEC(3299, AttackStyle.CRUSH, true),
     MELEE_LEAF_BLADED_BATTLEAXE_CRUSH(3852, AttackStyle.CRUSH),
     MELEE_INQUISITORS_MACE(4503, AttackStyle.CRUSH),
     MELEE_BARRELCHEST_ANCHOR_CRUSH(5865, AttackStyle.CRUSH),
+    MELEE_BARRELCHEST_ANCHOR_CRUSH_SPEC(5870, AttackStyle.CRUSH, true),
     MELEE_LEAF_BLADED_BATTLEAXE_SLASH(7004, AttackStyle.SLASH),
     MELEE_GODSWORD_SLASH(7045, AttackStyle.SLASH), // tested w/ AGS, BGS, ZGS, SGS, AGS(or) sara sword
     MELEE_GODSWORD_CRUSH(7054, AttackStyle.CRUSH), // tested w/ AGS, BGS, ZGS, SGS, sara sword
     MELEE_GODSWORD_DEFENSIVE(7055, AttackStyle.SLASH), // tested w/ BGS
+    MELEE_RUNE_CLAWS_SPEC(923, AttackStyle.SLASH, true),
     MELEE_DRAGON_CLAWS_SPEC(7514, AttackStyle.SLASH, true),
     MELEE_VLS_SPEC(7515, AttackStyle.SLASH, true), // both VLS and dragon sword spec
     MELEE_ELDER_MAUL(7516, AttackStyle.CRUSH),
     MELEE_ZAMORAK_GODSWORD_SPEC(7638, AttackStyle.SLASH, true), // tested zgs spec
-    MELEE_ZAMORAK_GODSWORD_OR_SPEC(7639, AttackStyle.SLASH, true), // UNTESTED, assumed due to ags(or)
+    MELEE_ELDER_MAUL_SPEC(11124, AttackStyle.CRUSH),
+    MELEE_ZAMORAK_GODSWORD_OR_SPEC(7639, AttackStyle.SLASH, true), // verified 22/06/2024, assumed due to ags(or)
     MELEE_SARADOMIN_GODSWORD_SPEC(7640, AttackStyle.SLASH, true), // tested sgs spec
-    MELEE_SARADOMIN_GODSWORD_OR_SPEC(7641, AttackStyle.SLASH, true), // UNTESTED, assumed due to ags(or)
+    MELEE_SARADOMIN_GODSWORD_OR_SPEC(7641, AttackStyle.SLASH, true), // verified 22/06/2024, assumed due to ags(or)
     MELEE_BANDOS_GODSWORD_SPEC(7642, AttackStyle.SLASH, true), // tested bgs spec
-    MELEE_BANDOS_GODSWORD_OR_SPEC(7643, AttackStyle.SLASH, true), // UNTESTED, assumed due to ags(or)
+    MELEE_BANDOS_GODSWORD_OR_SPEC(7643, AttackStyle.SLASH, true), // verified 22/06/2024, assumed due to ags(or)
     MELEE_ARMADYL_GODSWORD_SPEC(7644, AttackStyle.SLASH, true), // tested ags spec
     MELEE_ARMADYL_GODSWORD_OR_SPEC(7645, AttackStyle.SLASH, true), // tested ags(or) spec
     MELEE_SCYTHE(8056, AttackStyle.SLASH), // tested w/ all scythe styles (so could be crush, but unlikely)
@@ -110,7 +114,19 @@ public enum AnimationData
     MELEE_GUTHANS_POUNDMA(2082, AttackStyle.CRUSH),
     MELEE_TORAG_HAMMERS(2068, AttackStyle.CRUSH),
     MELEE_VERACS_FLAIL(2062, AttackStyle.STAB),
-
+    MELEE_BLISTERWOOD_FLAIL_CRUSH(8010, AttackStyle.CRUSH), // blisterwood flail
+    MELEE_BONE_DAGGER_SPEC(4198, AttackStyle.STAB, true), // tested with all poison variants (p, p+, p++, none)
+    MELEE_DUAL_MACUAHUITL(10989, AttackStyle.CRUSH), // https://oldschool.runescape.wiki/w/Dual_macuahuitl set effect needs custom code
+    MELEE_BLUE_MOON_SPEAR_SPEC(1710, AttackStyle.STAB, true), // https://oldschool.runescape.wiki/w/Blue_moon_spear
+    MELEE_BLUE_MOON_SPEAR(1711, AttackStyle.STAB),
+    MELEE_DHINS(7511, AttackStyle.CRUSH), // https://oldschool.runescape.wiki/w/Dinh%27s_bulwark
+    MELEE_URSINE_CHAINMACE_SPEC(9963, AttackStyle.CRUSH, true), // https://oldschool.runescape.wiki/w/Ursine_chainmace#Charged
+    MELEE_ANCIENT_MACE_SPEC(6147, AttackStyle.CRUSH, true), // https://oldschool.runescape.wiki/w/Ancient_mace
+    MELEE_DSCIM_SPEC(1872, AttackStyle.SLASH, true), // https://oldschool.runescape.wiki/w/Dragon_scimitar
+    MELEE_D2H_SPEC(3157, AttackStyle.SLASH, true), // https://oldschool.runescape.wiki/w/Dragon_2h_sword
+    MELEE_ARCLIGHT_SPEC(2890, AttackStyle.SLASH, true), // https://oldschool.runescape.wiki/w/Arclight
+    MELEE_SARA_SWORD_SPEC(1132, AttackStyle.SLASH, true), // https://oldschool.runescape.wiki/w/Saradomin_sword assumed to be the same for the blessed version
+    MELEE_RED_KERIS_SPEC(9544, AttackStyle.SLASH, true), // https://oldschool.runescape.wiki/w/Keris_partisan_of_corruption
 
     // RANGED
     RANGED_CHINCHOMPA(7618, AttackStyle.RANGED),
@@ -121,6 +137,8 @@ public enum AnimationData
     RANGED_BLOWPIPE(5061, AttackStyle.RANGED), // tested in PvP with all styles. Has 1 tick delay between animations in pvp.
     RANGED_DARTS(7554, AttackStyle.RANGED), // tested w/ addy darts. Seems to be constant animation but sometimes stalls and doesn't animate
     RANGED_BALLISTA(7218, AttackStyle.RANGED), // Tested w/ dragon javelins.
+    RANGED_BALLISTA_SPEC(7556, AttackStyle.RANGED, true),
+    RANGED_RUNE_THROWNAXE_SPEC(1068, AttackStyle.RANGED, true), // https://oldschool.runescape.wiki/w/Rune_thrownaxe
     RANGED_DRAGON_THROWNAXE_SPEC(7521, AttackStyle.RANGED, true),
     RANGED_RUNE_CROSSBOW(7552, AttackStyle.RANGED),
     RANGED_RUNE_CROSSBOW_OR(9206, AttackStyle.RANGED),
@@ -135,6 +153,12 @@ public enum AnimationData
     RANGED_BLAZING_BLOWPIPE(10656, AttackStyle.RANGED),
     RANGED_VENATOR_BOW(9858, AttackStyle.RANGED),
     RANGED_KARIL_CROSSBOW(2075, AttackStyle.RANGED),
+    RANGED_ATLATL(11057, AttackStyle.RANGED), // https://oldschool.runescape.wiki/w/Eclipse_atlatl
+    RANGED_ATLATL_SPEC(11060, AttackStyle.RANGED, true),
+    RANGED_TONALZTICS(10923, AttackStyle.RANGED), // https://oldschool.runescape.wiki/w/Tonalztics_of_ralos#Charged
+    RANGED_TONALZTICS_SPEC(10914, AttackStyle.RANGED, true),
+    RANGED_WEBWEAVER_SPEC(9964, AttackStyle.RANGED, true), // https://oldschool.runescape.wiki/w/Webweaver_bow#Charged
+    RANGED_BONE_CROSSBOW_SPEC(7557, AttackStyle.RANGED, true), // https://oldschool.runescape.wiki/w/Dorgeshuun_crossbow
 
     // MAGIC - uses highest base damage available when animations are re-used. No damage = 0 damage.
     // for example, strike/bolt/blast animation will be fire blast base damage, multi target ancient spells will be ice barrage.
@@ -152,7 +176,8 @@ public enum AnimationData
     MAGIC_TUMEKENS_SHADOW(9493, AttackStyle.MAGIC),
     MAGIC_ARCEUUS_GRASP(8972, AttackStyle.MAGIC),
     MAGIC_ARCEUUS_DEMONBANE(8977, AttackStyle.MAGIC),
-    MAGIC_WARPED_SCEPTRE(10501, AttackStyle.MAGIC);
+    MAGIC_WARPED_SCEPTRE(10501, AttackStyle.MAGIC),
+    MAGIC_ACCURSED_SCEPTRE_SPEC(9961, AttackStyle.MAGIC);
 
     private static final Map<Integer, AnimationData> DATA;
 

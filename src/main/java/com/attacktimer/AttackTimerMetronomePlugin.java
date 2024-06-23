@@ -125,6 +125,13 @@ public class AttackTimerMetronomePlugin extends Plugin
         }
     }
 
+    static final int BloodMoonSetAnimId = 2792;
+
+    private boolean getBloodMoonProc()
+    {
+        return client.getLocalPlayer().hasSpotAnim(BloodMoonSetAnimId);
+    }
+
 
     private int adjustSpeedForLeaguesIfApplicable(int baseSpeed)
     {
@@ -171,7 +178,12 @@ public class AttackTimerMetronomePlugin extends Plugin
     {
         boolean isPlayerCasting = isPlayerCasting();
         int itemId = getWeaponId();
-        if (isPlayerCasting && itemId != 11907 && itemId != 12899) {
+        // We cannot use the weapon type to determine this as the shadow is also
+        // a powered stave which has a 5-tick attack. Though weapon stats might
+        // be better.
+        boolean isFourTick = WeaponIds.FourTickStaves().contains(itemId);
+        if (isPlayerCasting && !isFourTick)
+        {
             // Unfortunately, the trident and toxic trident share animations with wave-tier spells.
             //
             // Assume that if the user is not wielding a trident and isCasting, they are autocasting
@@ -193,13 +205,33 @@ public class AttackTimerMetronomePlugin extends Plugin
             speed -= 1; // Assume ranging == rapid.
         }
 
+        if (getBloodMoonProc())
+        { // Similar hack as rapid, blood moon saves a tick when it proc's
+            speed -= 1;
+        }
+
         return adjustSpeedForLeaguesIfApplicable(speed); // Deadline for next available attack.
     }
 
     private boolean isPlayerAttacking()
     {
-        int id = client.getLocalPlayer().getAnimation();
-        return AnimationData.fromId(id) != null;
+        int animationId = client.getLocalPlayer().getAnimation();
+        // Testing if we are attacking by checking the target is more future
+        // proof to new weapons which don't need custom code and the weapon
+        // stats are enough.
+        Actor target = client.getLocalPlayer().getInteracting();
+        if (target != null)
+        {
+            boolean isTargetDummy = target.getHealthRatio() == -1 && target.getCombatLevel() == 0;
+            boolean attackingNPC = target.getCombatLevel() > 0 || isTargetDummy;
+            boolean notWalking = animationId != -1;
+            // just having a target is not enough the player may be out of
+            // range, we must wait for any animation which isn't
+            // running/walking/etc
+            return attackingNPC && notWalking;
+        }
+        // fallback - might as well see if the hard-coded list has this animation
+        return AnimationData.fromId(animationId) != null;
     }
 
     private boolean isPlayerCasting() {
