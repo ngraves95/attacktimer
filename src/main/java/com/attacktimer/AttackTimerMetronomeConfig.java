@@ -7,7 +7,8 @@ import net.runelite.client.config.ConfigItem;
 import net.runelite.client.config.Range;
 import net.runelite.client.config.ConfigSection;
 import net.runelite.client.config.Keybind;
-import java.awt.Color;
+
+import java.awt.*;
 
 @ConfigGroup("attacktimermetronome")
 public interface AttackTimerMetronomeConfig extends Config
@@ -91,6 +92,26 @@ public interface AttackTimerMetronomeConfig extends Config
 			section = TickNumberSettings
 	)
 	default FontTypes fontType() { return FontTypes.REGULAR; }
+
+	@ConfigItem(
+			position = 7,
+			keyName = "xOffset",
+			name = "Horizontal Offset",
+			description = "Change the horizontal offset of the Tick Number",
+			section = TickNumberSettings
+	)
+	@Range(min = -4096, max = 4096)
+	default int xOffset() { return 0;};
+
+	@ConfigItem(
+			position = 8,
+			keyName = "yOffset",
+			name = "Vertical Offset",
+			description = "Change the vertical offset of the Tick Number",
+			section = TickNumberSettings
+	)
+	@Range(min = -4096, max = 4096)
+	default int yOffset() { return 0;};
 
 	@ConfigSection(
 			name = "Attack Bar",
