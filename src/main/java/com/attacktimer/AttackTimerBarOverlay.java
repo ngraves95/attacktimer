@@ -32,10 +32,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import net.runelite.api.Client;
 import net.runelite.api.Perspective;
-import net.runelite.api.Player;
 import net.runelite.api.Point;
-import net.runelite.api.Skill;
-import net.runelite.api.SpriteID;
 import net.runelite.api.coords.LocalPoint;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayLayer;
@@ -80,7 +77,7 @@ class AttackTimerBarOverlay extends Overlay
 
         final int height = client.getLocalPlayer().getLogicalHeight() + config.heightOffset() - 20;
         final LocalPoint localLocation = client.getLocalPlayer().getLocalLocation();
-        final Point canvasPoint = Perspective.localToCanvas(client, localLocation, client.getPlane(), height);
+        final Point canvasPoint = Perspective.localToCanvas(client, localLocation, client.getTopLevelWorldView().getPlane(), height);
 
         int denomMod = (config.barEmpties()) ? 1 : 0;
         int numerMod = (config.barFills()) ? 1 : 0;
