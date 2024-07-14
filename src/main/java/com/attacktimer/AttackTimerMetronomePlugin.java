@@ -309,7 +309,7 @@ public class AttackTimerMetronomePlugin extends Plugin
 
     private int getWeaponSpeed(int weaponId, PoweredStaves stave, AnimationData curAnimation, boolean matchesSpellbook)
     {
-        if (stave != null && !matchesSpellbook)
+        if (stave != null && stave.getAnimations().contains(curAnimation))
         {
             // We are currently dealing with a staves in which case we can make decisions based on the
             // spellbook flag. We can only improve this by using a deprecated API to check the projectile
