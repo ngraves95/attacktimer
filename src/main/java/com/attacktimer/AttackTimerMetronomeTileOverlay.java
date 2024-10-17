@@ -3,6 +3,7 @@ package com.attacktimer;
 /*
  * Copyright (c) 2022, Nick Graves <https://github.com/ngraves95>
  * Copyright (c) 2024, Lexer747 <https://github.com/Lexer747>
+ * Copyright (c) 2024, Richardant <https://github.com/Richardant>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,6 +30,7 @@ package com.attacktimer;
 import net.runelite.api.Client;
 import net.runelite.api.Perspective;
 import net.runelite.api.Point;
+import net.runelite.api.Player;
 import net.runelite.api.coords.LocalPoint;
 import net.runelite.client.ui.FontManager;
 import net.runelite.client.ui.overlay.Overlay;
@@ -52,6 +54,8 @@ public class AttackTimerMetronomeTileOverlay extends Overlay
     private final AttackTimerMetronomeConfig config;
     private final AttackTimerMetronomePlugin plugin;
 
+    private Player player;
+
     @Inject
     public AttackTimerMetronomeTileOverlay(Client client, AttackTimerMetronomeConfig config, AttackTimerMetronomePlugin plugin)
     {
@@ -67,6 +71,8 @@ public class AttackTimerMetronomeTileOverlay extends Overlay
     @Override
     public Dimension render(Graphics2D graphics)
     {
+        player = client.getLocalPlayer();
+
         plugin.renderedState = plugin.attackState;
         if (plugin.attackState == AttackTimerMetronomePlugin.AttackState.NOT_ATTACKING) {
             return null;
@@ -78,19 +84,35 @@ public class AttackTimerMetronomeTileOverlay extends Overlay
             {
                 graphics.setFont(new Font(FontManager.getRunescapeFont().getName(), Font.PLAIN, config.fontSize()));
             }
+            if (config.fontType() == FontTypes.BOLD)
+            {
+                graphics.setFont(new Font(config.fontType().toString(), Font.BOLD, config.fontSize()));
+            }
             else
             {
                 graphics.setFont(new Font(config.fontType().toString(), Font.PLAIN, config.fontSize()));
             }
 
-            final int height = client.getLocalPlayer().getLogicalHeight()+20;
-            final LocalPoint localLocation = client.getLocalPlayer().getLocalLocation();
-            final Point playerPoint = Perspective.localToCanvas(client, localLocation, client.getTopLevelWorldView().getPlane(), height);
-
+            int ticksRemaining = plugin.getTicksUntilNextAttack();
             // Countdown ticks instead of up.
             // plugin.tickCounter => ticksRemaining
-            int ticksRemaining = plugin.getTicksUntilNextAttack();
-            OverlayUtil.renderTextLocation(graphics, playerPoint, String.valueOf(ticksRemaining), config.NumberColor());
+
+            if (config.ticksPosition() == AttackTimerMetronomeConfig.TicksPosition.TOP){
+                final LocalPoint localLocation = client.getLocalPlayer().getLocalLocation();
+                final Point playerPointT = Perspective.localToCanvas(client, localLocation, client.getTopLevelWorldView().getPlane(), 214);
+                OverlayUtil.renderTextLocation(graphics, playerPointT, String.valueOf(ticksRemaining), ticksRemaining == 1 ? config.LastColor() : config.NumberColor());
+            }
+
+            if (config.ticksPosition() == AttackTimerMetronomeConfig.TicksPosition.CENTERED){
+                final LocalPoint localLocationC = client.getLocalPlayer().getLocalLocation();
+                final Point playerPointC = Perspective.localToCanvas(client, localLocationC, client.getTopLevelWorldView().getPlane(), 100);
+                OverlayUtil.renderTextLocation(graphics, playerPointC, String.valueOf(ticksRemaining), ticksRemaining == 1 ? config.LastColor() : config.NumberColor());
+            }
+
+            if (config.ticksPosition() == AttackTimerMetronomeConfig.TicksPosition.BOTTOM){
+                final Point playerPointB = player.getCanvasTextLocation(graphics, String.valueOf(ticksRemaining), 10);
+                OverlayUtil.renderTextLocation(graphics, playerPointB, String.valueOf(ticksRemaining), ticksRemaining == 1 ? config.LastColor() : config.NumberColor());
+            }
         }
 
         return null;
@@ -113,5 +135,3 @@ public class AttackTimerMetronomeTileOverlay extends Overlay
         OverlayUtil.renderPolygon(graphics, poly, color, fillColor, new BasicStroke((float) borderWidth));
     }
 }
-
-
