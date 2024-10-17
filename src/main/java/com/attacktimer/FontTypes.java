@@ -3,8 +3,6 @@ package com.attacktimer;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import java.awt.*;
-
 @RequiredArgsConstructor
 @Getter
 public enum FontTypes
