@@ -3,12 +3,15 @@ package com.attacktimer;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.awt.*;
+
 @RequiredArgsConstructor
 @Getter
 public enum FontTypes
 {
     REGULAR("RS Regular"),
     ARIAL("Arial"),
+    BOLD("Bold"),
     CAMBRIA("Cambria"),
     ROCKWELL("Rockwell"),
     SEGOE_UI("Segoe Ui"),
