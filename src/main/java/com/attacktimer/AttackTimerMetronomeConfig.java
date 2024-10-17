@@ -134,6 +134,10 @@ public interface AttackTimerMetronomeConfig extends Config
 	)
 	default boolean showBar() { return false; }
 
+	@Range(
+		min = -100,
+		max = 100
+	)
 	@ConfigItem(
 			position = 2,
 			keyName = "attackBarHeightOffset",
