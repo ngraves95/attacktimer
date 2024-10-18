@@ -115,7 +115,7 @@ public interface AttackTimerMetronomeConfig extends Config
 	)
 	default TicksPosition ticksPosition()
 	{
-		return TicksPosition.TOP;
+		return TicksPosition.DEFAULT;
 	}
 
 	@ConfigSection(
@@ -135,8 +135,8 @@ public interface AttackTimerMetronomeConfig extends Config
 	default boolean showBar() { return false; }
 
 	@Range(
-		min = -100,
-		max = 100
+			min = -100,
+			max = 100
 	)
 	@ConfigItem(
 			position = 2,
@@ -178,6 +178,7 @@ public interface AttackTimerMetronomeConfig extends Config
 	@AllArgsConstructor
 	enum TicksPosition
 	{
+		DEFAULT("Default"),
 		TOP("Top"),
 		CENTERED("Centered"),
 		BOTTOM("Bottom");
