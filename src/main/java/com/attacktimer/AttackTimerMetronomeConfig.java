@@ -101,7 +101,10 @@ public interface AttackTimerMetronomeConfig extends Config
 			description = "Change the font of the tick number",
 			section = TickNumberSettings
 	)
-	default FontTypes fontType() { return FontTypes.REGULAR; }
+	default FontTypes fontType()
+	{
+		return FontTypes.REGULAR; 
+	}
 
 	@ConfigItem(
 			position = 7,
@@ -167,7 +170,10 @@ public interface AttackTimerMetronomeConfig extends Config
 			description = "Controls whether the attack bar will fully empty before a new attack can occur",
 			section = AttackBarSettings
 	)
-	default boolean barEmpties() { return true; }
+	default boolean barEmpties()
+	{
+		return true;
+	}
 
 	@ConfigItem(
 			position = 4,
@@ -176,7 +182,10 @@ public interface AttackTimerMetronomeConfig extends Config
 			description = "Controls whether the attack bar will fill completely after an attack",
 			section = AttackBarSettings
 	)
-	default boolean barFills() { return true; }
+	default boolean barFills()
+	{
+		return true;
+	}
 
 	@ConfigItem(
 			position = 5,
@@ -185,7 +194,10 @@ public interface AttackTimerMetronomeConfig extends Config
 			description = "Controls whether the attack bar will fill or drain as a cooldown",
 			section = AttackBarSettings
 	)
-	default boolean barDirection() { return true; }
+	default boolean barDirection()
+	{
+		return true;
+	}
 
 	@Getter
 	@AllArgsConstructor
