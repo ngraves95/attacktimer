@@ -57,10 +57,6 @@ public interface AttackTimerMetronomeConfig extends Config
 		return false;
 	}
 
-	@Range(
-			min = 8,
-			max = 50
-	)
 	@ConfigItem(
 			position = 3,
 			keyName = "fontSize",
@@ -68,6 +64,7 @@ public interface AttackTimerMetronomeConfig extends Config
 			description = "Change the font size of the overhead attack cooldown ticks",
 			section = TickNumberSettings
 	)
+	@Range(min = 8, max = 50)
 	default int fontSize()
 	{
 		return 18;
@@ -118,6 +115,19 @@ public interface AttackTimerMetronomeConfig extends Config
 		return TicksPosition.DEFAULT;
 	}
 
+	@ConfigItem(
+			position = 8,
+			keyName = "tickHeightOffset",
+			name = "Height Offset",
+			description = "Height offset for minor adjustments of the tick number",
+			section = TickNumberSettings
+	)
+	@Range(min = -50, max = 50)
+	default int heightTickOffset()
+	{
+		return 0;
+	}
+
 	@ConfigSection(
 			name = "Attack Bar",
 			description = "Change the colors and number of colors to cycle through",
@@ -132,27 +142,30 @@ public interface AttackTimerMetronomeConfig extends Config
 			description = "Show the attack bar",
 			section = AttackBarSettings
 	)
-	default boolean showBar() { return false; }
+	default boolean showBar()
+	{
+		return false;
+	}
 
-	@Range(
-			min = -100,
-			max = 100
-	)
 	@ConfigItem(
 			position = 2,
 			keyName = "attackBarHeightOffset",
 			name = "Height Offset",
 			description = "Height offset for the bar from top of player model",
-			section =AttackBarSettings
+			section = AttackBarSettings
 	)
-	default int heightOffset() { return 0; }
+	@Range(min = -100, max = 100)
+	default int heightOffset()
+	{
+		return 0;
+	}
 
 	@ConfigItem(
 			position = 3,
 			keyName = "attackBarEmpties",
 			name = "Empties Before Attack",
 			description = "Controls whether the attack bar will fully empty before a new attack can occur",
-			section =AttackBarSettings
+			section = AttackBarSettings
 	)
 	default boolean barEmpties() { return true; }
 
@@ -161,7 +174,7 @@ public interface AttackTimerMetronomeConfig extends Config
 			keyName = "attackBarFills",
 			name = "Fills Before Attack",
 			description = "Controls whether the attack bar will fill completely after an attack",
-			section =AttackBarSettings
+			section = AttackBarSettings
 	)
 	default boolean barFills() { return true; }
 
@@ -170,7 +183,7 @@ public interface AttackTimerMetronomeConfig extends Config
 			keyName = "attackBarDirection",
 			name = "Attack Bar Fills or Drains",
 			description = "Controls whether the attack bar will fill or drain as a cooldown",
-			section =AttackBarSettings
+			section = AttackBarSettings
 	)
 	default boolean barDirection() { return true; }
 
