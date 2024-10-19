@@ -347,7 +347,7 @@ public class AttackTimerMetronomePlugin extends Plugin
         return adjustSpeedForLeaguesIfApplicable(speed); // Deadline for next available attack.
     }
 
-    private static final int TARGET_DUMMY_ID = 10507;
+    private static final List<Integer> SPECIAL_NPCS = Arrays.asList(10507, 9435, 9438, 9441, 9444); // Combat Dummy + Nightmare Pillars
 
     private boolean isPlayerAttacking()
     {
@@ -370,7 +370,7 @@ public class AttackTimerMetronomePlugin extends Plugin
             boolean containsAttackOption = Arrays.stream(npc.getComposition().getActions()).anyMatch("Attack"::equals);
             Integer health = npcManager.getHealth(npc.getId());
             boolean hasHealthAndLevel = health != null && health > 0 && target.getCombatLevel() > 0;
-            boolean attackingNPC = hasHealthAndLevel || npc.getId() == TARGET_DUMMY_ID || containsAttackOption;
+            boolean attackingNPC = hasHealthAndLevel || SPECIAL_NPCS.contains(npc.getId()) || containsAttackOption;
             // just having a target is not enough the player may be out of range, we must wait for any
             // animation which isn't running/walking/etc
             return attackingNPC && notWalking;
