@@ -67,7 +67,7 @@ public interface AttackTimerMetronomeConfig extends Config
 	@Range(min = 8, max = 50)
 	default int fontSize()
 	{
-		return 18;
+		return 15;
 	}
 
 	@ConfigItem(
@@ -91,7 +91,7 @@ public interface AttackTimerMetronomeConfig extends Config
 	)
 	default Color LastColor()
 	{
-		return Color.WHITE;
+		return Color.CYAN;
 	}
 
 	@ConfigItem(
