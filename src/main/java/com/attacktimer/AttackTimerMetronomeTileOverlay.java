@@ -96,30 +96,29 @@ public class AttackTimerMetronomeTileOverlay extends Overlay
             // plugin.tickCounter => ticksRemaining
             int ticksRemaining = plugin.getTicksUntilNextAttack();
 
+            final LocalPoint localLocation = client.getLocalPlayer().getLocalLocation();
+            Point playerPoint = null;
+
             switch (config.ticksPosition()) {
                 case TOP:
-                    final LocalPoint localLocationT = client.getLocalPlayer().getLocalLocation();
-                    final Point playerPointT = Perspective.localToCanvas(client, localLocationT, client.getTopLevelWorldView().getPlane(), 214 + config.heightTickOffset());
-                    OverlayUtil.renderTextLocation(graphics, playerPointT, String.valueOf(ticksRemaining), ticksRemaining == 1 ? config.LastColor() : config.NumberColor());
+                    playerPoint = Perspective.localToCanvas(client, localLocation, client.getTopLevelWorldView().getPlane(), 214 + config.heightTickOffset());
                     break;
 
                 case CENTERED:
-                    final LocalPoint localLocationC = client.getLocalPlayer().getLocalLocation();
-                    final Point playerPointC = Perspective.localToCanvas(client, localLocationC, client.getTopLevelWorldView().getPlane(), 100 + config.heightTickOffset());
-                    OverlayUtil.renderTextLocation(graphics, playerPointC, String.valueOf(ticksRemaining), ticksRemaining == 1 ? config.LastColor() : config.NumberColor());
+                    playerPoint = Perspective.localToCanvas(client, localLocation, client.getTopLevelWorldView().getPlane(), 100 + config.heightTickOffset());
                     break;
 
                 case BOTTOM:
-                    final Point playerPointB = player.getCanvasTextLocation(graphics, String.valueOf(ticksRemaining), 10 + config.heightTickOffset());
-                    OverlayUtil.renderTextLocation(graphics, playerPointB, String.valueOf(ticksRemaining), ticksRemaining == 1 ? config.LastColor() : config.NumberColor());
+                    playerPoint = player.getCanvasTextLocation(graphics, String.valueOf(ticksRemaining), 10 + config.heightTickOffset());
                     break;
 
                 case DEFAULT:
-                    final int height = client.getLocalPlayer().getLogicalHeight() + 20 + config.heightTickOffset();
-                    final LocalPoint localLocationD = client.getLocalPlayer().getLocalLocation();
-                    final Point playerPointD = Perspective.localToCanvas(client, localLocationD, client.getTopLevelWorldView().getPlane(), height);
-                    OverlayUtil.renderTextLocation(graphics, playerPointD, String.valueOf(ticksRemaining), ticksRemaining == 1 ? config.LastColor() : config.NumberColor());
+                    int height = client.getLocalPlayer().getLogicalHeight() + 20 + config.heightTickOffset();
+                    playerPoint = Perspective.localToCanvas(client, localLocation, client.getTopLevelWorldView().getPlane(), height);
                     break;
+            }
+            if (playerPoint != null) {
+                OverlayUtil.renderTextLocation(graphics, playerPoint, String.valueOf(ticksRemaining), ticksRemaining == 1 ? config.LastColor() : config.NumberColor());
             }
         }
         return null;
