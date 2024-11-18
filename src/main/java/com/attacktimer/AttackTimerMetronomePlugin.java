@@ -4,6 +4,7 @@ package com.attacktimer;
 /*
  * Copyright (c) 2022, Nick Graves <https://github.com/ngraves95>
  * Copyright (c) 2024, Lexer747 <https://github.com/Lexer747>
+ * Copyright (c) 2024, Richardant <https://github.com/Richardant>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,6 +32,7 @@ import com.google.inject.Provides;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.util.Arrays;
+import java.util.List;
 import javax.inject.Inject;
 import net.runelite.api.Actor;
 import net.runelite.api.ChatMessageType;
