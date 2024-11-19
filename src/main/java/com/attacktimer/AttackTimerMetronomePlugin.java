@@ -201,7 +201,7 @@ public class AttackTimerMetronomePlugin extends Plugin
 
     private ItemStats getWeaponStats(int weaponId)
     {
-        return itemManager.getItemStats(weaponId, false);
+        return itemManager.getItemStats(weaponId);
     }
 
     private AttackStyle getAttackStyle()
