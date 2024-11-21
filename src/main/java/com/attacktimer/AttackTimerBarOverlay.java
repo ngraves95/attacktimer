@@ -28,25 +28,30 @@ package com.attacktimer;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import net.runelite.api.Client;
 import net.runelite.api.Perspective;
 import net.runelite.api.Point;
 import net.runelite.api.coords.LocalPoint;
+import net.runelite.api.SpriteID;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.OverlayPriority;
+import net.runelite.client.util.ImageUtil;
+
 
 @Singleton
 class AttackTimerBarOverlay extends Overlay
 {
     private static final Color BAR_FILL_COLOR = new Color(201, 161, 28);
-
     private static final Color BAR_BG_COLOR = Color.black;
     private static final Dimension ATTACK_BAR_SIZE = new Dimension(30, 5);
-
+    private static final int HD_Attack_BAR_PADDING = 1;
+    private static final BufferedImage HD_FRONT_BAR = ImageUtil.loadImageResource(AttackTimerMetronomePlugin.class, "/front.png");
+    private static final BufferedImage HD_BACK_BAR = ImageUtil.loadImageResource(AttackTimerMetronomePlugin.class, "/back.png");
     private final Client client;
     private final AttackTimerMetronomeConfig config;
     private final AttackTimerMetronomePlugin plugin;
@@ -86,6 +91,20 @@ class AttackTimerBarOverlay extends Overlay
             ratio = (float)Math.max(1.0f - ratio, 0f);
         }
 
+        if (client.getSpriteOverrides().containsKey(SpriteID.HEALTHBAR_DEFAULT_FRONT_30PX)) {
+            final int barWidth = HD_FRONT_BAR.getWidth();
+            final int barHeight = HD_FRONT_BAR.getHeight();
+            final int barX = canvasPoint.getX() - barWidth / 2;
+            final int barY = canvasPoint.getY();
+
+            // Include padding so the bar doesn't show empty at very low prayer values
+            final int progressFill = (int) Math.ceil(Math.max(HD_Attack_BAR_PADDING * 2, Math.min((barWidth * ratio), barWidth)));
+
+            graphics.drawImage(HD_BACK_BAR, barX, barY, barWidth, barHeight, null);
+            // Use a sub-image to create the same effect the HD Health Bar has
+            graphics.drawImage(HD_FRONT_BAR.getSubimage(0, 0, progressFill, barHeight), barX, barY, progressFill, barHeight, null);
+            return null;
+        }
         // Draw bar
         final int barX = canvasPoint.getX() - 15;
         final int barY = canvasPoint.getY();
