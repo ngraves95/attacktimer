@@ -80,7 +80,7 @@ class AttackTimerBarOverlay extends Overlay
             return null;
         }
 
-        final int height = client.getLocalPlayer().getLogicalHeight() + config.heightOffset() - 20;
+        final int height = client.getLocalPlayer().getLogicalHeight() + config.heightOffset() + 5;
         final LocalPoint localLocation = client.getLocalPlayer().getLocalLocation();
         final Point canvasPoint = Perspective.localToCanvas(client, localLocation, client.getTopLevelWorldView().getPlane(), height);
 
@@ -95,7 +95,7 @@ class AttackTimerBarOverlay extends Overlay
             final int barWidth = HD_FRONT_BAR.getWidth();
             final int barHeight = HD_FRONT_BAR.getHeight();
             final int barX = canvasPoint.getX() - barWidth / 2;
-            final int barY = canvasPoint.getY();
+            final int barY = canvasPoint.getY() + 7;
 
             // Include padding so the bar doesn't show empty at very low prayer values
             final int progressFill = (int) Math.ceil(Math.max(HD_Attack_BAR_PADDING * 2, Math.min((barWidth * ratio), barWidth)));
@@ -107,7 +107,7 @@ class AttackTimerBarOverlay extends Overlay
         }
         // Draw bar
         final int barX = canvasPoint.getX() - 15;
-        final int barY = canvasPoint.getY();
+        final int barY = canvasPoint.getY() + 7;
         final int barWidth = ATTACK_BAR_SIZE.width;
         final int barHeight = ATTACK_BAR_SIZE.height;
 
