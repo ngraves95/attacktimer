@@ -95,7 +95,7 @@ class AttackTimerBarOverlay extends Overlay
             final int barWidth = HD_FRONT_BAR.getWidth();
             final int barHeight = HD_FRONT_BAR.getHeight();
             final int barX = canvasPoint.getX() - barWidth / 2;
-            final int barY = canvasPoint.getY();
+            final int barY = canvasPoint.getY() + 7;
 
             // Include padding so the bar doesn't show empty at very low prayer values
             final int progressFill = (int) Math.ceil(Math.max(HD_Attack_BAR_PADDING * 2, Math.min((barWidth * ratio), barWidth)));
