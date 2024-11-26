@@ -49,7 +49,6 @@ class AttackTimerBarOverlay extends Overlay
     private static final Color BAR_FILL_COLOR = new Color(201, 161, 28);
     private static final Color BAR_BG_COLOR = Color.black;
     private static final Dimension ATTACK_BAR_SIZE = new Dimension(30, 5);
-    private static final int HD_Attack_BAR_PADDING = 1;
     private static final BufferedImage HD_FRONT_BAR = ImageUtil.loadImageResource(AttackTimerMetronomePlugin.class, "/front.png");
     private static final BufferedImage HD_BACK_BAR = ImageUtil.loadImageResource(AttackTimerMetronomePlugin.class, "/back.png");
     private final Client client;
@@ -97,8 +96,7 @@ class AttackTimerBarOverlay extends Overlay
             final int barX = canvasPoint.getX() - barWidth / 2;
             final int barY = canvasPoint.getY() + 7;
 
-            // Include padding so the bar doesn't show empty at very low prayer values
-            final int progressFill = (int) Math.ceil(Math.max(HD_Attack_BAR_PADDING * 2, Math.min((barWidth * ratio), barWidth)));
+            final int progressFill = (int) Math.ceil(Math.min((barWidth * ratio), barWidth));
 
             graphics.drawImage(HD_BACK_BAR, barX, barY, barWidth, barHeight, null);
             // Use a sub-image to create the same effect the HD Health Bar has
