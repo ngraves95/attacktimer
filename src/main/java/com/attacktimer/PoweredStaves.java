@@ -152,7 +152,8 @@ enum PoweredStaves
         {
             // Fake the kodai to be a harm for testing, because I don't own a harm.
             ImmutableMap.Builder<Integer, PoweredStaves> spellMap = new ImmutableMap.Builder<>();
-            for (AnimationData harmAnim : WEAPON_HARM.animations) {
+            for (AnimationData harmAnim : WEAPON_HARM.animations)
+            {
                 spellMap.put(harmAnim.animationId, WEAPON_HARM);
             }
             builder.put(21006, spellMap.build());

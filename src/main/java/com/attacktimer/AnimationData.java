@@ -35,103 +35,99 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import lombok.Getter;
-import net.runelite.api.HeadIcon;
-import net.runelite.api.SpriteID;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 public enum AnimationData
 {
     // MELEE
-    MELEE_VIGGORAS_CHAINMACE(245, AttackStyle.CRUSH),
-    MELEE_DAGGER_SLASH(376, AttackStyle.SLASH), // tested w/ dds
-    MELEE_SPEAR_STAB(381, AttackStyle.STAB), // tested w/ zammy hasta
-    MELEE_SWORD_STAB(386, AttackStyle.STAB), // tested w/ dragon sword, obby sword, d long
-    MELEE_SCIM_SLASH(390, AttackStyle.SLASH), // tested w/ rune & dragon scim, d sword, VLS, obby sword
+    MELEE_VIGGORAS_CHAINMACE(245, AttackStyle.MELEE),
+    MELEE_DAGGER_SLASH(376, AttackStyle.MELEE), // tested w/ dds
+    MELEE_SPEAR_STAB(381, AttackStyle.MELEE), // tested w/ zammy hasta
+    MELEE_SWORD_STAB(386, AttackStyle.MELEE), // tested w/ dragon sword, obby sword, d long
+    MELEE_SCIM_SLASH(390, AttackStyle.MELEE), // tested w/ rune & dragon scim, d sword, VLS, obby sword
 
-    MELEE_LANCE_STAB(8288, AttackStyle.STAB),
-    MELEE_LANCE_CRUSH(8290, AttackStyle.CRUSH),
-    MELEE_LANCE_SLASH(8289, AttackStyle.SLASH),
+    MELEE_LANCE_STAB(8288, AttackStyle.MELEE),
+    MELEE_LANCE_CRUSH(8290, AttackStyle.MELEE),
+    MELEE_LANCE_SLASH(8289, AttackStyle.MELEE),
 
-    MELEE_FANG_STAB(9471, AttackStyle.STAB), // tested w/ fang
-    MELEE_FANG_SPEC(6118, AttackStyle.STAB, true), // tested w/ fang spec
+    MELEE_FANG_STAB(9471, AttackStyle.MELEE), // tested w/ fang
+    MELEE_FANG_SPEC(6118, AttackStyle.MELEE, true), // tested w/ fang spec
 
-    MELEE_GENERIC_SLASH(393, AttackStyle.SLASH), // tested w/ zuriel's staff, d long slash, dclaws regular slash
-    MELEE_STAFF_CRUSH(0, AttackStyle.SLASH), // 393 previously, save name to support old fights but no longer track
+    MELEE_GENERIC_SLASH(393, AttackStyle.MELEE), // tested w/ zuriel's staff, d long slash, dclaws regular slash
+    MELEE_STAFF_CRUSH(0, AttackStyle.MELEE), // 393 previously, save name to support old fights but no longer track
 
-    MELEE_BATTLEAXE_SLASH(395, AttackStyle.SLASH), // tested w/ rune baxe
-    MELEE_MACE_STAB(400, AttackStyle.STAB), // tested w/ d mace
-    MELEE_BATTLEAXE_CRUSH(401, AttackStyle.CRUSH), // tested w/ rune baxe, dwh & statius warhammer animation, d mace
-    MELEE_2H_CRUSH(406, AttackStyle.CRUSH), // tested w/ rune & dragon 2h
-    MELEE_2H_SLASH(407, AttackStyle.SLASH), // tested w/ rune & dragon 2h
-    MELEE_STAFF_CRUSH_2(414, AttackStyle.CRUSH), // tested w/ ancient staff, 3rd age wand
-    MELEE_STAFF_CRUSH_3(419, AttackStyle.CRUSH), // Common staff crush. Air/fire/etc staves, smoke battlestaff, SOTD/SOL crush, zammy hasta crush
-    MELEE_PUNCH(422, AttackStyle.CRUSH),
-    MELEE_KICK(423, AttackStyle.CRUSH),
-    MELEE_STAFF_STAB(428, AttackStyle.STAB), // tested w/ SOTD/SOL jab, vesta's spear stab, c hally
-    MELEE_SPEAR_CRUSH(429, AttackStyle.CRUSH), // tested w/ vesta's spear
-    MELEE_STAFF_SLASH(440, AttackStyle.SLASH), // tested w/ SOTD/SOL slash, zammy hasta slash, vesta's spear slash, c hally
-    MELEE_DLONG_SPEC(1058, AttackStyle.SLASH, true), // tested w/ d long spec, also thammaron's sceptre crush (????)...
-    MELEE_DRAGON_MACE_SPEC(1060, AttackStyle.CRUSH, true),
-    MELEE_DRAGON_DAGGER_SPEC(1062, AttackStyle.STAB, true),
-    MELEE_DRAGON_WARHAMMER_SPEC(1378, AttackStyle.CRUSH, true), // tested w/ dwh, statius warhammer spec
-    MELEE_ABYSSAL_WHIP(1658, AttackStyle.SLASH), // tested w/ whip, tent whip
-    MELEE_GRANITE_MAUL(1665, AttackStyle.CRUSH), // tested w/ normal gmaul, ornate maul
-    MELEE_GRANITE_MAUL_SPEC(1667, AttackStyle.CRUSH, true), // tested w/ normal gmaul, ornate maul
-    MELEE_DHAROKS_GREATAXE_CRUSH(2066, AttackStyle.CRUSH),
-    MELEE_DHAROKS_GREATAXE_SLASH(2067, AttackStyle.SLASH),
-    MELEE_AHRIMS_STAFF_CRUSH(2078, AttackStyle.CRUSH),
-    MELEE_OBBY_MAUL_CRUSH(2661, AttackStyle.CRUSH),
-    MELEE_ABYSSAL_DAGGER_STAB(3297, AttackStyle.STAB), // spec un-tested
-    MELEE_ABYSSAL_BLUDGEON_CRUSH(3298, AttackStyle.CRUSH),
-    MELEE_ABYSSAL_BLUDGEON_SPEC(3299, AttackStyle.CRUSH, true),
-    MELEE_LEAF_BLADED_BATTLEAXE_CRUSH(3852, AttackStyle.CRUSH),
-    MELEE_INQUISITORS_MACE(4503, AttackStyle.CRUSH),
-    MELEE_BARRELCHEST_ANCHOR_CRUSH(5865, AttackStyle.CRUSH),
-    MELEE_BARRELCHEST_ANCHOR_CRUSH_SPEC(5870, AttackStyle.CRUSH, true),
-    MELEE_LEAF_BLADED_BATTLEAXE_SLASH(7004, AttackStyle.SLASH),
-    MELEE_GODSWORD_SLASH(7045, AttackStyle.SLASH), // tested w/ AGS, BGS, ZGS, SGS, AGS(or) sara sword
-    MELEE_GODSWORD_CRUSH(7054, AttackStyle.CRUSH), // tested w/ AGS, BGS, ZGS, SGS, sara sword
-    MELEE_GODSWORD_DEFENSIVE(7055, AttackStyle.SLASH), // tested w/ BGS
-    MELEE_RUNE_CLAWS_SPEC(923, AttackStyle.SLASH, true),
-    MELEE_DRAGON_CLAWS_SPEC(7514, AttackStyle.SLASH, true),
-    MELEE_VLS_SPEC(7515, AttackStyle.SLASH, true), // both VLS and dragon sword spec
-    MELEE_ELDER_MAUL(7516, AttackStyle.CRUSH),
-    MELEE_ZAMORAK_GODSWORD_SPEC(7638, AttackStyle.SLASH, true), // tested zgs spec
-    MELEE_ELDER_MAUL_SPEC(11124, AttackStyle.CRUSH),
-    MELEE_ZAMORAK_GODSWORD_OR_SPEC(7639, AttackStyle.SLASH, true), // verified 22/06/2024, assumed due to ags(or)
-    MELEE_SARADOMIN_GODSWORD_SPEC(7640, AttackStyle.SLASH, true), // tested sgs spec
-    MELEE_SARADOMIN_GODSWORD_OR_SPEC(7641, AttackStyle.SLASH, true), // verified 22/06/2024, assumed due to ags(or)
-    MELEE_BANDOS_GODSWORD_SPEC(7642, AttackStyle.SLASH, true), // tested bgs spec
-    MELEE_BANDOS_GODSWORD_OR_SPEC(7643, AttackStyle.SLASH, true), // verified 22/06/2024, assumed due to ags(or)
-    MELEE_ARMADYL_GODSWORD_SPEC(7644, AttackStyle.SLASH, true), // tested ags spec
-    MELEE_ARMADYL_GODSWORD_OR_SPEC(7645, AttackStyle.SLASH, true), // tested ags(or) spec
-    MELEE_SCYTHE(8056, AttackStyle.SLASH), // tested w/ all scythe styles (so could be crush, but unlikely)
-    MELEE_GHAZI_RAPIER_STAB(8145, AttackStyle.STAB), // rapier slash is 390, basic slash animation. Also VLS stab.
-    MELEE_ANCIENT_GODSWORD_SPEC(9171, AttackStyle.SLASH, true),
-    MELEE_CRYSTAL_HALBERD_SPEC(1203, AttackStyle.SLASH, true),
-    MELEE_SOULREAPER_AXE(10172, AttackStyle.SLASH, true),
-    MELEE_SOULREAPER_AXE_SPEC(10173, AttackStyle.SLASH, true),
-    MELEE_GUTHANS_LUNGE(2080, AttackStyle.STAB),
-    MELEE_GUTHANS_SWIPE(2081, AttackStyle.STAB),
-    MELEE_GUTHANS_POUNDMA(2082, AttackStyle.CRUSH),
-    MELEE_TORAG_HAMMERS(2068, AttackStyle.CRUSH),
-    MELEE_VERACS_FLAIL(2062, AttackStyle.STAB),
-    MELEE_BLISTERWOOD_FLAIL_CRUSH(8010, AttackStyle.CRUSH), // blisterwood flail
-    MELEE_BONE_DAGGER_SPEC(4198, AttackStyle.STAB, true), // tested with all poison variants (p, p+, p++, none)
-    MELEE_DUAL_MACUAHUITL(10989, AttackStyle.CRUSH), // https://oldschool.runescape.wiki/w/Dual_macuahuitl set effect needs custom code
-    MELEE_BLUE_MOON_SPEAR_SPEC(1710, AttackStyle.STAB, true), // https://oldschool.runescape.wiki/w/Blue_moon_spear
-    MELEE_BLUE_MOON_SPEAR(1711, AttackStyle.STAB),
-    MELEE_DHINS(7511, AttackStyle.CRUSH), // https://oldschool.runescape.wiki/w/Dinh%27s_bulwark
-    MELEE_URSINE_CHAINMACE_SPEC(9963, AttackStyle.CRUSH, true), // https://oldschool.runescape.wiki/w/Ursine_chainmace#Charged
-    MELEE_ANCIENT_MACE_SPEC(6147, AttackStyle.CRUSH, true), // https://oldschool.runescape.wiki/w/Ancient_mace
-    MELEE_DSCIM_SPEC(1872, AttackStyle.SLASH, true), // https://oldschool.runescape.wiki/w/Dragon_scimitar
-    MELEE_D2H_SPEC(3157, AttackStyle.SLASH, true), // https://oldschool.runescape.wiki/w/Dragon_2h_sword
-    MELEE_ARCLIGHT_SPEC(2890, AttackStyle.SLASH, true), // https://oldschool.runescape.wiki/w/Arclight
-    MELEE_SARA_SWORD_SPEC(1132, AttackStyle.SLASH, true), // https://oldschool.runescape.wiki/w/Saradomin_sword assumed to be the same for the blessed version
-    MELEE_RED_KERIS_SPEC(9544, AttackStyle.SLASH, true), // https://oldschool.runescape.wiki/w/Keris_partisan_of_corruption
-    MELEE_SALAMANDER(5247, AttackStyle.SLASH), // https://oldschool.runescape.wiki/w/Salamander
+    MELEE_BATTLEAXE_SLASH(395, AttackStyle.MELEE), // tested w/ rune baxe
+    MELEE_MACE_STAB(400, AttackStyle.MELEE), // tested w/ d mace
+    MELEE_BATTLEAXE_CRUSH(401, AttackStyle.MELEE), // tested w/ rune baxe, dwh & statius warhammer animation, d mace
+    MELEE_2H_CRUSH(406, AttackStyle.MELEE), // tested w/ rune & dragon 2h
+    MELEE_2H_SLASH(407, AttackStyle.MELEE), // tested w/ rune & dragon 2h
+    MELEE_STAFF_CRUSH_2(414, AttackStyle.MELEE), // tested w/ ancient staff, 3rd age wand
+    MELEE_STAFF_CRUSH_3(419, AttackStyle.MELEE), // Common staff crush. Air/fire/etc staves, smoke battlestaff, SOTD/SOL crush, zammy hasta crush
+    MELEE_PUNCH(422, AttackStyle.MELEE),
+    MELEE_KICK(423, AttackStyle.MELEE),
+    MELEE_STAFF_STAB(428, AttackStyle.MELEE), // tested w/ SOTD/SOL jab, vesta's spear stab, c hally
+    MELEE_SPEAR_CRUSH(429, AttackStyle.MELEE), // tested w/ vesta's spear
+    MELEE_STAFF_SLASH(440, AttackStyle.MELEE), // tested w/ SOTD/SOL slash, zammy hasta slash, vesta's spear slash, c hally
+    MELEE_DLONG_SPEC(1058, AttackStyle.MELEE, true), // tested w/ d long spec, also thammaron's sceptre crush (????)...
+    MELEE_DRAGON_MACE_SPEC(1060, AttackStyle.MELEE, true),
+    MELEE_DRAGON_DAGGER_SPEC(1062, AttackStyle.MELEE, true),
+    MELEE_DRAGON_WARHAMMER_SPEC(1378, AttackStyle.MELEE, true), // tested w/ dwh, statius warhammer spec
+    MELEE_ABYSSAL_WHIP(1658, AttackStyle.MELEE), // tested w/ whip, tent whip
+    MELEE_GRANITE_MAUL(1665, AttackStyle.MELEE), // tested w/ normal gmaul, ornate maul
+    MELEE_GRANITE_MAUL_SPEC(1667, AttackStyle.MELEE, true), // tested w/ normal gmaul, ornate maul
+    MELEE_DHAROKS_GREATAXE_CRUSH(2066, AttackStyle.MELEE),
+    MELEE_DHAROKS_GREATAXE_SLASH(2067, AttackStyle.MELEE),
+    MELEE_AHRIMS_STAFF_CRUSH(2078, AttackStyle.MELEE),
+    MELEE_OBBY_MAUL_CRUSH(2661, AttackStyle.MELEE),
+    MELEE_ABYSSAL_DAGGER_STAB(3297, AttackStyle.MELEE), // spec un-tested
+    MELEE_ABYSSAL_BLUDGEON_CRUSH(3298, AttackStyle.MELEE),
+    MELEE_ABYSSAL_BLUDGEON_SPEC(3299, AttackStyle.MELEE, true),
+    MELEE_LEAF_BLADED_BATTLEAXE_CRUSH(3852, AttackStyle.MELEE),
+    MELEE_INQUISITORS_MACE(4503, AttackStyle.MELEE),
+    MELEE_BARRELCHEST_ANCHOR_CRUSH(5865, AttackStyle.MELEE),
+    MELEE_BARRELCHEST_ANCHOR_CRUSH_SPEC(5870, AttackStyle.MELEE, true),
+    MELEE_LEAF_BLADED_BATTLEAXE_SLASH(7004, AttackStyle.MELEE),
+    MELEE_GODSWORD_SLASH(7045, AttackStyle.MELEE), // tested w/ AGS, BGS, ZGS, SGS, AGS(or) sara sword
+    MELEE_GODSWORD_CRUSH(7054, AttackStyle.MELEE), // tested w/ AGS, BGS, ZGS, SGS, sara sword
+    MELEE_GODSWORD_DEFENSIVE(7055, AttackStyle.MELEE), // tested w/ BGS
+    MELEE_RUNE_CLAWS_SPEC(923, AttackStyle.MELEE, true),
+    MELEE_DRAGON_CLAWS_SPEC(7514, AttackStyle.MELEE, true),
+    MELEE_VLS_SPEC(7515, AttackStyle.MELEE, true), // both VLS and dragon sword spec
+    MELEE_ELDER_MAUL(7516, AttackStyle.MELEE),
+    MELEE_ZAMORAK_GODSWORD_SPEC(7638, AttackStyle.MELEE, true), // tested zgs spec
+    MELEE_ELDER_MAUL_SPEC(11124, AttackStyle.MELEE),
+    MELEE_ZAMORAK_GODSWORD_OR_SPEC(7639, AttackStyle.MELEE, true), // verified 22/06/2024, assumed due to ags(or)
+    MELEE_SARADOMIN_GODSWORD_SPEC(7640, AttackStyle.MELEE, true), // tested sgs spec
+    MELEE_SARADOMIN_GODSWORD_OR_SPEC(7641, AttackStyle.MELEE, true), // verified 22/06/2024, assumed due to ags(or)
+    MELEE_BANDOS_GODSWORD_SPEC(7642, AttackStyle.MELEE, true), // tested bgs spec
+    MELEE_BANDOS_GODSWORD_OR_SPEC(7643, AttackStyle.MELEE, true), // verified 22/06/2024, assumed due to ags(or)
+    MELEE_ARMADYL_GODSWORD_SPEC(7644, AttackStyle.MELEE, true), // tested ags spec
+    MELEE_ARMADYL_GODSWORD_OR_SPEC(7645, AttackStyle.MELEE, true), // tested ags(or) spec
+    MELEE_SCYTHE(8056, AttackStyle.MELEE), // tested w/ all scythe styles (so could be crush, but unlikely)
+    MELEE_GHAZI_RAPIER_STAB(8145, AttackStyle.MELEE), // rapier slash is 390, basic slash animation. Also VLS stab.
+    MELEE_ANCIENT_GODSWORD_SPEC(9171, AttackStyle.MELEE, true),
+    MELEE_CRYSTAL_HALBERD_SPEC(1203, AttackStyle.MELEE, true),
+    MELEE_SOULREAPER_AXE(10172, AttackStyle.MELEE, true),
+    MELEE_SOULREAPER_AXE_SPEC(10173, AttackStyle.MELEE, true),
+    MELEE_GUTHANS_LUNGE(2080, AttackStyle.MELEE),
+    MELEE_GUTHANS_SWIPE(2081, AttackStyle.MELEE),
+    MELEE_GUTHANS_POUNDMA(2082, AttackStyle.MELEE),
+    MELEE_TORAG_HAMMERS(2068, AttackStyle.MELEE),
+    MELEE_VERACS_FLAIL(2062, AttackStyle.MELEE),
+    MELEE_BLISTERWOOD_FLAIL_CRUSH(8010, AttackStyle.MELEE), // blisterwood flail
+    MELEE_BONE_DAGGER_SPEC(4198, AttackStyle.MELEE, true), // tested with all poison variants (p, p+, p++, none)
+    MELEE_DUAL_MACUAHUITL(10989, AttackStyle.MELEE), // https://oldschool.runescape.wiki/w/Dual_macuahuitl set effect needs custom code
+    MELEE_BLUE_MOON_SPEAR_SPEC(1710, AttackStyle.MELEE, true), // https://oldschool.runescape.wiki/w/Blue_moon_spear
+    MELEE_BLUE_MOON_SPEAR(1711, AttackStyle.MELEE),
+    MELEE_DHINS(7511, AttackStyle.MELEE), // https://oldschool.runescape.wiki/w/Dinh%27s_bulwark
+    MELEE_URSINE_CHAINMACE_SPEC(9963, AttackStyle.MELEE, true), // https://oldschool.runescape.wiki/w/Ursine_chainmace#Charged
+    MELEE_ANCIENT_MACE_SPEC(6147, AttackStyle.MELEE, true), // https://oldschool.runescape.wiki/w/Ancient_mace
+    MELEE_DSCIM_SPEC(1872, AttackStyle.MELEE, true), // https://oldschool.runescape.wiki/w/Dragon_scimitar
+    MELEE_D2H_SPEC(3157, AttackStyle.MELEE, true), // https://oldschool.runescape.wiki/w/Dragon_2h_sword
+    MELEE_ARCLIGHT_SPEC(2890, AttackStyle.MELEE, true), // https://oldschool.runescape.wiki/w/Arclight
+    MELEE_SARA_SWORD_SPEC(1132, AttackStyle.MELEE, true), // https://oldschool.runescape.wiki/w/Saradomin_sword assumed to be the same for the blessed version
+    MELEE_RED_KERIS_SPEC(9544, AttackStyle.MELEE, true), // https://oldschool.runescape.wiki/w/Keris_partisan_of_corruption
+    MELEE_SALAMANDER(5247, AttackStyle.MELEE), // https://oldschool.runescape.wiki/w/Salamander
 
     // RANGED
     RANGED_CHINCHOMPA(7618, AttackStyle.RANGED),
@@ -196,10 +192,29 @@ public enum AnimationData
     MAGIC_VOLATILE_NIGHTMARE_STAFF_SPEC(8532, AttackStyle.MAGIC, true), // assume 99 mage's base damage (does not rise when boosted).
 
     // Misc
-    MARK_OF_DARKNESS(8970, AttackStyle.NON_ATTACK),
+    MAGIC_IMBUE(722, AttackStyle.NON_ATTACK),
+    SPELLBOOK_SWAP(6299, AttackStyle.NON_ATTACK),
+    LUNAR_GROUP(4409, AttackStyle.NON_ATTACK), // heal group, cure group, etc
+    LUNAR_OTHER(4411, AttackStyle.NON_ATTACK), // Venge other, heal other, spec transfer, cure other, cure me, etc
+    NPC_CONTACT(4413, AttackStyle.NON_ATTACK), // Also bake pie and pot share
+    VENGEANCE(8316, AttackStyle.NON_ATTACK),
+    REANIMATION(7198, AttackStyle.NON_ATTACK),
+    DEMONIC_OFFERING(8975, AttackStyle.NON_ATTACK), // Also sinister offering
+    SHADOW_VEIL(8979, AttackStyle.NON_ATTACK),
+    MARK_OF_DARKNESS(8970, AttackStyle.NON_ATTACK), // Also death charge and ward of arceuss
     PICK_POCKETING(881, AttackStyle.NON_ATTACK),
-    EAT_FOOD_OR_POTION(829, AttackStyle.NON_ATTACK),
     SUMMON_THRALL(8973, AttackStyle.NON_ATTACK),
+    LUNAR_TELEPORT(1816, AttackStyle.NON_ATTACK),
+    MONSTER_EXAMINE(6293, AttackStyle.NON_ATTACK), // Also stat spy
+    HUMIDIFY(6294, AttackStyle.NON_ATTACK),
+    GEOMANCY(7118, AttackStyle.NON_ATTACK),
+    DREAM(7672, AttackStyle.NON_ATTACK),
+
+    DESERT_AMMY(3872, AttackStyle.NON_ATTACK),
+
+    EAT_FOOD_OR_POTION(829, AttackStyle.NON_ATTACK),
+    OVERLOAD_HIT(3170, AttackStyle.NON_ATTACK), // https://oldschool.runescape.wiki/w/Overload_(Chambers_of_Xeric)#4_dose
+
     TAKING_HIT_1HANDED_UNARMED(397, AttackStyle.NON_ATTACK),
     TAKING_HIT_2H_SWORD(410, AttackStyle.NON_ATTACK),
     TAKING_HIT_ANCHOR(5866, AttackStyle.NON_ATTACK),
@@ -223,6 +238,7 @@ public enum AnimationData
     TAKING_HIT_UNARMED(424, AttackStyle.NON_ATTACK),
     TAKING_HIT_VERACS_FLAIL(2063, AttackStyle.NON_ATTACK),
     TAKING_HIT_WHIP(1659, AttackStyle.NON_ATTACK),
+
     LOW_ALCH(712, AttackStyle.NON_ATTACK),
     HIGH_ALCH(713, AttackStyle.NON_ATTACK);
 
@@ -358,47 +374,10 @@ public enum AnimationData
     // An enum of combat styles (including stab, slash, crush).
     public enum AttackStyle
     {
-        STAB(HeadIcon.MELEE, SpriteID.COMBAT_STYLE_SWORD_STAB),
-        SLASH(HeadIcon.MELEE, SpriteID.COMBAT_STYLE_SWORD_SLASH),
-        CRUSH(HeadIcon.MELEE, SpriteID.COMBAT_STYLE_HAMMER_POUND),
-        RANGED(HeadIcon.RANGED, SpriteID.SKILL_RANGED),
-        MAGIC(HeadIcon.MAGIC, SpriteID.SKILL_MAGIC),
-        NON_ATTACK(HeadIcon.SMITE, SpriteID.SKILL_THIEVING);
-
-        static AttackStyle[] MELEE_STYLES = {STAB, SLASH, CRUSH};
-
-        @Getter
-        private final HeadIcon protection;
-
-        @Getter
-        private final int styleSpriteId;
-
-        AttackStyle(HeadIcon protection, int styleSpriteId)
-        {
-            this.protection = protection;
-            this.styleSpriteId = styleSpriteId;
-        }
-
-        public boolean isMelee()
-        {
-            return ArrayUtils.contains(AttackStyle.MELEE_STYLES, this);
-        }
-
-        public boolean isUsingSuccessfulOffensivePray(int pray)
-        {
-            return (pray > 0 &&
-                    ((isMelee() &&
-                            (pray == SpriteID.PRAYER_PIETY ||
-                                    pray == SpriteID.PRAYER_ULTIMATE_STRENGTH)) ||
-                            (this == RANGED &&
-                                    (pray == SpriteID.PRAYER_RIGOUR ||
-                                            pray == SpriteID.PRAYER_EAGLE_EYE)) ||
-                            (this == MAGIC &&
-                                    (pray == SpriteID.PRAYER_AUGURY ||
-                                            pray == SpriteID.PRAYER_MYSTIC_MIGHT)))
-            );
-        }
-
+        MELEE,
+        RANGED,
+        MAGIC,
+        NON_ATTACK;
 
         @Override
         public String toString()
