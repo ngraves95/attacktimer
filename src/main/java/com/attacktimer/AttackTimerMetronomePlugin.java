@@ -28,6 +28,7 @@ package com.attacktimer;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.attacktimer.VariableSpeed.VariableSpeed;
 import com.google.inject.Provides;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -43,9 +44,7 @@ import net.runelite.api.Item;
 import net.runelite.api.ItemContainer;
 import net.runelite.api.NPC;
 import net.runelite.api.Player;
-import net.runelite.api.VarPlayer;
 import net.runelite.api.Varbits;
-import net.runelite.api.WorldType;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.InteractingChanged;
@@ -55,7 +54,6 @@ import net.runelite.api.events.VarbitChanged;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
-import net.runelite.client.game.ItemEquipmentStats;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.game.ItemStats;
 import net.runelite.client.game.NPCManager;
@@ -204,84 +202,9 @@ public class AttackTimerMetronomePlugin extends Plugin
         return itemManager.getItemStats(weaponId);
     }
 
-    private AttackStyle getAttackStyle()
-    {
-        final int currentAttackStyleVarbit = client.getVarpValue(VarPlayer.ATTACK_STYLE);
-        final int currentEquippedWeaponTypeVarbit = client.getVarbitValue(Varbits.EQUIPPED_WEAPON_TYPE);
-        AttackStyle[] attackStyles = WeaponType.getWeaponType(currentEquippedWeaponTypeVarbit).getAttackStyles();
-
-        if (currentAttackStyleVarbit < attackStyles.length) {
-            return attackStyles[currentAttackStyleVarbit];
-        }
-
-        return AttackStyle.ACCURATE;
-    }
-
-    private int applyRangedAndMeleeRelicSpeed(int baseSpeed)
-    {
-        if (baseSpeed >= 4) {
-            return baseSpeed / 2;
-        } else {
-            return (baseSpeed + 1) / 2;
-        }
-    }
-
-    private boolean isRedKerisSpecAnimation(AnimationData animation)
-    {
-        return animation == AnimationData.MELEE_RED_KERIS_SPEC;
-    }
-
-    static final int BloodMoonSetAnimId = 2792;
-
-    private boolean getBloodMoonProc()
-    {
-        return client.getLocalPlayer().hasSpotAnim(BloodMoonSetAnimId);
-    }
-
     private boolean getSalamanderAttack()
     {
         return client.getLocalPlayer().hasSpotAnim(SALAMANDER_SET_ANIM_ID);
-    }
-
-    private int adjustSpeedForLeaguesIfApplicable(int baseSpeed)
-    {
-        int leagueRelicVarbit = 0;
-        if (client.getWorldType().contains(WorldType.SEASONAL)) {
-            leagueRelicVarbit = client.getVarbitValue(Varbits.LEAGUE_RELIC_4);
-        }
-
-        AttackStyle attackStyle = getAttackStyle();
-
-        switch (leagueRelicVarbit) {
-            case 0:
-                // No league relic active - player does not have t4 relic or is not in leagues.
-                return baseSpeed;
-            case 1:
-                // Archer's Embrace (ranged).
-                if (attackStyle == AttackStyle.RANGING ||
-                        attackStyle == AttackStyle.LONGRANGE) {
-                    return applyRangedAndMeleeRelicSpeed(baseSpeed);
-                }
-                break;
-            case 2:
-                // Brawler's Resolve (melee)
-                if (attackStyle == AttackStyle.ACCURATE ||
-                        attackStyle == AttackStyle.AGGRESSIVE ||
-                        attackStyle == AttackStyle.CONTROLLED ||
-                        attackStyle == AttackStyle.DEFENSIVE) {
-                    return applyRangedAndMeleeRelicSpeed(baseSpeed);
-                }
-                break;
-            case 3:
-                // Superior Sorcerer (magic)
-                if (attackStyle == AttackStyle.CASTING ||
-                        attackStyle == AttackStyle.DEFENSIVE_CASTING) {
-                    return 2;
-                }
-                break;
-        }
-
-        return baseSpeed;
     }
 
     private void setAttackDelay()
@@ -316,37 +239,19 @@ public class AttackTimerMetronomePlugin extends Plugin
             // We are currently dealing with a staves in which case we can make decisions based on the
             // spellbook flag. We can only improve this by using a deprecated API to check the projectile
             // matches the stave rather than a manual spell, but this is good enough for now.
-            return adjustSpeedForLeaguesIfApplicable(4);
+            return VariableSpeed.computeSpeed(client, curAnimation, AttackProcedure.POWERED_STAVE, 4);
         }
-
         if (matchesSpellbook && isManualCasting(curAnimation))
         {
             // You can cast with anything equipped in which case we shouldn't look to invent for speed, it will instead always be 5.
-            return adjustSpeedForLeaguesIfApplicable(5);
+            return VariableSpeed.computeSpeed(client, curAnimation, AttackProcedure.MANUAL_AUTO_CAST, 5);
         }
-
         ItemStats weaponStats = getWeaponStats(weaponId);
         if (weaponStats == null) {
-            return adjustSpeedForLeaguesIfApplicable(4); // Assume barehanded == 4t
+            return VariableSpeed.computeSpeed(client, curAnimation, AttackProcedure.MELEE_OR_RANGE, 4); // Assume barehanded == 4t
         }
-        ItemEquipmentStats e = weaponStats.getEquipment();
-        int speed = e.getAspeed();
-
-        if (getAttackStyle() == AttackStyle.RANGING && client.getVarpValue(VarPlayer.ATTACK_STYLE) == 1)
-        { // Hack for index 1 => rapid
-            speed -= 1; // Assume ranging == rapid. Also works for salamanders which attack 1 tick faster when using the ranged style
-        }
-        if (getBloodMoonProc())
-        { // Similar hack as rapid, blood moon saves a tick when it proc's
-            speed -= 1;
-        }
-
-        if (isRedKerisSpecAnimation(curAnimation))
-        {
-            speed += 4; // If the spec missed we are just wrong by 4-ticks IDC, requires spec tracking code similar to the spec plugin if we want this to be correct when we miss.
-        }
-
-        return adjustSpeedForLeaguesIfApplicable(speed); // Deadline for next available attack.
+        // Deadline for next available attack.
+        return VariableSpeed.computeSpeed(client, curAnimation, AttackProcedure.MELEE_OR_RANGE, weaponStats.getEquipment().getAspeed());
     }
 
     private static final List<Integer> SPECIAL_NPCS = Arrays.asList(10507, 9435, 9438, 9441, 9444); // Combat Dummy + Nightmare Pillars
@@ -484,6 +389,7 @@ public class AttackTimerMetronomePlugin extends Plugin
     @Subscribe
     public void onGameTick(GameTick tick)
     {
+        VariableSpeed.onGameTick(client, tick);
         boolean isAttacking = isPlayerAttacking();
         switch (attackState) {
             case NOT_ATTACKING:
