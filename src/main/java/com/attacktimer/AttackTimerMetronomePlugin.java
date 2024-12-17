@@ -339,11 +339,6 @@ public class AttackTimerMetronomePlugin extends Plugin
     @Subscribe
     public void onChatMessage(ChatMessage event)
     {
-        if (event.getType() != ChatMessageType.SPAM)
-        {
-            return;
-        }
-
         final String message = event.getMessage();
 
         if (message.startsWith("You eat") ||

@@ -47,7 +47,7 @@ public class Leagues implements IVariableSpeed
         }
 
         AttackStyle attackStyle = Utils.getAttackStyle(client);
-
+        int masteryLevel;
         switch (leagueRelicVarbit)
         {
             case 0:
@@ -55,26 +55,32 @@ public class Leagues implements IVariableSpeed
                 return baseSpeed;
             case 1:
                 // Archer's Embrace (ranged).
+                // Ranged Mastery 3 & 5.
+                masteryLevel = client.getVarbitValue(Varbits.LEAGUES_RANGED_COMBAT_MASTERY_LEVEL);
                 if (attackStyle == AttackStyle.RANGING || attackStyle == AttackStyle.LONGRANGE)
                 {
-                    return applyRangedAndMeleeRelicSpeed(baseSpeed);
+                    return applyLeagueFormulaSpeed(baseSpeed, masteryLevel);
                 }
                 break;
             case 2:
                 // Brawler's Resolve (melee)
+                // Melee Mastery 3 & 5.
+                masteryLevel = client.getVarbitValue(Varbits.LEAGUES_MELEE_COMBAT_MASTERY_LEVEL);
                 if (attackStyle == AttackStyle.ACCURATE ||
                         attackStyle == AttackStyle.AGGRESSIVE ||
                         attackStyle == AttackStyle.CONTROLLED ||
                         attackStyle == AttackStyle.DEFENSIVE)
                 {
-                    return applyRangedAndMeleeRelicSpeed(baseSpeed);
+                    return applyLeagueFormulaSpeed(baseSpeed, masteryLevel);
                 }
                 break;
             case 3:
                 // Superior Sorcerer (magic)
+                // Magic Mastery 3 & 5.
+                masteryLevel = client.getVarbitValue(Varbits.LEAGUES_MAGIC_COMBAT_MASTERY_LEVEL);
                 if (attackStyle == AttackStyle.CASTING || attackStyle == AttackStyle.DEFENSIVE_CASTING)
                 {
-                    return 2;
+                    return applyLeagueFormulaSpeed(baseSpeed, masteryLevel);
                 }
                 break;
         }
@@ -82,13 +88,26 @@ public class Leagues implements IVariableSpeed
         return baseSpeed;
     }
 
-    private int applyRangedAndMeleeRelicSpeed(int baseSpeed)
+    private int applyLeagueFormulaSpeed(int baseSpeed, int masteryLevel)
     {
-        if (baseSpeed >= 4) {
-            return baseSpeed / 2;
-        } else {
-            return (baseSpeed + 1) / 2;
+        // Older league's had no masteries and were all: "attack rate set to 50%, rounded down for 5t and above, rounded up below 4t. "
+        if (masteryLevel >= 5 || masteryLevel <= 0)
+        {
+            if (baseSpeed >= 4)
+            {
+                return baseSpeed / 2;
+            }
+            else
+            {
+                return (baseSpeed + 1) / 2;
+            }
         }
+        else if (masteryLevel >= 3)
+        {
+            // "attack rate set to 80%, rounding down." e.g. https://oldschool.runescape.wiki/w/Melee_III
+            return (int) Math.floor(((double) baseSpeed) * 0.8);
+        }
+        return baseSpeed;
     }
 
     public void onGameTick(Client client, GameTick tick) {}
