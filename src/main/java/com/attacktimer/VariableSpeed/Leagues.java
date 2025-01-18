@@ -40,52 +40,29 @@ public class Leagues implements IVariableSpeed
 {
     public int apply(final Client client, final AnimationData curAnimation, final AttackProcedure atkProcedure, final int baseSpeed, final int curSpeed)
     {
-        int leagueRelicVarbit = 0;
-        if (client.getWorldType().contains(WorldType.SEASONAL))
+        if (!client.getWorldType().contains(WorldType.SEASONAL))
         {
-            leagueRelicVarbit = client.getVarbitValue(Varbits.LEAGUE_RELIC_4);
+            return curSpeed;
         }
 
         AttackStyle attackStyle = Utils.getAttackStyle(client);
-        int masteryLevel;
-        switch (leagueRelicVarbit)
+        if (attackStyle == AttackStyle.RANGING || attackStyle == AttackStyle.LONGRANGE)
         {
-            case 0:
-                // No league relic active - player does not have t4 relic or is not in leagues.
-                return baseSpeed;
-            case 1:
-                // Archer's Embrace (ranged).
-                // Ranged Mastery 3 & 5.
-                masteryLevel = client.getVarbitValue(Varbits.LEAGUES_RANGED_COMBAT_MASTERY_LEVEL);
-                if (attackStyle == AttackStyle.RANGING || attackStyle == AttackStyle.LONGRANGE)
-                {
-                    return applyLeagueFormulaSpeed(baseSpeed, masteryLevel);
-                }
-                break;
-            case 2:
-                // Brawler's Resolve (melee)
-                // Melee Mastery 3 & 5.
-                masteryLevel = client.getVarbitValue(Varbits.LEAGUES_MELEE_COMBAT_MASTERY_LEVEL);
-                if (attackStyle == AttackStyle.ACCURATE ||
-                        attackStyle == AttackStyle.AGGRESSIVE ||
-                        attackStyle == AttackStyle.CONTROLLED ||
-                        attackStyle == AttackStyle.DEFENSIVE)
-                {
-                    return applyLeagueFormulaSpeed(baseSpeed, masteryLevel);
-                }
-                break;
-            case 3:
-                // Superior Sorcerer (magic)
-                // Magic Mastery 3 & 5.
-                masteryLevel = client.getVarbitValue(Varbits.LEAGUES_MAGIC_COMBAT_MASTERY_LEVEL);
-                if (attackStyle == AttackStyle.CASTING || attackStyle == AttackStyle.DEFENSIVE_CASTING)
-                {
-                    return applyLeagueFormulaSpeed(baseSpeed, masteryLevel);
-                }
-                break;
+            return applyLeagueFormulaSpeed(baseSpeed, client.getVarbitValue(Varbits.LEAGUES_RANGED_COMBAT_MASTERY_LEVEL));
+        }
+        if (attackStyle == AttackStyle.ACCURATE ||
+            attackStyle == AttackStyle.AGGRESSIVE ||
+            attackStyle == AttackStyle.CONTROLLED ||
+            attackStyle == AttackStyle.DEFENSIVE)
+        {
+            return applyLeagueFormulaSpeed(baseSpeed, client.getVarbitValue(Varbits.LEAGUES_MELEE_COMBAT_MASTERY_LEVEL));
+        }
+        if (attackStyle == AttackStyle.CASTING || attackStyle == AttackStyle.DEFENSIVE_CASTING)
+        {
+            return applyLeagueFormulaSpeed(baseSpeed, client.getVarbitValue(Varbits.LEAGUES_MAGIC_COMBAT_MASTERY_LEVEL));
         }
 
-        return baseSpeed;
+        return curSpeed;
     }
 
     private int applyLeagueFormulaSpeed(int baseSpeed, int masteryLevel)
