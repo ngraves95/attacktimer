@@ -171,17 +171,17 @@ public enum AnimationData
     MAGIC_STANDARD_CRUMBLE_UNDEAD(724, AttackStyle.MAGIC, Spellbook.STANDARD),
     MAGIC_STANDARD_CRUMBLE_UNDEAD_HOLDING_STAFF(1166, AttackStyle.MAGIC, Spellbook.STANDARD),
     MAGIC_STANDARD_ENFEEBLE(1168, AttackStyle.MAGIC, Spellbook.STANDARD),
-    MAGIC_STANDARD_STRIKE_BOLT_BLAST(711, AttackStyle.MAGIC, Spellbook.STANDARD), // tested w/ bolt
-    MAGIC_STANDARD_STRIKE_BOLT_BLAST_STAFF(1162, AttackStyle.MAGIC, Spellbook.STANDARD), // strike, bolt and blast (tested all spells, different weapons)
+    MAGIC_STANDARD_STRIKE_BOLT_BLAST(9144, AttackStyle.MAGIC, Spellbook.STANDARD), // tested w/ bolt
+    MAGIC_STANDARD_STRIKE_BOLT_BLAST_STAFF(11423, AttackStyle.MAGIC, Spellbook.STANDARD), // strike, bolt and blast (tested all spells, different weapons)
     MAGIC_STANDARD_STUN(1169, AttackStyle.MAGIC, Spellbook.STANDARD),
-    MAGIC_STANDARD_SURGE_STAFF(7855, AttackStyle.MAGIC, Spellbook.STANDARD), // tested many staves
+    MAGIC_STANDARD_SURGE_STAFF(9145, AttackStyle.MAGIC, Spellbook.STANDARD), // tested many staves
     MAGIC_STANDARD_VULNERABILITY_CURSE(1165, AttackStyle.MAGIC, Spellbook.STANDARD),
-    MAGIC_STANDARD_WAVE(727, AttackStyle.MAGIC, Spellbook.STANDARD), // tested w/ wave spells
-    MAGIC_STANDARD_WAVE_STAFF(1167, AttackStyle.MAGIC, Spellbook.STANDARD), // tested many staves
+    MAGIC_STANDARD_WAVE(11429, AttackStyle.MAGIC, Spellbook.STANDARD), // tested w/ wave spells
+    MAGIC_STANDARD_WAVE_STAFF(11430, AttackStyle.MAGIC, Spellbook.STANDARD), // tested many staves
     MAGIC_STANDARD_WEAKEN(1164, AttackStyle.MAGIC, Spellbook.STANDARD),
 
-    MAGIC_ANCIENT_MULTI_TARGET(1979, AttackStyle.MAGIC, Spellbook.ANCIENT), // Burst & Barrage animations (tested all 8, different weapons)
-    MAGIC_ANCIENT_SINGLE_TARGET(1978, AttackStyle.MAGIC, Spellbook.ANCIENT), // Rush & Blitz animations (tested all 8, different weapons)
+    MAGIC_ANCIENT_MULTI_TARGET(10092, AttackStyle.MAGIC, Spellbook.ANCIENT), // Burst & Barrage animations (tested all 8, different weapons)
+    MAGIC_ANCIENT_SINGLE_TARGET(10091, AttackStyle.MAGIC, Spellbook.ANCIENT), // Rush & Blitz animations (tested all 8, different weapons)
 
     MAGIC_ARCEUUS_DEMONBANE(8977, AttackStyle.MAGIC, Spellbook.ARCEUUS), // Also greater corruption, so that may accidentally trigger a manual-cast, but that's probably fine only affects Muspah
     MAGIC_ARCEUUS_GRASP(8972, AttackStyle.MAGIC, Spellbook.ARCEUUS),
