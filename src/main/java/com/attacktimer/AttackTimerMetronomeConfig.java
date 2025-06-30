@@ -224,6 +224,18 @@ public interface AttackTimerMetronomeConfig extends Config
 		return true;
 	}
 
+	@ConfigItem(
+			position = 6,
+			keyName = "attackBarForceSD",
+			name = "Force Standard Quality",
+			description = "Forces Standard Quality Attack bar rather than matching HD interfaces setting from Interface Styles plugin",
+			section = AttackBarSettings
+	)
+	default boolean barForceSD()
+	{
+		return false;
+	}
+
 	@Getter
 	@AllArgsConstructor
 	enum TicksPosition
