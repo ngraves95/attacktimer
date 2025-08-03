@@ -1,7 +1,7 @@
 package com.attacktimer.VariableSpeed;
 
 /*
- * Copyright (c) 2024-2025, Lexer747 <https://github.com/Lexer747>
+ * Copyright (c) 2025, Lexer747 <https://github.com/Lexer747>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,55 +25,26 @@ package com.attacktimer.VariableSpeed;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.attacktimer.AttackProcedure;
 import com.attacktimer.AnimationData;
+import com.attacktimer.AttackProcedure;
 import net.runelite.api.Client;
 import net.runelite.api.events.GameTick;
 
-public class VariableSpeed {
-
-    /**
-     * computeSpeed will forward the client, animation data and current weapon speed to all the known classes
-     * which can affect the base speed of a weapon. See implementations of IVariableSpeed.
-     * @param client
-     * @param curAnimation
-     * @param atkType
-     * @param baseSpeed
-     * @return
-     */
-    public static int computeSpeed(final Client client, final AnimationData curAnimation, final AttackProcedure atkProcedure, final int baseSpeed)
+public class EyeOfAyak implements IVariableSpeed
+{
+    public int apply(final Client client, final AnimationData curAnimation, final AttackProcedure atkProcedure, final int baseSpeed, final int curSpeed)
     {
-        int newSpeed = baseSpeed;
-        for (IVariableSpeed i : toApply)
+        // https://oldschool.runescape.wiki/w/Eye_of_ayak#Charged
+        // https://oldschool.runescape.wiki/w/Eye_of_ayak#Special_attack
+        if (curAnimation == AnimationData.MAGIC_EYE_OF_AYAK_SPEC)
         {
-            newSpeed = i.apply(client, curAnimation, atkProcedure, baseSpeed, newSpeed);
+            // This is unclear if the Ayak spec "sets" the speed to 5 or adds two ticks. We can't know until
+            // leagues. If it does set it too 5 this code is correct and it's order in
+            // `src\main\java\com\attacktimer\VariableSpeed\VariableSpeed.java` is correct. However if it's
+            // actually a +2 this code is wrong and it *might* need to come before the leagues modifier.
+            return 5;
         }
-        return newSpeed;
+        return curSpeed;
     }
-
-    public static void onGameTick(Client client, GameTick tick)
-    {
-        for (IVariableSpeed i : toApply)
-        {
-            i.onGameTick(client, tick);
-        }
-    }
-
-    private static final IVariableSpeed[] toApply = {
-        // Order matters, apply leagues first, then any incremental modifications like rapid, or set effects.
-        // Then overriding speeds last, which set a speed.
-        new Leagues(),
-
-        // Incremental:
-        new BloodMoonSet(),
-        new RapidAttackStyle(),
-        new RedKerisSpec(),
-        new EyeOfAyak(),
-        new TormentedDemons(),
-
-        // Overriding modifiers:
-        new Scurrius(),
-        new TombsOfAmascut(),
-    };
-
+    public void onGameTick(Client client, GameTick tick) {}
 }

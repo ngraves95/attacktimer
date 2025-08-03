@@ -3,7 +3,7 @@ package com.attacktimer;
 /*
  * Copyright (c) 2021, Matsyir <https://github.com/matsyir>
  * Copyright (c) 2020, Mazhar <https://twitter.com/maz_rs>
- * Copyright (c) 2024, Lexer747 <https://github.com/Lexer747>
+ * Copyright (c) 2024-2025, Lexer747 <https://github.com/Lexer747>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -190,6 +190,8 @@ public enum AnimationData
     MAGIC_TUMEKENS_SHADOW(9493, AttackStyle.MAGIC, false),
     MAGIC_WARPED_SCEPTRE(10501, AttackStyle.MAGIC, false), // https://oldschool.runescape.wiki/w/Warped_sceptre
     MAGIC_VOLATILE_NIGHTMARE_STAFF_SPEC(8532, AttackStyle.MAGIC, true), // assume 99 mage's base damage (does not rise when boosted).
+
+    MAGIC_EYE_OF_AYAK_SPEC(12394, AttackStyle.MAGIC, true), // https://github.com/ngraves95/attacktimer/issues/91
 
     // Misc
     MAGIC_IMBUE(722, AttackStyle.NON_ATTACK),
