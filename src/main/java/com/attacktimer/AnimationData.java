@@ -191,6 +191,7 @@ public enum AnimationData
     MAGIC_WARPED_SCEPTRE(10501, AttackStyle.MAGIC, false), // https://oldschool.runescape.wiki/w/Warped_sceptre
     MAGIC_VOLATILE_NIGHTMARE_STAFF_SPEC(8532, AttackStyle.MAGIC, true), // assume 99 mage's base damage (does not rise when boosted).
 
+    MAGIC_EYE_OF_AYAK(12397, AttackStyle.MAGIC, false),
     MAGIC_EYE_OF_AYAK_SPEC(12394, AttackStyle.MAGIC, true), // https://github.com/ngraves95/attacktimer/issues/91
 
     // Misc
