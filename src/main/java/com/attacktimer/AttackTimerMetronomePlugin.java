@@ -236,7 +236,7 @@ public class AttackTimerMetronomePlugin extends Plugin
         AnimationData curAnimation = AnimationData.fromId(client.getLocalPlayer().getAnimation());
         PoweredStaves stave = PoweredStaves.getPoweredStaves(weaponId, curAnimation);
         boolean matchesSpellbook = matchesSpellbook(curAnimation);
-        attackDelayHoldoffTicks = getWeaponSpeed(weaponId, stave, curAnimation, matchesSpellbook);
+        attackDelayHoldoffTicks = config.flinchingMode() ? 10 : getWeaponSpeed(weaponId, stave, curAnimation, matchesSpellbook);
     }
 
     // matchesSpellbook tries two methods, matching the animation the spell book based on the enum of
