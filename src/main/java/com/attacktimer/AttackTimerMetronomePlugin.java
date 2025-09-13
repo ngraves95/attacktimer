@@ -318,10 +318,10 @@ public class AttackTimerMetronomePlugin extends Plugin
         }
 
         AnimationData fromId = AnimationData.fromId(animationId);
-        if (fromId == AnimationData.RANGED_BLOWPIPE || fromId == AnimationData.RANGED_BLAZING_BLOWPIPE)
+        if (fromId == AnimationData.RANGED_BLOWPIPE || fromId == AnimationData.RANGED_BLAZING_BLOWPIPE || fromId == AnimationData.MAGIC_EYE_OF_AYAK || fromId == AnimationData.MAGIC_EYE_OF_AYAK_SPEC)
         {
-            // These two animations are the only ones which exceed the duration of their attack cooldown (when
-            // on rapid), so in this case DO NOT fall back the animation as it is un-reliable.
+            // These four animations are the only ones which exceed the duration of their attack cooldown
+            // so in this case DO NOT fall back the animation as it is un-reliable.
             return false;
         }
         // fall back to animations.
