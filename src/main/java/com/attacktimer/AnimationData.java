@@ -181,8 +181,10 @@ public enum AnimationData
     MAGIC_STANDARD_WEAKEN(1164, AttackStyle.MAGIC, Spellbook.STANDARD),
 
     MAGIC_ANCIENT_MULTI_TARGET(10092, AttackStyle.MAGIC, Spellbook.ANCIENT), // Burst & Barrage animations (tested all 8, different weapons)
+    MAGIC_ANCIENT_MULTI_TARGET_PVP(1979, AttackStyle.MAGIC, Spellbook.ANCIENT), // Burst & Barrage animations (tested all 8, different weapons)
     MAGIC_ANCIENT_SINGLE_TARGET(10091, AttackStyle.MAGIC, Spellbook.ANCIENT), // Rush & Blitz animations (tested all 8, different weapons)
-
+    MAGIC_ANCIENT_SINGLE_TARGET_PVP(1978, AttackStyle.MAGIC, Spellbook.ANCIENT), // Rush & Blitz animations
+    
     MAGIC_ARCEUUS_DEMONBANE(8977, AttackStyle.MAGIC, Spellbook.ARCEUUS), // Also greater corruption, so that may accidentally trigger a manual-cast, but that's probably fine only affects Muspah
     MAGIC_ARCEUUS_GRASP(8972, AttackStyle.MAGIC, Spellbook.ARCEUUS),
 
