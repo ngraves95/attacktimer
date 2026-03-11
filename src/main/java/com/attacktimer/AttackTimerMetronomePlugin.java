@@ -3,8 +3,8 @@ package com.attacktimer;
 
 /*
  * Copyright (c) 2022, Nick Graves <https://github.com/ngraves95>
- * Copyright (c) 2024, Lexer747 <https://github.com/Lexer747>
- * Copyright (c) 2024, Richardant <https://github.com/Richardant>
+ * Copyright (c) 2024-2026, Lexer747 <https://github.com/Lexer747>
+ * Copyright (c) 2024-2026, Richardant <https://github.com/Richardant>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,15 +30,17 @@ package com.attacktimer;
 
 import com.attacktimer.VariableSpeed.VariableSpeed;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.inject.Provides;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 import javax.inject.Inject;
 import net.runelite.api.Actor;
-import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
 import net.runelite.api.EquipmentInventorySlot;
 import net.runelite.api.InventoryID;
@@ -124,6 +126,16 @@ public class AttackTimerMetronomePlugin extends Plugin
     private static final int TWINFLAME_STAFF_WEAPON_ID = 30634;
     private static final int ECHO_VENATOR_BOW_WEAPON_ID = 30434;
     private static final int VENATOR_BOW_WEAPON_ID = 27610;
+
+    // These animations are the ones which exceed the duration of their attack cooldown
+    // so in this case DO NOT fall back the animation as it is un-reliable.
+    private static final Set<AnimationData> UNRELIABLE_ANIMATIONS = new ImmutableSet.Builder<AnimationData>()
+            .add(AnimationData.RANGED_BLOWPIPE)
+            .add(AnimationData.RANGED_BLAZING_BLOWPIPE)
+            .add(AnimationData.MAGIC_EYE_OF_AYAK )
+            .add(AnimationData.MAGIC_EYE_OF_AYAK_SPEC)
+            .build();
+
 
     private static final Map<Integer, Integer> NON_STANDARD_MAGIC_WEAPON_SPEEDS =
             new ImmutableMap.Builder<Integer, Integer>()
@@ -318,10 +330,9 @@ public class AttackTimerMetronomePlugin extends Plugin
         }
 
         AnimationData fromId = AnimationData.fromId(animationId);
-        if (fromId == AnimationData.RANGED_BLOWPIPE || fromId == AnimationData.RANGED_BLAZING_BLOWPIPE || fromId == AnimationData.MAGIC_EYE_OF_AYAK || fromId == AnimationData.MAGIC_EYE_OF_AYAK_SPEC)
+        // Do not use any animations from this set
+        if (UNRELIABLE_ANIMATIONS.contains(fromId))
         {
-            // These four animations are the only ones which exceed the duration of their attack cooldown
-            // so in this case DO NOT fall back the animation as it is un-reliable.
             return false;
         }
         // fall back to animations.
