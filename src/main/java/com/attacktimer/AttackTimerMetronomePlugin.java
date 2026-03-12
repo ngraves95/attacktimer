@@ -409,10 +409,8 @@ public class AttackTimerMetronomePlugin extends Plugin
                       FAST_EAT_ATTACK_DELAY_TICKS
                     : DEFAULT_FOOD_ATTACK_DELAY_TICKS;
 
-            if (isAttackCooldownPending())
-            {
-                pendingEatDelayTicks += attackDelay;
-            }
+            // We should always add eat delay
+            pendingEatDelayTicks += attackDelay;
         }
     }
 
@@ -479,9 +477,11 @@ public class AttackTimerMetronomePlugin extends Plugin
                 }
         }
 
+        // This needs to come after performAttack as it's an additive affect
         applyAndClearEats();
 
-        attackDelayHoldoffTicks--;
+        // clamp the holdoff at 0
+        attackDelayHoldoffTicks = Math.max(0, attackDelayHoldoffTicks - 1);
     }
 
 
