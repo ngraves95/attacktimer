@@ -90,7 +90,7 @@ class AttackTimerBarOverlay extends Overlay
             ratio = (float)Math.max(1.0f - ratio, 0f);
         }
 
-        if (client.getSpriteOverrides().containsKey(SpriteID.HEALTHBAR_DEFAULT_FRONT_30PX)) {
+        if (client.getSpriteOverrides().containsKey(SpriteID.HEALTHBAR_DEFAULT_FRONT_30PX) && !config.barForceSD()) {
             final int barWidth = HD_FRONT_BAR.getWidth();
             final int barHeight = HD_FRONT_BAR.getHeight();
             final int barX = canvasPoint.getX() - barWidth / 2;
