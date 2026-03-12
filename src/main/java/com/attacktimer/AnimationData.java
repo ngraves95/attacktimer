@@ -3,7 +3,7 @@ package com.attacktimer;
 /*
  * Copyright (c) 2021, Matsyir <https://github.com/matsyir>
  * Copyright (c) 2020, Mazhar <https://twitter.com/maz_rs>
- * Copyright (c) 2024-2025, Lexer747 <https://github.com/Lexer747>
+ * Copyright (c) 2024-2026, Lexer747 <https://github.com/Lexer747>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -172,6 +172,8 @@ public enum AnimationData
     MAGIC_STANDARD_CRUMBLE_UNDEAD_HOLDING_STAFF(1166, AttackStyle.MAGIC, Spellbook.STANDARD),
     MAGIC_STANDARD_ENFEEBLE(1168, AttackStyle.MAGIC, Spellbook.STANDARD),
     MAGIC_STANDARD_STRIKE_BOLT_BLAST(9144, AttackStyle.MAGIC, Spellbook.STANDARD), // tested w/ bolt
+    MAGIC_STANDARD_STRIKE_MANUAL(711, AttackStyle.MAGIC, Spellbook.STANDARD),
+    MAGIC_STANDARD_STRIKE_STAFF(1162, AttackStyle.MAGIC, Spellbook.STANDARD),
     MAGIC_STANDARD_STRIKE_BOLT_BLAST_STAFF(11423, AttackStyle.MAGIC, Spellbook.STANDARD), // strike, bolt and blast (tested all spells, different weapons)
     MAGIC_STANDARD_STUN(1169, AttackStyle.MAGIC, Spellbook.STANDARD),
     MAGIC_STANDARD_SURGE_STAFF(9145, AttackStyle.MAGIC, Spellbook.STANDARD), // tested many staves
@@ -342,7 +344,7 @@ public enum AnimationData
     public static boolean isManualCasting(AnimationData animationData)
     {
         // This check ensures we don't treat staff animations which are magic attacks as a "manual cast".
-        if (animationData.spellbook != null && animationData != null)
+        if (animationData != null && animationData.spellbook != null)
         {
             // We tell a manual cast by the animation data:
             return animationData.attackStyle == AttackStyle.MAGIC &&

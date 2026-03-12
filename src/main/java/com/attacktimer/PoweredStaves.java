@@ -48,14 +48,19 @@ enum PoweredStaves
     WEAPON_BLUE_C_STAFF_P(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(1720),23900), // https://oldschool.runescape.wiki/w/Crystal_staff_(perfected)
     WEAPON_BONE_STAFF(AnimationData.MELEE_GENERIC_SLASH, Projectiles(2647),  28796, 28797), //https://oldschool.runescape.wiki/w/Bone_staff
     WEAPON_DAWNBRINGER(AnimationData.MAGIC_STANDARD_WAVE_STAFF,  Projectiles(1544, 1547),22516), // https://oldschool.runescape.wiki/w/Dawnbringer
-    WEAPON_HARM(Set.of(AnimationData.MAGIC_STANDARD_WAVE_STAFF, AnimationData.MAGIC_STANDARD_STRIKE_BOLT_BLAST_STAFF, AnimationData.MAGIC_STANDARD_SURGE_STAFF),
+    WEAPON_HARM(Set.of(
+            AnimationData.MAGIC_STANDARD_STRIKE_STAFF,
+            AnimationData.MAGIC_STANDARD_WAVE_STAFF,
+            AnimationData.MAGIC_STANDARD_STRIKE_BOLT_BLAST_STAFF,
+            AnimationData.MAGIC_STANDARD_SURGE_STAFF
+        ),
         Projectiles(/*in level order then air -> fire*/
             91, 94, 97, 100, /* strikes */
             118, 121, 124, 127, /* bolts */
             133, 136, 139, 130, /* blasts */
             159, 162, 165, 156, /* waves */
             1456, 1459, 1462, 1465 /* surges */),
-        24508), // https://oldschool.runescape.wiki/w/Harmonised_nightmare_staff
+        24423), // https://oldschool.runescape.wiki/w/Harmonised_nightmare_staff
     WEAPON_RED_C_STAFF_A(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(1723), 23853), // https://oldschool.runescape.wiki/w/Corrupted_staff_(attuned)
     WEAPON_RED_C_STAFF_B(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(1723), 23852), // https://oldschool.runescape.wiki/w/Corrupted_staff_(basic)
     WEAPON_RED_C_STAFF_P(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(1723), 23854), // https://oldschool.runescape.wiki/w/Corrupted_staff_(perfected)
