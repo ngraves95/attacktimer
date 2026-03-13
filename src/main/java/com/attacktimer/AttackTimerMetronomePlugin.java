@@ -480,8 +480,9 @@ public class AttackTimerMetronomePlugin extends Plugin
         // This needs to come after performAttack as it's an additive affect
         applyAndClearEats();
 
-        // clamp the holdoff at 0
-        attackDelayHoldoffTicks = Math.max(0, attackDelayHoldoffTicks - 1);
+        // clamp the attackDelayHoldoffTicks at -20, this is so we correctly account for eats even when not
+        // attacking, but don't count down forever.
+        attackDelayHoldoffTicks = Math.max(-20, attackDelayHoldoffTicks - 1);
     }
 
 
