@@ -224,6 +224,9 @@ public enum AnimationData
     FLECTHING_CHISEL(5244, AttackStyle.NON_ATTACK), // chisel & moonlight antler
     FLECTHING_DART_TIP(8485, AttackStyle.NON_ATTACK), // dart tip & feather
     HERB_TAR(5249, AttackStyle.NON_ATTACK), // pestle motar animation
+    SETUP_HUNTER_TRAP(5208, AttackStyle.NON_ATTACK),
+    RESET_SNARE_TRAP(5207, AttackStyle.NON_ATTACK),
+    RESET_BOX_TRAP(5212, AttackStyle.NON_ATTACK),
 
     DESERT_AMMY(3872, AttackStyle.NON_ATTACK),
 
