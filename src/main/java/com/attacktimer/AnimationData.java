@@ -216,6 +216,17 @@ public enum AnimationData
     HUMIDIFY(6294, AttackStyle.NON_ATTACK),
     GEOMANCY(7118, AttackStyle.NON_ATTACK),
     DREAM(7672, AttackStyle.NON_ATTACK),
+    ROCKSLUG_BAG_OF_SALT(1574, AttackStyle.NON_ATTACK), // https://oldschool.runescape.wiki/w/Rockslug
+    DESSET_LIZARD_ICE_COOLER(2779, AttackStyle.NON_ATTACK), // https://oldschool.runescape.wiki/w/Desert_Lizard
+    // Tick manipulation actions are not trustworthy for attack starts, in fact for the most part they're like an eat and would stop attacks being allowed.
+    FLECTHING_KNIFE(1248, AttackStyle.NON_ATTACK), // knife & log (celastrus bark, etc)
+    FLECTHING_KEBBIT(5243, AttackStyle.NON_ATTACK), // kebbit & vamb
+    FLECTHING_CHISEL(5244, AttackStyle.NON_ATTACK), // chisel & moonlight antler
+    FLECTHING_DART_TIP(8485, AttackStyle.NON_ATTACK), // dart tip & feather
+    HERB_TAR(5249, AttackStyle.NON_ATTACK), // pestle motar animation
+    SETUP_HUNTER_TRAP(5208, AttackStyle.NON_ATTACK),
+    RESET_SNARE_TRAP(5207, AttackStyle.NON_ATTACK),
+    RESET_BOX_TRAP(5212, AttackStyle.NON_ATTACK),
 
     DESERT_AMMY(3872, AttackStyle.NON_ATTACK),
 
