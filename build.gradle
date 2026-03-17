@@ -48,8 +48,10 @@ tasks.withType(JavaCompile) {
 
 // Code based on https://gist.github.com/lwasyl/6ae0b8a66903729033e18ffc7a503597#file-fancy_logging_original-gradle
 tasks.withType(Test) {
+	// if no `-Pupdate=all` is passed to gradle then we assume none
+	def update=project.properties['update'] ?: "none"
 	// allow specific system properties to be forwarded
-	systemProperty "update", project.getProperty("update")
+	systemProperty "update", update
 	outputs.upToDateWhen { false } // always force tests to be re-run
 	testLogging {
 		// set options for log level LIFECYCLE

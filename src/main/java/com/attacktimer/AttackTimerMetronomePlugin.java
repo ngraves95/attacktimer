@@ -526,6 +526,7 @@ public class AttackTimerMetronomePlugin extends Plugin
     public void writeState(ByteArrayDataOutput outChannel)
     {
         StringBuilder sb = new StringBuilder();
+        // @formatter:off
         sb.append("tickPeriod: "); sb.append(this.tickPeriod);sb.append(SEPARATOR);
         sb.append("uiUnshowDebounceTickCount: "); sb.append(this.uiUnshowDebounceTickCount);sb.append(SEPARATOR);
         sb.append("attackDelayHoldoffTicks: "); sb.append(this.attackDelayHoldoffTicks);sb.append(SEPARATOR);
@@ -536,6 +537,7 @@ public class AttackTimerMetronomePlugin extends Plugin
         sb.append("lastEquippingMonotonicValue: "); sb.append(this.lastEquippingMonotonicValue);sb.append(SEPARATOR);
         sb.append("soundEffectTick: "); sb.append(this.soundEffectTick);sb.append(SEPARATOR);
         sb.append("soundEffectId: "); sb.append(this.soundEffectId);sb.append("\n");
+        // @formatter:on
         byte[] bytes = sb.toString().getBytes(StandardCharsets.UTF_8);
         outChannel.write(bytes);
     }
