@@ -41,6 +41,7 @@ import java.util.EnumSet;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -309,20 +310,23 @@ public class IntegrationTests
     private void performStateVerificationOrUpdate(ByteArrayDataOutput channel, Path path) throws IOException
     {
         var actualBytes = channel.toByteArray();
-        if (Update.system() == Update.NONE)
+        switch (Update.system())
         {
-            // We verify that the file on disk is the same as the one generated
+        case NONE:
+            // We verify that the file on disk/repo are the same as the one generated
             var expectedBytes = Files.readAllBytes(path);
             assertArrayEquals(expectedBytes, actualBytes);
-        }
-        else
-        {
+            return;
+        case ALL:
             // Write the generated one to disk
             try (var file = Files.newByteChannel(path, EnumSet.of(StandardOpenOption.CREATE, StandardOpenOption.WRITE)))
             {
                 file.write(ByteBuffer.wrap(actualBytes));
                 file.close();
             }
+            return;
+        default:
+            fail("Unexpected Update enum");
         }
     }
 
