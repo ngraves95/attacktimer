@@ -3,7 +3,7 @@ package com.attacktimer;
 /*
  * Copyright (c) 2021, Matsyir <https://github.com/matsyir>
  * Copyright (c) 2020, Mazhar <https://twitter.com/maz_rs>
- * Copyright (c) 2024, Lexer747 <https://github.com/Lexer747>
+ * Copyright (c) 2024-2026, Lexer747 <https://github.com/Lexer747>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -172,6 +172,8 @@ public enum AnimationData
     MAGIC_STANDARD_CRUMBLE_UNDEAD_HOLDING_STAFF(1166, AttackStyle.MAGIC, Spellbook.STANDARD),
     MAGIC_STANDARD_ENFEEBLE(1168, AttackStyle.MAGIC, Spellbook.STANDARD),
     MAGIC_STANDARD_STRIKE_BOLT_BLAST(9144, AttackStyle.MAGIC, Spellbook.STANDARD), // tested w/ bolt
+    MAGIC_STANDARD_STRIKE_MANUAL(711, AttackStyle.MAGIC, Spellbook.STANDARD),
+    MAGIC_STANDARD_STRIKE_STAFF(1162, AttackStyle.MAGIC, Spellbook.STANDARD),
     MAGIC_STANDARD_STRIKE_BOLT_BLAST_STAFF(11423, AttackStyle.MAGIC, Spellbook.STANDARD), // strike, bolt and blast (tested all spells, different weapons)
     MAGIC_STANDARD_STUN(1169, AttackStyle.MAGIC, Spellbook.STANDARD),
     MAGIC_STANDARD_SURGE_STAFF(9145, AttackStyle.MAGIC, Spellbook.STANDARD), // tested many staves
@@ -181,8 +183,10 @@ public enum AnimationData
     MAGIC_STANDARD_WEAKEN(1164, AttackStyle.MAGIC, Spellbook.STANDARD),
 
     MAGIC_ANCIENT_MULTI_TARGET(10092, AttackStyle.MAGIC, Spellbook.ANCIENT), // Burst & Barrage animations (tested all 8, different weapons)
+    MAGIC_ANCIENT_MULTI_TARGET_PVP(1979, AttackStyle.MAGIC, Spellbook.ANCIENT), // Burst & Barrage animations (tested all 8, different weapons)
     MAGIC_ANCIENT_SINGLE_TARGET(10091, AttackStyle.MAGIC, Spellbook.ANCIENT), // Rush & Blitz animations (tested all 8, different weapons)
-
+    MAGIC_ANCIENT_SINGLE_TARGET_PVP(1978, AttackStyle.MAGIC, Spellbook.ANCIENT), // Rush & Blitz animations
+    
     MAGIC_ARCEUUS_DEMONBANE(8977, AttackStyle.MAGIC, Spellbook.ARCEUUS), // Also greater corruption, so that may accidentally trigger a manual-cast, but that's probably fine only affects Muspah
     MAGIC_ARCEUUS_GRASP(8972, AttackStyle.MAGIC, Spellbook.ARCEUUS),
 
@@ -190,6 +194,9 @@ public enum AnimationData
     MAGIC_TUMEKENS_SHADOW(9493, AttackStyle.MAGIC, false),
     MAGIC_WARPED_SCEPTRE(10501, AttackStyle.MAGIC, false), // https://oldschool.runescape.wiki/w/Warped_sceptre
     MAGIC_VOLATILE_NIGHTMARE_STAFF_SPEC(8532, AttackStyle.MAGIC, true), // assume 99 mage's base damage (does not rise when boosted).
+
+    MAGIC_EYE_OF_AYAK(12397, AttackStyle.MAGIC, false),
+    MAGIC_EYE_OF_AYAK_SPEC(12394, AttackStyle.MAGIC, true), // https://github.com/ngraves95/attacktimer/issues/91
 
     // Misc
     MAGIC_IMBUE(722, AttackStyle.NON_ATTACK),
@@ -209,6 +216,17 @@ public enum AnimationData
     HUMIDIFY(6294, AttackStyle.NON_ATTACK),
     GEOMANCY(7118, AttackStyle.NON_ATTACK),
     DREAM(7672, AttackStyle.NON_ATTACK),
+    ROCKSLUG_BAG_OF_SALT(1574, AttackStyle.NON_ATTACK), // https://oldschool.runescape.wiki/w/Rockslug
+    DESSET_LIZARD_ICE_COOLER(2779, AttackStyle.NON_ATTACK), // https://oldschool.runescape.wiki/w/Desert_Lizard
+    // Tick manipulation actions are not trustworthy for attack starts, in fact for the most part they're like an eat and would stop attacks being allowed.
+    FLECTHING_KNIFE(1248, AttackStyle.NON_ATTACK), // knife & log (celastrus bark, etc)
+    FLECTHING_KEBBIT(5243, AttackStyle.NON_ATTACK), // kebbit & vamb
+    FLECTHING_CHISEL(5244, AttackStyle.NON_ATTACK), // chisel & moonlight antler
+    FLECTHING_DART_TIP(8485, AttackStyle.NON_ATTACK), // dart tip & feather
+    HERB_TAR(5249, AttackStyle.NON_ATTACK), // pestle motar animation
+    SETUP_HUNTER_TRAP(5208, AttackStyle.NON_ATTACK),
+    RESET_SNARE_TRAP(5207, AttackStyle.NON_ATTACK),
+    RESET_BOX_TRAP(5212, AttackStyle.NON_ATTACK),
 
     DESERT_AMMY(3872, AttackStyle.NON_ATTACK),
 
@@ -337,7 +355,7 @@ public enum AnimationData
     public static boolean isManualCasting(AnimationData animationData)
     {
         // This check ensures we don't treat staff animations which are magic attacks as a "manual cast".
-        if (animationData.spellbook != null && animationData != null)
+        if (animationData != null && animationData.spellbook != null)
         {
             // We tell a manual cast by the animation data:
             return animationData.attackStyle == AttackStyle.MAGIC &&

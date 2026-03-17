@@ -3,8 +3,8 @@ package com.attacktimer;
 
 /*
  * Copyright (c) 2022, Nick Graves <https://github.com/ngraves95>
- * Copyright (c) 2024, Lexer747 <https://github.com/Lexer747>
- * Copyright (c) 2024, Richardant <https://github.com/Richardant>
+ * Copyright (c) 2024-2026, Lexer747 <https://github.com/Lexer747>
+ * Copyright (c) 2024-2026, Richardant <https://github.com/Richardant>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,15 +30,18 @@ package com.attacktimer;
 
 import com.attacktimer.VariableSpeed.VariableSpeed;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.inject.Provides;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.regex.Pattern;
+
 import javax.inject.Inject;
 import net.runelite.api.Actor;
-import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
 import net.runelite.api.EquipmentInventorySlot;
 import net.runelite.api.InventoryID;
@@ -125,6 +128,16 @@ public class AttackTimerMetronomePlugin extends Plugin
     private static final int ECHO_VENATOR_BOW_WEAPON_ID = 30434;
     private static final int VENATOR_BOW_WEAPON_ID = 27610;
 
+    // These animations are the ones which exceed the duration of their attack cooldown
+    // so in this case DO NOT fall back the animation as it is un-reliable.
+    private static final Set<AnimationData> UNRELIABLE_ANIMATIONS = new ImmutableSet.Builder<AnimationData>()
+            .add(AnimationData.RANGED_BLOWPIPE)
+            .add(AnimationData.RANGED_BLAZING_BLOWPIPE)
+            .add(AnimationData.MAGIC_EYE_OF_AYAK )
+            .add(AnimationData.MAGIC_EYE_OF_AYAK_SPEC)
+            .build();
+
+
     private static final Map<Integer, Integer> NON_STANDARD_MAGIC_WEAPON_SPEEDS =
             new ImmutableMap.Builder<Integer, Integer>()
                     .put(TWINFLAME_STAFF_WEAPON_ID, 6)
@@ -137,8 +150,12 @@ public class AttackTimerMetronomePlugin extends Plugin
                     .put(ECHO_VENATOR_BOW_WEAPON_ID, VENATOR_BOW_WEAPON_ID)
                     .build();
 
+
+    // https://oldschool.runescape.wiki/w/Food/Fast_foods#Food_Delays
+    // These constants are not to be confused with eat delay.
     private final int DEFAULT_FOOD_ATTACK_DELAY_TICKS = 3;
-    private final int KARAMBWAN_ATTACK_DELAY_TICKS = 2;
+    private final int FAST_EAT_ATTACK_DELAY_TICKS = 2;
+
     public static final int EQUIPPING_MONOTONIC = 384; // From empirical testing this clientint seems to always increase whenever the player equips an item
     private Spellbook currentSpellBook = Spellbook.STANDARD;
     private int lastEquippingMonotonicValue = -1;
@@ -318,10 +335,9 @@ public class AttackTimerMetronomePlugin extends Plugin
         }
 
         AnimationData fromId = AnimationData.fromId(animationId);
-        if (fromId == AnimationData.RANGED_BLOWPIPE || fromId == AnimationData.RANGED_BLAZING_BLOWPIPE)
+        // Do not use any animations from this set
+        if (UNRELIABLE_ANIMATIONS.contains(fromId))
         {
-            // These two animations are the only ones which exceed the duration of their attack cooldown (when
-            // on rapid), so in this case DO NOT fall back the animation as it is un-reliable.
             return false;
         }
         // fall back to animations.
@@ -366,20 +382,35 @@ public class AttackTimerMetronomePlugin extends Plugin
             || uiUnshowDebounceTickCount > 0;
     }
 
+
+    private static final String GENERIC_EAT = "You eat";
+    private static final String BARBARIAN_POTIONS = "You drink the lumpy potion"; // barbarian potions https://oldschool.runescape.wiki/w/Barbarian_Training#Barbarian_potions
+    private static final String JUG_OF_WINE = "You drink the wine"; // Wine https://oldschool.runescape.wiki/w/Jug_of_wine
+
+    // Match only the start of the line with `^` and the Pattern.MULTILINE
+    private static final Pattern EAT_MESSAGE = Pattern
+            .compile("^(" + GENERIC_EAT + "|" + BARBARIAN_POTIONS + "|" + JUG_OF_WINE + ")", Pattern.MULTILINE);
+
+    // gnome foods are also fast eats (Note these are not the food names as the wiki lists them, but the name
+    // as written in chat), also pre-made and handmade have the same chat message.
+    private static final String FAST_GNOME_FOOD = "worm hole|tangled toads legs|veg ball|chocolate bomb|worm crunchies|toad crunchies|"
+            + "choc chip crunchies|spicy crunchies|fruit batta|cheese and tomato batta|toad batta|vegetable batta|worm batta";
+    private static final String FAST_FOOD = "karambwan|halibut";
+    private static final Pattern FAST_EAT = Pattern.compile("(" + FAST_FOOD + "|" + FAST_GNOME_FOOD + ")");
+
     @Subscribe
     public void onChatMessage(ChatMessage event)
     {
         final String message = event.getMessage();
 
-        if (message.startsWith("You eat") ||
-                message.startsWith("You drink the wine")) {
-            int attackDelay = (message.toLowerCase().contains("karambwan")) ?
-                    KARAMBWAN_ATTACK_DELAY_TICKS :
-                    DEFAULT_FOOD_ATTACK_DELAY_TICKS;
+        if (EAT_MESSAGE.matcher(message).find())
+        {
+            int attackDelay = FAST_EAT.matcher(message).find() ?
+                      FAST_EAT_ATTACK_DELAY_TICKS
+                    : DEFAULT_FOOD_ATTACK_DELAY_TICKS;
 
-            if (isAttackCooldownPending()) {
-                pendingEatDelayTicks += attackDelay;
-            }
+            // We should always add eat delay
+            pendingEatDelayTicks += attackDelay;
         }
     }
 
@@ -446,9 +477,12 @@ public class AttackTimerMetronomePlugin extends Plugin
                 }
         }
 
+        // This needs to come after performAttack as it's an additive affect
         applyAndClearEats();
 
-        attackDelayHoldoffTicks--;
+        // clamp the attackDelayHoldoffTicks at -20, this is so we correctly account for eats even when not
+        // attacking, but don't count down forever.
+        attackDelayHoldoffTicks = Math.max(-20, attackDelayHoldoffTicks - 1);
     }
 
 
