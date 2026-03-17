@@ -226,14 +226,14 @@ public interface AttackTimerMetronomeConfig extends Config
 
 	@ConfigItem(
 			position = 6,
-			keyName = "attackBarForceSD",
-			name = "Force Standard Quality",
-			description = "Forces Standard Quality Attack bar rather than matching HD interfaces setting from Interface Styles plugin",
+			keyName = "attackBarStyle",
+			name = "Attack Bar Style",
+			description = "Auto matches HD/SD from Interface Styles plugin. Standard forces the basic bar. High Detail forces the HD bar.",
 			section = AttackBarSettings
 	)
-	default boolean barForceSD()
+	default AttackBarStyle barStyle()
 	{
-		return false;
+		return AttackBarStyle.AUTO;
 	}
 
 	@Getter
