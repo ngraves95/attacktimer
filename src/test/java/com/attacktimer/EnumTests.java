@@ -1,7 +1,7 @@
 package com.attacktimer;
 
 /*
- * Copyright (c) 2024, Lexer747 <https://github.com/Lexer747>
+ * Copyright (c) 2024-2026, Lexer747 <https://github.com/Lexer747>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,21 +37,25 @@ public class EnumTests
     public void runtimeCheck()
     {
         // Ensures every enum has no duplicate values
+        System.out.println("===== Animation Data =====");
         for (AnimationData a : AnimationData.values())
         {
-            System.out.println(a.toString());
+            System.out.print(a.toString() + ", ");
         }
+        System.out.println("\n===== Powered Staves =====");
         for (PoweredStaves a : PoweredStaves.values())
         {
-            System.out.println(a.toString());
+            System.out.print(a.toString() + ", ");
         }
+        System.out.println("\n===== Casting Sound Data =====");
         for (CastingSoundData a : CastingSoundData.values())
         {
-            System.out.println(a.toString());
+            System.out.print(a.toString() + ", ");
         }
+        System.out.println("\n===== Weapon Type =====");
         for (WeaponType a : WeaponType.values())
         {
-            System.out.println(a.toString());
+            System.out.print(a.toString() + ", ");
         }
         assertFalse(PoweredStaves.LOCAL_DEBUGGING);
     }
@@ -64,22 +68,27 @@ public class EnumTests
         String fails = new String();
         for (PoweredStaves staff : PoweredStaves.values())
         {
-            for (int id : staff.getIds()) {
+            for (int id : staff.getIds())
+            {
                 boolean containsKey = PoweredStaves.poweredStaves.get(id).containsKey(PoweredStaves.UNKNOWN_SPELL);
                 if (containsKey)
                 {
                     failed = true;
-                    fails += MessageFormatter.format("Staff | {} IDs:{} doesn't have a spell associated\n", staff, staff.getIds()).getMessage();
+                    fails += MessageFormatter
+                            .format("Staff | {} IDs:{} doesn't have a spell associated\n", staff, staff.getIds())
+                            .getMessage();
                 }
                 break;
             }
             if (staff.getProjectiles() == null)
             {
-                fails += MessageFormatter.format("Staff | {} doesn't have a projectile associated\n", staff).getMessage();
+                fails += MessageFormatter.format("Staff | {} doesn't have a projectile associated\n", staff)
+                        .getMessage();
             }
         }
 
-        if (failed) {
+        if (failed)
+        {
             fail(fails);
         }
     }

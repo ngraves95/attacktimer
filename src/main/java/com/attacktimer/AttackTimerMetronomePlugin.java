@@ -31,14 +31,20 @@ package com.attacktimer;
 import com.attacktimer.VariableSpeed.VariableSpeed;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.io.ByteArrayDataOutput;
 import com.google.inject.Provides;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.SeekableByteChannel;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import javax.inject.Inject;
 import net.runelite.api.Actor;
@@ -105,11 +111,7 @@ public class AttackTimerMetronomePlugin extends Plugin
 
     public int tickPeriod = 0;
 
-    final int ATTACK_DELAY_NONE = 0;
-
     private int uiUnshowDebounceTickCount = 0;
-    private int uiUnshowDebounceTicksMax = 1;
-
     public int attackDelayHoldoffTicks = ATTACK_DELAY_NONE;
 
     public AttackState attackState = AttackState.NOT_ATTACKING;
@@ -120,7 +122,17 @@ public class AttackTimerMetronomePlugin extends Plugin
 
     public Color CurrentColor = Color.WHITE;
 
-    public int DEFAULT_SIZE_UNIT_PX = 25;
+    private Spellbook currentSpellBook = Spellbook.STANDARD;
+    private int lastEquippingMonotonicValue = -1;
+    private int soundEffectTick = -1;
+    private int soundEffectId = -1;
+
+    public int pendingEatDelayTicks = 0;
+
+
+    private static final int uiUnshowDebounceTicksMax = 1;
+    private static final int ATTACK_DELAY_NONE = 0;
+    public static final int DEFAULT_SIZE_UNIT_PX = 25;
 
     public static final int SALAMANDER_SET_ANIM_ID = 952; // Used by all 4 types of salamander https://oldschool.runescape.wiki/w/Salamander
 
@@ -157,13 +169,8 @@ public class AttackTimerMetronomePlugin extends Plugin
     private final int FAST_EAT_ATTACK_DELAY_TICKS = 2;
 
     public static final int EQUIPPING_MONOTONIC = 384; // From empirical testing this clientint seems to always increase whenever the player equips an item
-    private Spellbook currentSpellBook = Spellbook.STANDARD;
-    private int lastEquippingMonotonicValue = -1;
-    private int soundEffectTick = -1;
-    private int soundEffectId = -1;
-    public Dimension DEFAULT_SIZE = new Dimension(DEFAULT_SIZE_UNIT_PX, DEFAULT_SIZE_UNIT_PX);
+    public static final Dimension DEFAULT_SIZE = new Dimension(DEFAULT_SIZE_UNIT_PX, DEFAULT_SIZE_UNIT_PX);
 
-    private int pendingEatDelayTicks = 0;
 
     // region subscribers
 
@@ -181,6 +188,7 @@ public class AttackTimerMetronomePlugin extends Plugin
     @Subscribe
     public void onVarClientIntChanged(VarClientIntChanged varClientIntChanged)
     {
+        if (!config.enableMetronome()) return;
         final int currentMagicVarBit = client.getVarcIntValue(EQUIPPING_MONOTONIC);
         if (currentMagicVarBit <= lastEquippingMonotonicValue)
         {
@@ -206,6 +214,7 @@ public class AttackTimerMetronomePlugin extends Plugin
     @Subscribe
     public void onSoundEffectPlayed(SoundEffectPlayed event)
     {
+        if (!config.enableMetronome()) return;
         // event.getSource() will be null if the player cast a spell, it's only for area sounds.
         soundEffectTick = client.getTickCount();
         soundEffectId = event.getSoundId();
@@ -401,6 +410,7 @@ public class AttackTimerMetronomePlugin extends Plugin
     @Subscribe
     public void onChatMessage(ChatMessage event)
     {
+        if (!config.enableMetronome()) return;
         final String message = event.getMessage();
 
         if (EAT_MESSAGE.matcher(message).find())
@@ -419,6 +429,7 @@ public class AttackTimerMetronomePlugin extends Plugin
     @Subscribe
     public void onInteractingChanged(InteractingChanged interactingChanged)
     {
+        if (!config.enableMetronome()) return;
         Actor source = interactingChanged.getSource();
         Actor target = interactingChanged.getTarget();
 
@@ -453,6 +464,7 @@ public class AttackTimerMetronomePlugin extends Plugin
     @Subscribe
     public void onGameTick(GameTick tick)
     {
+        if (!config.enableMetronome()) return;
         VariableSpeed.onGameTick(client, tick);
         boolean isAttacking = isPlayerAttacking();
         switch (attackState) {
@@ -510,4 +522,24 @@ public class AttackTimerMetronomePlugin extends Plugin
         overlayManager.remove(barOverlay);
         attackDelayHoldoffTicks = 0;
     }
+
+    public void writeState(ByteArrayDataOutput outChannel)
+    {
+        StringBuilder sb = new StringBuilder();
+        // @formatter:off
+        sb.append("tickPeriod: "); sb.append(this.tickPeriod);sb.append(SEPARATOR);
+        sb.append("uiUnshowDebounceTickCount: "); sb.append(this.uiUnshowDebounceTickCount);sb.append(SEPARATOR);
+        sb.append("attackDelayHoldoffTicks: "); sb.append(this.attackDelayHoldoffTicks);sb.append(SEPARATOR);
+        sb.append("attackState: "); sb.append(this.attackState);sb.append(SEPARATOR);
+        sb.append("renderedState: "); sb.append(this.renderedState);sb.append(SEPARATOR);
+        sb.append("pendingEatDelayTicks: "); sb.append(this.pendingEatDelayTicks);sb.append(SEPARATOR);
+        sb.append("currentSpellBook: "); sb.append(this.currentSpellBook);sb.append(SEPARATOR);
+        sb.append("lastEquippingMonotonicValue: "); sb.append(this.lastEquippingMonotonicValue);sb.append(SEPARATOR);
+        sb.append("soundEffectTick: "); sb.append(this.soundEffectTick);sb.append(SEPARATOR);
+        sb.append("soundEffectId: "); sb.append(this.soundEffectId);sb.append("\n");
+        // @formatter:on
+        byte[] bytes = sb.toString().getBytes(StandardCharsets.UTF_8);
+        outChannel.write(bytes);
+    }
+    private static final String SEPARATOR = ", ";
 }

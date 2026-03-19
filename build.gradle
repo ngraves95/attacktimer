@@ -1,9 +1,17 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+
 plugins {
 	id 'java'
 }
 
 repositories {
-	mavenLocal()
+	// mavenLocal() seems to always break on my PC (looking for linux binaries even though I'm on windows):
+	// Execution failed for task ':test'.
+	//	> Could not resolve all files for configuration ':testRuntimeClasspath'.
+	//		> Could not find lwjgl-opengl-3.3.2-natives-linux-arm64.jar (org.lwjgl:lwjgl-opengl:3.3.2).
+	//			Searched in the following locations:
+	//				file:/C:/Users/Lexer/.m2/repository/org/lwjgl/lwjgl-opengl/3.3.2/lwjgl-opengl-3.3.2-natives-linux-arm64.jar
 	maven {
 		url = 'https://repo.runelite.net'
 	}
@@ -21,11 +29,13 @@ dependencies {
 	testImplementation 'junit:junit:4.12'
 	testImplementation group: 'net.runelite', name:'client', version: runeLiteVersion
 	testImplementation group: 'net.runelite', name:'jshell', version: runeLiteVersion
+	testImplementation 'org.mockito:mockito-core:3.1.0'
+	testImplementation 'com.google.inject.extensions:guice-testlib:4.1.0'
 }
 
 
 java {
-    targetCompatibility = "1.11"
+	targetCompatibility = "1.11"
 }
 
 group = 'com.attacktimer'
@@ -34,4 +44,47 @@ version = '1.1'
 tasks.withType(JavaCompile) {
 	options.encoding = 'UTF-8'
 	options.release.set(11)
+}
+
+// Code based on https://gist.github.com/lwasyl/6ae0b8a66903729033e18ffc7a503597#file-fancy_logging_original-gradle
+tasks.withType(Test) {
+	// if no `-Pupdate=all` is passed to gradle then we assume none
+	def update=project.properties['update'] ?: "none"
+	// allow specific system properties to be forwarded
+	systemProperty "update", update
+	outputs.upToDateWhen { false } // always force tests to be re-run
+	testLogging {
+		// set options for log level LIFECYCLE
+		events TestLogEvent.FAILED,
+				TestLogEvent.PASSED,
+				TestLogEvent.SKIPPED,
+				TestLogEvent.STANDARD_OUT
+		exceptionFormat TestExceptionFormat.FULL
+		showExceptions true
+		showCauses true
+		showStackTraces true
+
+		// set options for log level DEBUG and INFO
+		debug {
+			events TestLogEvent.STARTED,
+					TestLogEvent.FAILED,
+					TestLogEvent.PASSED,
+					TestLogEvent.SKIPPED,
+					TestLogEvent.STANDARD_ERROR,
+					TestLogEvent.STANDARD_OUT
+			exceptionFormat TestExceptionFormat.FULL
+		}
+		info.events = debug.events
+		info.exceptionFormat = debug.exceptionFormat
+
+		afterSuite { desc, result ->
+			if (!desc.parent)
+			{ // will match the outermost suite
+				def output = "Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
+				def startItem = '|  ', endItem = '  |'
+				def repeatLength = startItem.length() + output.length() + endItem.length()
+				println('\n' + ('-' * repeatLength) + '\n' + startItem + output + endItem + '\n' + ('-' * repeatLength))
+			}
+		}
+	}
 }
