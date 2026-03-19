@@ -1,7 +1,12 @@
 package com.attacktimer;
+
 /*
- * Copyright (c) 2018, Tomas Slusny <slusnucky@gmail.com>
  * Copyright (c) 2018, Chdata
+ * Copyright (c) 2018, Tomas Slusny <slusnucky@gmail.com>
+ * Copyright (c) 2022, Nick Graves <https://github.com/ngraves95>
+ * Copyright (c) 2025-2026, Pedro Alves <https://github.com/PedroSilvaAlves>
+ * Copyright (c) 2024-2026, Lexer747 <https://github.com/Lexer747>
+ *
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -42,15 +47,16 @@ import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.OverlayPriority;
 import net.runelite.client.util.ImageUtil;
 
-
 @Singleton
 class AttackTimerBarOverlay extends Overlay
 {
     private static final Color BAR_FILL_COLOR = new Color(201, 161, 28);
     private static final Color BAR_BG_COLOR = Color.black;
     private static final Dimension ATTACK_BAR_SIZE = new Dimension(30, 5);
-    private static final BufferedImage HD_FRONT_BAR = ImageUtil.loadImageResource(AttackTimerMetronomePlugin.class, "/front.png");
-    private static final BufferedImage HD_BACK_BAR = ImageUtil.loadImageResource(AttackTimerMetronomePlugin.class, "/back.png");
+    private static final BufferedImage HD_FRONT_BAR = ImageUtil.loadImageResource(AttackTimerMetronomePlugin.class,
+            "/front.png");
+    private static final BufferedImage HD_BACK_BAR = ImageUtil.loadImageResource(AttackTimerMetronomePlugin.class,
+            "/back.png");
     private final Client client;
     private final AttackTimerMetronomeConfig config;
     private final AttackTimerMetronomePlugin plugin;
@@ -58,7 +64,8 @@ class AttackTimerBarOverlay extends Overlay
     private boolean shouldShowBar = false;
 
     @Inject
-    private AttackTimerBarOverlay(final Client client, final AttackTimerMetronomeConfig config, final AttackTimerMetronomePlugin plugin)
+    private AttackTimerBarOverlay(final Client client, final AttackTimerMetronomeConfig config,
+            final AttackTimerMetronomePlugin plugin)
     {
         this.client = client;
         this.config = config;
@@ -86,15 +93,17 @@ class AttackTimerBarOverlay extends Overlay
         int denomMod = (config.barEmpties()) ? 1 : 0;
         int numerMod = (config.barFills()) ? 1 : 0;
         float ratio = (float) (plugin.getTicksUntilNextAttack() - numerMod) / (float) (plugin.getWeaponPeriod() - denomMod);
-        if (!config.barDirection()) {
-            ratio = (float)Math.max(1.0f - ratio, 0f);
+        if (!config.barDirection())
+        {
+            ratio = (float) Math.max(1.0f - ratio, 0f);
         }
 
         AttackBarStyle barStyle = config.barStyle();
-        boolean useHD = barStyle == AttackBarStyle.HIGH_DETAIL
-                || (barStyle == AttackBarStyle.AUTO && client.getSpriteOverrides().containsKey(SpriteID.HEALTHBAR_DEFAULT_FRONT_30PX));
+        boolean useHD = barStyle == AttackBarStyle.HIGH_DETAIL || (barStyle == AttackBarStyle.AUTO
+                && client.getSpriteOverrides().containsKey(SpriteID.HEALTHBAR_DEFAULT_FRONT_30PX));
 
-        if (useHD) {
+        if (useHD)
+        {
             final int barWidth = HD_FRONT_BAR.getWidth();
             final int barHeight = HD_FRONT_BAR.getHeight();
             final int barX = canvasPoint.getX() - barWidth / 2;
@@ -104,7 +113,8 @@ class AttackTimerBarOverlay extends Overlay
 
             graphics.drawImage(HD_BACK_BAR, barX, barY, barWidth, barHeight, null);
             // Use a sub-image to create the same effect the HD Health Bar has
-            graphics.drawImage(HD_FRONT_BAR.getSubimage(0, 0, progressFill, barHeight), barX, barY, progressFill, barHeight, null);
+            graphics.drawImage(HD_FRONT_BAR.getSubimage(0, 0, progressFill, barHeight), barX, barY, progressFill,
+                    barHeight, null);
             return null;
         }
         // Draw bar
@@ -113,7 +123,8 @@ class AttackTimerBarOverlay extends Overlay
         final int barWidth = ATTACK_BAR_SIZE.width;
         final int barHeight = ATTACK_BAR_SIZE.height;
 
-        // Restricted by the width to prevent the bar from being too long while you are boosted above your real prayer level.
+        // Restricted by the width to prevent the bar from being too long while you are boosted above your
+        // real prayer level.
         final int progressFill = (int) Math.ceil(Math.min((barWidth * ratio), barWidth));
 
         graphics.setColor(BAR_BG_COLOR);
@@ -123,19 +134,23 @@ class AttackTimerBarOverlay extends Overlay
 
         return null;
     }
+
     private void onTick()
     {
         shouldShowBar = true;
 
-        if (!config.enableMetronome()) {
+        if (!config.enableMetronome())
+        {
             shouldShowBar = false;
         }
 
-        if (!config.showBar()) {
+        if (!config.showBar())
+        {
             shouldShowBar = false;
         }
 
-        if (!plugin.isAttackCooldownPending()) {
+        if (!plugin.isAttackCooldownPending())
+        {
             shouldShowBar = false;
         }
     }
