@@ -224,6 +224,18 @@ public interface AttackTimerMetronomeConfig extends Config
 		return true;
 	}
 
+	@ConfigItem(
+			position = 6,
+			keyName = "attackBarStyle",
+			name = "Attack Bar Style",
+			description = "Auto matches HD/SD from Interface Styles plugin. Standard forces the basic bar. High Detail forces the HD bar.",
+			section = AttackBarSettings
+	)
+	default AttackBarStyle barStyle()
+	{
+		return AttackBarStyle.AUTO;
+	}
+
 	@Getter
 	@AllArgsConstructor
 	enum TicksPosition
