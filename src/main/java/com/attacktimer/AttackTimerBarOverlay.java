@@ -107,8 +107,8 @@ class AttackTimerBarOverlay extends Overlay
         int numerMod = (config.barFills()) ? 1 : 0;
         float ratio = (float) (plugin.getTicksUntilNextAttack() - numerMod) / (float) (plugin.getWeaponPeriod() - denomMod);
         // barDirection:
-        // true  -> drain -> moves right to left each tick
-        // false -> fills -> move left to right each tick
+        // true  -> drain -> moves right to left  each tick
+        // false -> fills -> move  left  to right each tick
         ratio = config.barDirection() ? clampBetween0and1(ratio) : clampBetween0and1(1.0f - ratio);
 
         AttackBarStyle barStyle = config.barStyle();
@@ -128,7 +128,7 @@ class AttackTimerBarOverlay extends Overlay
             // if progress is less than 1 then there's no "sub-bar" to draw as it would either have fractional
             // pixels (not possible) or negative pixels (also not possible) fixes
             // (https://github.com/ngraves95/attacktimer/issues/92)
-            if (progressFill <= 1)
+            if (progressFill < 1)
             {
                 return null;
             }
