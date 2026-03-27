@@ -28,3 +28,11 @@ jobs:
 
       - name: Run Tests
         run: ./gradlew test
+
+      - name: Run Pre-PluginHub-Checks
+        run: |
+          longestLine=$(cat build.gradle | wc -L)
+          if (( longestLine > 120 )); then
+            echo "Malformed gradle - longest line: ${longestLine}"
+            exit 1
+          fi
