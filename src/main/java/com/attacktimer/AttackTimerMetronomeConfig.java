@@ -156,6 +156,19 @@ public interface AttackTimerMetronomeConfig extends Config
 		return 0;
 	}
 
+	@ConfigItem(
+			position = 9,
+			keyName = "flinchingMode",
+			name = "Flinching Mode",
+			description = "Enables flinching mode for the tick number",
+			section = TickNumberSettings
+	)
+	@Range(min = -50, max = 50)
+	default boolean flinchingMode()
+	{
+		return false;
+	}
+
 	@ConfigSection(
 			name = "Attack Bar",
 			description = "Change the colors and number of colors to cycle through",
