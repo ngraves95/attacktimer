@@ -118,7 +118,8 @@ public class AttackTimerMetronomeTileOverlay extends Overlay
                     break;
             }
             if (playerPoint != null) {
-                OverlayUtil.renderTextLocation(graphics, playerPoint, String.valueOf(ticksRemaining), ticksRemaining == 1 ? config.LastColor() : config.NumberColor());
+                int displayTicksRemaining = config.useZeroBasedTickCount() ? ticksRemaining - 1 : ticksRemaining;
+                OverlayUtil.renderTextLocation(graphics, playerPoint, String.valueOf(displayTicksRemaining), ticksRemaining == 1 ? config.LastColor() : config.NumberColor());
             }
         }
         return null;
