@@ -398,14 +398,15 @@ public class AttackTimerMetronomePlugin extends Plugin
 
     // Match only the start of the line with `^` and the Pattern.MULTILINE
     private static final Pattern EAT_MESSAGE = Pattern
-            .compile("^(" + GENERIC_EAT + "|" + BARBARIAN_POTIONS + "|" + JUG_OF_WINE + ")", Pattern.MULTILINE);
+            .compile("^(" + GENERIC_EAT + "|" + BARBARIAN_POTIONS + "|" + JUG_OF_WINE + ")", Pattern.MULTILINE & Pattern.CASE_INSENSITIVE);
 
     // gnome foods are also fast eats (Note these are not the food names as the wiki lists them, but the name
     // as written in chat), also pre-made and handmade have the same chat message.
     private static final String FAST_GNOME_FOOD = "worm hole|tangled toads legs|veg ball|chocolate bomb|worm crunchies|toad crunchies|"
             + "choc chip crunchies|spicy crunchies|fruit batta|cheese and tomato batta|toad batta|vegetable batta|worm batta";
     private static final String FAST_FOOD = "karambwan|halibut";
-    private static final Pattern FAST_EAT = Pattern.compile("(" + FAST_FOOD + "|" + FAST_GNOME_FOOD + ")");
+    // TODO ^ find out the food messages for https://oldschool.runescape.wiki/w/Crystal_paddlefish and https://oldschool.runescape.wiki/w/Corrupted_paddlefish
+    private static final Pattern FAST_EAT = Pattern.compile("(" + FAST_FOOD + "|" + FAST_GNOME_FOOD + ")", Pattern.CASE_INSENSITIVE);
 
     @Subscribe
     public void onChatMessage(ChatMessage event)

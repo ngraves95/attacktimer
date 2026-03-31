@@ -81,38 +81,38 @@ public class IntegrationTests
 {
     @Mock
     @Bind
-    private OverlayManager mockedOverlayManager;
+    protected OverlayManager mockedOverlayManager;
 
     @Mock
     @Bind
-    private ConfigManager mockedConfigManager;
+    protected ConfigManager mockedConfigManager;
 
     @Mock
     @Bind
-    private AttackTimerMetronomeTileOverlay mockedOverlay;
+    protected AttackTimerMetronomeTileOverlay mockedOverlay;
 
     @Mock
     @Bind
-    private AttackTimerBarOverlay mockedBarOverlay;
+    protected AttackTimerBarOverlay mockedBarOverlay;
 
     @Mock
     @Bind
-    private AttackTimerMetronomeConfig mockedConfig;
+    protected AttackTimerMetronomeConfig mockedConfig;
 
     @Mock
     @Bind
-    private ItemManager mockedItemManager;
+    protected ItemManager mockedItemManager;
 
     @Mock
     @Bind
-    private Client mockedClient;
+    protected Client mockedClient;
 
     @Mock
     @Bind
-    private NPCManager mockedNpcManager;
+    protected NPCManager mockedNpcManager;
 
     @Inject
-    private AttackTimerMetronomePlugin underTest;
+    protected AttackTimerMetronomePlugin underTest;
 
     @Before
     public void setup()
@@ -307,7 +307,7 @@ public class IntegrationTests
         performStateVerificationOrUpdate(channel, Paths.get(testdata + "eatingFoodTest.txt"));
     }
 
-    private void performStateVerificationOrUpdate(ByteArrayDataOutput channel, Path path) throws IOException
+    protected void performStateVerificationOrUpdate(ByteArrayDataOutput channel, Path path) throws IOException
     {
         var actualBytes = channel.toByteArray();
         switch (Update.system())
@@ -330,13 +330,13 @@ public class IntegrationTests
         }
     }
 
-    private void onGameTick(ByteArrayDataOutput file)
+    protected void onGameTick(ByteArrayDataOutput file)
     {
         underTest.onGameTick(new GameTick());
         underTest.writeState(file);
     }
 
-    private void writeTestMessage(String message, ByteArrayDataOutput file)
+    protected void writeTestMessage(String message, ByteArrayDataOutput file)
     {
         file.write(testMessagePrefix);
         file.write(message.getBytes(StandardCharsets.UTF_8));
