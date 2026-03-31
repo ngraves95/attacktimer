@@ -405,6 +405,7 @@ public class AttackTimerMetronomePlugin extends Plugin
     private static final String FAST_GNOME_FOOD = "worm hole|tangled toads legs|veg ball|chocolate bomb|worm crunchies|toad crunchies|"
             + "choc chip crunchies|spicy crunchies|fruit batta|cheese and tomato batta|toad batta|vegetable batta|worm batta";
     private static final String FAST_FOOD = "karambwan|halibut";
+    // TODO ^ find out the food messages for https://oldschool.runescape.wiki/w/Crystal_paddlefish and https://oldschool.runescape.wiki/w/Corrupted_paddlefish
     private static final Pattern FAST_EAT = Pattern.compile("(" + FAST_FOOD + "|" + FAST_GNOME_FOOD + ")", Pattern.CASE_INSENSITIVE);
 
     @Subscribe
