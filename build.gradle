@@ -48,14 +48,6 @@ tasks.withType(JavaCompile) {
 	options.release.set(11)
 }
 
-tasks.register('run', JavaExec) {
-    classpath = sourceSets.test.runtimeClasspath
-    mainClass = "com.attacktimer.AttackTimerPluginTest"
-
-    jvmArgs "-ea"
-    args "--developer-mode", "--debug"
-}
-
 // Code based on
 // https://gist.github.com/lwasyl/6ae0b8a66903729033e18ffc7a503597#file-fancy_logging_original-gradle
 tasks.withType(Test) {
