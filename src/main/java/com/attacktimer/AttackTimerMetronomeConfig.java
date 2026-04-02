@@ -156,6 +156,18 @@ public interface AttackTimerMetronomeConfig extends Config
 		return 0;
 	}
 
+    @ConfigItem(
+            position = 9,
+            keyName = "useZeroBasedTickCount",
+            name = "Zero-based Tick Count",
+            description = "Count ticks to 0 instead of 1",
+            section = TickNumberSettings
+    )
+    default boolean useZeroBasedTickCount()
+    {
+        return false;
+    }
+
 	@ConfigSection(
 			name = "Attack Bar",
 			description = "Change the colors and number of colors to cycle through",
