@@ -2,7 +2,7 @@ package com.attacktimer;
 
 /*
  * Copyright (c) 2022, Nick Graves <https://github.com/ngraves95>
- * Copyright (c) 2024, Lexer747 <https://github.com/Lexer747>
+ * Copyright (c) 2024-2026, Lexer747 <https://github.com/Lexer747>
  * Copyright (c) 2024, Richardant <https://github.com/Richardant>
  * All rights reserved.
  *
@@ -123,22 +123,5 @@ public class AttackTimerMetronomeTileOverlay extends Overlay
             }
         }
         return null;
-    }
-
-    private void renderTile(final Graphics2D graphics, final LocalPoint dest, final Color color, final Color fillColor, final double borderWidth)
-    {
-        if (dest == null)
-        {
-            return;
-        }
-
-        final Polygon poly = Perspective.getCanvasTilePoly(client, dest);
-
-        if (poly == null)
-        {
-            return;
-        }
-
-        OverlayUtil.renderPolygon(graphics, poly, color, fillColor, new BasicStroke((float) borderWidth));
     }
 }

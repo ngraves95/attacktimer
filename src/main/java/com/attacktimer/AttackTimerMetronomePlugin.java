@@ -35,16 +35,12 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.inject.Provides;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.channels.SeekableByteChannel;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
 import javax.inject.Inject;
 import net.runelite.api.Actor;
