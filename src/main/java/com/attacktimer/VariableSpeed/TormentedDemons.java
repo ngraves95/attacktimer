@@ -237,7 +237,7 @@ public class TormentedDemons implements IVariableSpeed
             }
             else if (this.attacked > tick + VulTicksAfterEnd)
             {
-                // already attacked within the window
+                // already attacked within the window don't consume the vuln again we let update handle this
                 return true;
             }
             else
