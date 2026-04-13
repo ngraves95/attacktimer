@@ -33,14 +33,11 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Collections;
 import java.util.EnumSet;
 
 import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.junit.Before;
@@ -49,15 +46,12 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import com.attacktimer.AttackTimerMetronomePlugin.AttackState;
 import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.testing.fieldbinder.Bind;
 import com.google.inject.testing.fieldbinder.BoundFieldModule;
 
-import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
 import net.runelite.api.EnumComposition;
 import net.runelite.api.EnumID;
@@ -69,7 +63,6 @@ import net.runelite.api.WorldType;
 import net.runelite.api.WorldView;
 import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldPoint;
-import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameTick;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.game.ItemManager;
@@ -126,6 +119,7 @@ public class IntegrationTests
         when(mockedConfig.enableMetronome()).thenReturn(true);
         // Create player
         Player mockedPlayer = mock(Player.class);
+        when(mockedPlayer.getAnimation()).thenReturn(noAnimation);
 
         // Create the enemy
         NPC mockedTarget = mock(NPC.class);
@@ -171,142 +165,6 @@ public class IntegrationTests
         return mockedPlayer;
     }
 
-    @Test
-    public void basicTest() throws Exception
-    {
-        ByteArrayDataOutput channel = ByteStreams.newDataOutput();
-        underTest.writeState(channel);
-        // Trivial Pre-conditions:
-        assertSame(AttackState.NOT_ATTACKING, underTest.attackState);
-
-        // Basic test case:
-        // 1. Start by setting up the player
-        // 2. Mock an attack animation
-        // 3. Check that the plugin has registered the attack
-        // 4. Check that the plugin counts down correctly
-        // 5. Check that the plugin is back to a waiting state and it still counts down
-
-        writeTestMessage("1. Start by setting up the player and plugin", channel);
-        int atkSpeed = 3; // no weapon equipped (4 ticks, plugin starts counting from 3)
-        int tick = 0;
-        Player mockedPlayer = pluginMockSetup();
-        when(mockedClient.getTickCount()).thenReturn(tick);
-
-        writeTestMessage("2. Mock an attack animation", channel);
-
-        // set the animation to an attack
-        when(mockedPlayer.getAnimation()).thenReturn(AnimationData.MELEE_GENERIC_SLASH.animationId);
-        // tell the plugin that a tick occurred
-        onGameTick(channel);
-
-        writeTestMessage("3. Check that the plugin has registered the attack", channel);
-        assertSame(AttackState.DELAYED_FIRST_TICK, underTest.attackState);
-        assertSame(atkSpeed, underTest.attackDelayHoldoffTicks);
-
-        // clear the animation
-        when(mockedPlayer.getAnimation()).thenReturn(noAnimation);
-
-        writeTestMessage("4. Check that the plugin counts down correctly", channel);
-        while (atkSpeed > 0)
-        {
-            tick++;
-            atkSpeed--;
-            when(mockedClient.getTickCount()).thenReturn(tick);
-            onGameTick(channel);
-            assertSame(AttackState.DELAYED, underTest.attackState);
-            assertSame(atkSpeed, underTest.attackDelayHoldoffTicks);
-        }
-
-        writeTestMessage("5. Check that the plugin is back to a waiting state and it still counts down", channel);
-        tick++;
-        onGameTick(channel);
-        assertSame(AttackState.NOT_ATTACKING, underTest.attackState);
-        while (tick < 30)
-        {
-            tick++;
-            when(mockedClient.getTickCount()).thenReturn(tick);
-            onGameTick(channel);
-            assertSame(AttackState.NOT_ATTACKING, underTest.attackState);
-            assertTrue(underTest.attackDelayHoldoffTicks < 0); // hold off should go negative
-        }
-
-        performStateVerificationOrUpdate(channel, Paths.get(testdata + "basicTest.txt"));
-    }
-
-    @Test
-    public void eatingFoodTest() throws Exception
-    {
-        ByteArrayDataOutput channel = ByteStreams.newDataOutput();
-        underTest.writeState(channel);
-        // Trivial Pre-conditions:
-        assertSame(AttackState.NOT_ATTACKING, underTest.attackState);
-        writeTestMessage("1. Start by setting up the player and plugin", channel);
-        int atkSpeed = 3; // no weapon equipped (4 ticks, plugin starts counting from 3)
-        int tick = 0;
-        Player mockedPlayer = pluginMockSetup();
-        when(mockedClient.getTickCount()).thenReturn(tick);
-
-        writeTestMessage("2. Mock an attack animation", channel);
-
-        // set the animation to an attack
-        when(mockedPlayer.getAnimation()).thenReturn(AnimationData.MELEE_GENERIC_SLASH.animationId);
-        // tell the plugin that a tick occurred
-        onGameTick(channel);
-
-        writeTestMessage("3. Check that the plugin has registered the attack", channel);
-        assertSame(AttackState.DELAYED_FIRST_TICK, underTest.attackState);
-        assertSame(atkSpeed, underTest.attackDelayHoldoffTicks);
-
-        when(mockedPlayer.getAnimation()).thenReturn(noAnimation);
-        underTest.writeState(channel);
-
-        writeTestMessage("Perform an eat", channel);
-        ChatMessage chatMessage = new ChatMessage(null, ChatMessageType.SPAM, "", "You eat the shark.", "", 0);
-        underTest.onChatMessage(chatMessage);
-        // the plugin wont apply the delay directly it waits until the next game tick
-        assertSame(3, underTest.pendingEatDelayTicks);
-        // Should still be same state
-        assertSame(AttackState.DELAYED_FIRST_TICK, underTest.attackState);
-        underTest.writeState(channel);
-
-        // Subsequent values should be offset by the eat delay
-        writeTestMessage("Next game tick", channel);
-        atkSpeed += 2;
-        onGameTick(channel);
-        assertSame(AttackState.DELAYED, underTest.attackState);
-        assertSame(atkSpeed, underTest.attackDelayHoldoffTicks);
-
-        // Note that this is essentially a "double" eat test.
-        writeTestMessage("Perform a fast eat", channel);
-        chatMessage = new ChatMessage(null, ChatMessageType.SPAM, "", "You eat the halibut.", "", 0);
-        underTest.onChatMessage(chatMessage);
-        // the plugin wont apply the delay directly it waits until the next game tick
-        assertSame(2, underTest.pendingEatDelayTicks);
-        // Should still be same state
-        assertSame(AttackState.DELAYED, underTest.attackState);
-        underTest.writeState(channel);
-
-        // Subsequent values should be offset by the eat delay
-        writeTestMessage("Next game tick", channel);
-        atkSpeed += 1;
-        onGameTick(channel);
-        assertSame(AttackState.DELAYED, underTest.attackState);
-        assertSame(atkSpeed, underTest.attackDelayHoldoffTicks);
-
-        writeTestMessage("4. Check that the plugin counts down correctly", channel);
-        while (atkSpeed > 0)
-        {
-            tick++;
-            atkSpeed--;
-            when(mockedClient.getTickCount()).thenReturn(tick);
-            onGameTick(channel);
-            assertSame(AttackState.DELAYED, underTest.attackState);
-            assertSame(atkSpeed, underTest.attackDelayHoldoffTicks);
-        }
-
-        performStateVerificationOrUpdate(channel, Paths.get(testdata + "eatingFoodTest.txt"));
-    }
-
     protected void performStateVerificationOrUpdate(ByteArrayDataOutput channel, Path path) throws IOException
     {
         var actualBytes = channel.toByteArray();
@@ -343,9 +201,18 @@ public class IntegrationTests
         file.write(testMessageSuffix);
     }
 
-    private static final int noAnimation = -1;
-    private static final String testdata = "src/test/java/com/attacktimer/testdata/";
+    protected static final int noAnimation = -1;
+    protected static final String testdata = "src/test/java/com/attacktimer/testdata/";
 
     private static final byte[] testMessagePrefix = "[TEST MESSAGE] ".getBytes(StandardCharsets.UTF_8);
     private static final byte[] testMessageSuffix = "\n".getBytes(StandardCharsets.UTF_8);
+
+    // This needs at least one public test to keep mockito happy but having real tests in this file would
+    // result in any future test which extends this test class also having to run and make that test pass.
+    //
+    // This does cause test inflation in that the summary will make it look like we have more tests than we
+    // really do, but I don't have a nicer way to not repeat all the injector boiler plate.
+    @Test
+    public void noTest()
+    {}
 }
