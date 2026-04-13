@@ -226,11 +226,13 @@ public class TormentedDemons implements IVariableSpeed
             return false;
         }
 
+
+        // vulnConsumed returns true if the demon was already attack, false if not and the vuln is still usable
         boolean vulnConsumed(int tick)
         {
             if (this.attacked == tick || this.attacked == -1)
             {
-                this.attacked = tick;
+                this.consumeVuln(tick);
                 return false;
             }
             else if (this.attacked > tick + VulTicksAfterEnd)
@@ -240,9 +242,14 @@ public class TormentedDemons implements IVariableSpeed
             }
             else
             {
-                this.attacked = tick;
+                this.consumeVuln(tick);
                 return false;
             }
+        }
+
+        void consumeVuln(int tick)
+        {
+            this.attacked = tick;
         }
 
         @Override

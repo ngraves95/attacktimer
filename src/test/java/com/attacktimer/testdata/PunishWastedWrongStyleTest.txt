@@ -1,0 +1,3 @@
+tickPeriod: 0, uiUnshowDebounceTickCount: 0, attackDelayHoldoffTicks: 0, attackState: NOT_ATTACKING, renderedState: NOT_ATTACKING, pendingEatDelayTicks: 0, currentSpellBook: STANDARD, lastEquippingMonotonicValue: -1, soundEffectTick: -1, soundEffectId: -1
+tickPeriod: 0, uiUnshowDebounceTickCount: -1, attackDelayHoldoffTicks: -1, attackState: NOT_ATTACKING, renderedState: NOT_ATTACKING, pendingEatDelayTicks: 0, currentSpellBook: STANDARD, lastEquippingMonotonicValue: -1, soundEffectTick: -1, soundEffectId: -1
+tickPeriod: 8, uiUnshowDebounceTickCount: 1, attackDelayHoldoffTicks: 7, attackState: DELAYED_FIRST_TICK, renderedState: NOT_ATTACKING, pendingEatDelayTicks: 0, currentSpellBook: STANDARD, lastEquippingMonotonicValue: -1, soundEffectTick: -1, soundEffectId: -1
