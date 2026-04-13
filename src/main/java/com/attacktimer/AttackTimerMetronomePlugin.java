@@ -526,7 +526,7 @@ public class AttackTimerMetronomePlugin extends Plugin
         StringBuilder sb = new StringBuilder();
         // @formatter:off
         sb.append("tickPeriod: "); sb.append(this.tickPeriod);sb.append(SEPARATOR);
-        sb.append("uiUnshowDebounceTickCount: "); sb.append(this.uiHideDebounceTickCount);sb.append(SEPARATOR);
+        sb.append("uiHideDebounceTickCount: "); sb.append(this.uiHideDebounceTickCount);sb.append(SEPARATOR);
         sb.append("attackDelayHoldoffTicks: "); sb.append(this.attackDelayHoldoffTicks);sb.append(SEPARATOR);
         sb.append("attackState: "); sb.append(this.attackState);sb.append(SEPARATOR);
         sb.append("renderedState: "); sb.append(this.renderedState);sb.append(SEPARATOR);
