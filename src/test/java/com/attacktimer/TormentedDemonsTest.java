@@ -32,13 +32,13 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.EnumSet;
 
-import static com.attacktimer.IntegrationTests.testdata;
 import static org.junit.Assert.assertSame;
 import org.junit.Test;
 
 import com.attacktimer.AttackTimerMetronomePlugin.AttackState;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+
 import net.runelite.api.EnumComposition;
 import net.runelite.api.EnumID;
 import net.runelite.api.IndexedObjectSet;
@@ -75,7 +75,8 @@ public class TormentedDemonsTest extends IntegrationTests
         runTest("PunishWastedWrongStyleTest", 8, 0, 8, 7);
     }
 
-    private void runTest(String testName, int aspeed, int EQUIPPED_WEAPON_TYPE, int ATTACK_STYLE, int expected) throws Exception
+    private void runTest(String testName, int aspeed, int EQUIPPED_WEAPON_TYPE, int ATTACK_STYLE, int expected)
+            throws Exception
     {
         when(mockedItemManager.getItemStats(-1))
                 .thenReturn(new ItemStats(true, 0, 0, ItemEquipmentStats.builder().aspeed(aspeed).build()));
@@ -105,7 +106,6 @@ public class TormentedDemonsTest extends IntegrationTests
 
         assertSame(AttackState.DELAYED_FIRST_TICK, underTest.attackState);
         assertSame(expected, underTest.attackDelayHoldoffTicks);
-
 
         performStateVerificationOrUpdate(channel, Paths.get(testdata + testName + ".txt"));
     }
