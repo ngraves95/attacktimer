@@ -44,7 +44,7 @@ public class VariableSpeed {
     public static int computeSpeed(final Client client, final AnimationData curAnimation, final AttackProcedure atkProcedure, final int baseSpeed)
     {
         int newSpeed = baseSpeed;
-        for (IVariableSpeed i : toApply)
+        for (IVariableSpeed i : TO_APPLY)
         {
             newSpeed = i.apply(client, curAnimation, atkProcedure, baseSpeed, newSpeed);
         }
@@ -53,13 +53,13 @@ public class VariableSpeed {
 
     public static void onGameTick(Client client, GameTick tick)
     {
-        for (IVariableSpeed i : toApply)
+        for (IVariableSpeed i : TO_APPLY)
         {
             i.onGameTick(client, tick);
         }
     }
 
-    private static final IVariableSpeed[] toApply = {
+    private static final IVariableSpeed[] TO_APPLY = {
         // Order matters, apply leagues first, then any incremental modifications like rapid, or set effects.
         // Then overriding speeds last, which set a speed.
         new Leagues(),

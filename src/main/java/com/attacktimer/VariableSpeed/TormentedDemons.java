@@ -169,7 +169,7 @@ public class TormentedDemons implements IVariableSpeed
     {
         // VulTicksAfterEnd is just a guess the wiki isn't clear how long this period is, from testing 10
         // ticks feels about right.
-        private static final int VulTicksAfterEnd = 10;
+        private static final int VULN_TICKS_AFTER_END = 10;
         private int lastSpotted;
         private Integer vulnerableStart;
         private Integer vulnerableFinish;
@@ -212,7 +212,7 @@ public class TormentedDemons implements IVariableSpeed
             {
                 return false;
             }
-            return (this.vulnerableFinish + VulTicksAfterEnd) > tick;
+            return (this.vulnerableFinish + VULN_TICKS_AFTER_END) > tick;
         }
 
         // isStale returns true if the last time this demon was spotted by the client was too long ago.
@@ -235,7 +235,7 @@ public class TormentedDemons implements IVariableSpeed
                 this.consumeVuln(tick);
                 return false;
             }
-            else if (this.attacked > tick + VulTicksAfterEnd)
+            else if (this.attacked > tick + VULN_TICKS_AFTER_END)
             {
                 // already attacked within the window don't consume the vuln again we let update handle this
                 return true;

@@ -119,7 +119,7 @@ public class IntegrationTests
         when(mockedConfig.enableMetronome()).thenReturn(true);
         // Create player
         Player mockedPlayer = mock(Player.class);
-        when(mockedPlayer.getAnimation()).thenReturn(noAnimation);
+        when(mockedPlayer.getAnimation()).thenReturn(NO_ANIMATION);
 
         // Create the enemy
         NPC mockedTarget = mock(NPC.class);
@@ -196,16 +196,16 @@ public class IntegrationTests
 
     protected void writeTestMessage(String message, ByteArrayDataOutput file)
     {
-        file.write(testMessagePrefix);
+        file.write(PREFIX);
         file.write(message.getBytes(StandardCharsets.UTF_8));
-        file.write(testMessageSuffix);
+        file.write(SUFFIX);
     }
 
-    protected static final int noAnimation = -1;
-    protected static final String testdata = "src/test/java/com/attacktimer/testdata/";
+    protected static final int NO_ANIMATION = -1;
+    protected static final String TESTDATA = "src/test/java/com/attacktimer/testdata/";
 
-    private static final byte[] testMessagePrefix = "[TEST MESSAGE] ".getBytes(StandardCharsets.UTF_8);
-    private static final byte[] testMessageSuffix = "\n".getBytes(StandardCharsets.UTF_8);
+    private static final byte[] PREFIX = "[TEST MESSAGE] ".getBytes(StandardCharsets.UTF_8);
+    private static final byte[] SUFFIX = "\n".getBytes(StandardCharsets.UTF_8);
 
     // This needs at least one public test to keep mockito happy but having real tests in this file would
     // result in any future test which extends this test class also having to run and make that test pass.

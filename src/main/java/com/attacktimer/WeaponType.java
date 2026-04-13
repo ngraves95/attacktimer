@@ -91,7 +91,7 @@ public enum WeaponType
     PARTISAN(MAGIC, MAGIC, null, MAGIC),
     PARTISAN_2(STAB, STAB, CRUSH, STAB);
 
-    private static final Map<Integer, WeaponType> weaponTypes;
+    private static final Map<Integer, WeaponType> WEAPON_TYPES;
 
     @Getter
     private final AttackType[] attackTypes;
@@ -105,7 +105,7 @@ public enum WeaponType
             builder.put(weaponType.ordinal(), weaponType);
         }
 
-        weaponTypes = builder.build();
+        WEAPON_TYPES = builder.build();
     }
 
     WeaponType(AttackType... attackTypes)
@@ -175,6 +175,6 @@ public enum WeaponType
 
     public static WeaponType getWeaponType(int id)
     {
-        return weaponTypes.get(id);
+        return WEAPON_TYPES.get(id);
     }
 }

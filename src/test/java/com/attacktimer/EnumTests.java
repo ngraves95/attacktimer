@@ -70,7 +70,7 @@ public class EnumTests
         {
             for (int id : staff.getIds())
             {
-                boolean containsKey = PoweredStaves.poweredStaves.get(id).containsKey(PoweredStaves.UNKNOWN_SPELL);
+                boolean containsKey = PoweredStaves.POWERED_STAVES.get(id).containsKey(PoweredStaves.UNKNOWN_SPELL);
                 if (containsKey)
                 {
                     failed = true;

@@ -107,7 +107,7 @@ public class AttackTimerMetronomePlugin extends Plugin
 
     public int tickPeriod = 0;
 
-    private int uiUnshowDebounceTickCount = 0;
+    private int uiHideDebounceTickCount = 0;
     public int attackDelayHoldoffTicks = ATTACK_DELAY_NONE;
 
     public AttackState attackState = AttackState.NOT_ATTACKING;
@@ -126,7 +126,7 @@ public class AttackTimerMetronomePlugin extends Plugin
     public int pendingEatDelayTicks = 0;
 
 
-    private static final int uiUnshowDebounceTicksMax = 1;
+    private static final int UI_HIDE_DEBOUNCE_TICKS_MAX = 1;
     private static final int ATTACK_DELAY_NONE = 0;
     public static final int DEFAULT_SIZE_UNIT_PX = 25;
 
@@ -368,7 +368,7 @@ public class AttackTimerMetronomePlugin extends Plugin
         attackState = AttackState.DELAYED_FIRST_TICK;
         setAttackDelay();
         tickPeriod = attackDelayHoldoffTicks;
-        uiUnshowDebounceTickCount = uiUnshowDebounceTicksMax;
+        uiHideDebounceTickCount = UI_HIDE_DEBOUNCE_TICKS_MAX;
     }
 
     public int getTicksUntilNextAttack()
@@ -385,7 +385,7 @@ public class AttackTimerMetronomePlugin extends Plugin
     {
         return attackState == AttackState.DELAYED
             || attackState == AttackState.DELAYED_FIRST_TICK
-            || uiUnshowDebounceTickCount > 0;
+            || uiHideDebounceTickCount > 0;
     }
 
 
@@ -470,7 +470,7 @@ public class AttackTimerMetronomePlugin extends Plugin
                 if (isAttacking) {
                     performAttack(); // Sets state to DELAYED_FIRST_TICK.
                 } else {
-                    uiUnshowDebounceTickCount--;
+                    uiHideDebounceTickCount--;
                 }
                 break;
             case DELAYED_FIRST_TICK:
@@ -526,7 +526,7 @@ public class AttackTimerMetronomePlugin extends Plugin
         StringBuilder sb = new StringBuilder();
         // @formatter:off
         sb.append("tickPeriod: "); sb.append(this.tickPeriod);sb.append(SEPARATOR);
-        sb.append("uiUnshowDebounceTickCount: "); sb.append(this.uiUnshowDebounceTickCount);sb.append(SEPARATOR);
+        sb.append("uiUnshowDebounceTickCount: "); sb.append(this.uiHideDebounceTickCount);sb.append(SEPARATOR);
         sb.append("attackDelayHoldoffTicks: "); sb.append(this.attackDelayHoldoffTicks);sb.append(SEPARATOR);
         sb.append("attackState: "); sb.append(this.attackState);sb.append(SEPARATOR);
         sb.append("renderedState: "); sb.append(this.renderedState);sb.append(SEPARATOR);

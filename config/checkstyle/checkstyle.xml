@@ -1,0 +1,23 @@
+<!DOCTYPE module PUBLIC
+  "-//Puppy Crawl//DTD Check Configuration 1.3//EN"
+  "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
+<module name="Checker">
+  <property name="fileExtensions" value="java, properties, xml"/>
+  <!-- Excludes all 'module-info.java' files              -->
+  <!-- See https://checkstyle.org/filefilters/index.html -->
+  <module name="BeforeExecutionExclusionFileFilter">
+    <property name="fileNamePattern" value="module\-info\.java$"/>
+  </module>
+
+  <module name="FileTabCharacter"/>
+
+  <module name="TreeWalker">
+    <module name="AvoidStarImport"/>
+    <module name="ConstantName"/>
+    <module name="EmptyBlock"/>
+    <module name="FallThrough"/>
+    <module name="OneTopLevelClass"/>
+    <module name="OuterTypeFilename"/>
+    <module name="UnusedImports"/>
+  </module>
+</module>

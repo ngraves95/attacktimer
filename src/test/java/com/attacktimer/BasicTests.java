@@ -29,6 +29,8 @@ import static org.mockito.Mockito.when;
 
 import java.nio.file.Paths;
 
+import static com.attacktimer.IntegrationTests.NO_ANIMATION;
+import static com.attacktimer.IntegrationTests.TESTDATA;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
@@ -78,7 +80,7 @@ public class BasicTests extends IntegrationTests
         assertSame(atkSpeed, underTest.attackDelayHoldoffTicks);
 
         // clear the animation
-        when(mockedPlayer.getAnimation()).thenReturn(noAnimation);
+        when(mockedPlayer.getAnimation()).thenReturn(NO_ANIMATION);
 
         writeTestMessage("4. Check that the plugin counts down correctly", channel);
         while (atkSpeed > 0)
@@ -104,7 +106,7 @@ public class BasicTests extends IntegrationTests
             assertTrue(underTest.attackDelayHoldoffTicks < 0); // hold off should go negative
         }
 
-        performStateVerificationOrUpdate(channel, Paths.get(testdata + "basicTest.txt"));
+        performStateVerificationOrUpdate(channel, Paths.get(TESTDATA + "basicTest.txt"));
     }
 
     @Test
@@ -131,7 +133,7 @@ public class BasicTests extends IntegrationTests
         assertSame(AttackState.DELAYED_FIRST_TICK, underTest.attackState);
         assertSame(atkSpeed, underTest.attackDelayHoldoffTicks);
 
-        when(mockedPlayer.getAnimation()).thenReturn(noAnimation);
+        when(mockedPlayer.getAnimation()).thenReturn(NO_ANIMATION);
         underTest.writeState(channel);
 
         writeTestMessage("Perform an eat", channel);
@@ -178,6 +180,6 @@ public class BasicTests extends IntegrationTests
             assertSame(atkSpeed, underTest.attackDelayHoldoffTicks);
         }
 
-        performStateVerificationOrUpdate(channel, Paths.get(testdata + "eatingFoodTest.txt"));
+        performStateVerificationOrUpdate(channel, Paths.get(TESTDATA + "eatingFoodTest.txt"));
     }
 }
