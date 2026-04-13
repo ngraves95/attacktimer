@@ -1,7 +1,7 @@
 package com.attacktimer.VariableSpeed;
 
 /*
- * Copyright (c) 2024, Lexer747 <https://github.com/Lexer747>
+ * Copyright (c) 2024-2026, Lexer747 <https://github.com/Lexer747>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,7 +36,6 @@ import com.attacktimer.WeaponType;
 import com.attacktimer.ClientUtils.Utils;
 import net.runelite.api.Client;
 import net.runelite.api.NPC;
-import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.GameTick;
 
 /**
@@ -59,10 +58,8 @@ public class TormentedDemons implements IVariableSpeed
 {
     public int apply(final Client client, final AnimationData curAnimation, final AttackProcedure atkProcedure, final int baseSpeed, final int curSpeed)
     {
-        WorldPoint location = Utils.getLocation(client);
-        int weaponId = Utils.getWeaponId(client);
         int targetId = Utils.getTargetId(client);
-        if (!attackingTormentedDemon(weaponId, location.getRegionID(), location.getX(), location.getY(), targetId))
+        if (!isTormentedDemon(targetId))
         {
             return curSpeed;
         }
@@ -120,22 +117,6 @@ public class TormentedDemons implements IVariableSpeed
     private static final int TORMENTED_DEMON_ID = 13600;
 
     private static final int TORMENTED_DEMON_2_ID = 13599;
-    private static final int TORMENTED_DEMON_REGION_ID = 16197;
-
-    private static final int TORMENTED_DEMON_REGION_2_ID = 16452;
-    private static final int TORMENTED_DEMON_MIN_X = 4010;
-
-    private static final int TORMENTED_DEMON_MAX_X = 4180;
-    private static final int TORMENTED_DEMON_MIN_Y = 4320;
-
-    private static final int TORMENTED_DEMON_MAX_Y = 4490;
-
-    private static boolean attackingTormentedDemon(int equipped, int regionId, int x, int y, int target)
-    {
-        boolean correctCoords = x >= TORMENTED_DEMON_MIN_X && x <= TORMENTED_DEMON_MAX_X && y >= TORMENTED_DEMON_MIN_Y && y <= TORMENTED_DEMON_MAX_Y;
-        boolean correctRegion = regionId == TORMENTED_DEMON_REGION_ID || regionId == TORMENTED_DEMON_REGION_2_ID;
-        return correctCoords && correctRegion && isTormentedDemon(target);
-    }
 
     private static boolean isTormentedDemon(int targetId)
     {
