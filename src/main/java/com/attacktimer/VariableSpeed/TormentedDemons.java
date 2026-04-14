@@ -131,7 +131,10 @@ public class TormentedDemons implements IVariableSpeed
         tickCount++;
         for (NPC npc : client.getTopLevelWorldView().npcs())
         {
-            if (!isTormentedDemon(npc.getId())) continue;
+            if (!isTormentedDemon(npc.getId()))
+            {
+                continue;
+            }
             boolean isVulnerable = npc.hasSpotAnim(TORMENTED_DEMON_VULN_SPOT_ANIM);
             if (tormentedDemons.containsKey(npc))
             {

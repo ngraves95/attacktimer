@@ -65,8 +65,7 @@ class AttackTimerBarOverlay extends Overlay
     private boolean shouldShowBar = false;
 
     @Inject
-    private AttackTimerBarOverlay(final Client client, final AttackTimerMetronomeConfig config,
-            final AttackTimerMetronomePlugin plugin)
+    private AttackTimerBarOverlay(final Client client, final AttackTimerMetronomeConfig config, final AttackTimerMetronomePlugin plugin)
     {
         this.client = client;
         this.config = config;
