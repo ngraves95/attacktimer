@@ -233,7 +233,8 @@ public class AttackTimerMetronomePlugin extends Plugin
         return (item != null) ? item.getId() : -1;
     }
 
-    private int getWeaponId() {
+    private int getWeaponId()
+    {
         int weaponId = getItemIdFromContainer(
                 client.getItemContainer(InventoryID.EQUIPMENT),
                 EquipmentInventorySlot.WEAPON.getSlotIdx()
