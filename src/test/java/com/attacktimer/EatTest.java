@@ -53,7 +53,7 @@ public class EatTest extends IntegrationTests
         };
         String[] foodsToTest = {
                 "shark", "meat pizza", "A brand new food message", "sunlight antelope", "moonlight antelope",
-                "purple sweets"
+                "purple sweets",
         };
         var curEatDelayTicks = underTest.pendingEatDelayTicks;
         for (String food : foodsToTest)

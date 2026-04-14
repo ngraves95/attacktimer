@@ -133,7 +133,7 @@ public enum WeaponType
             if (weaponType == 22)
             {
                 return new AttackStyle[]{
-                    ACCURATE, AGGRESSIVE, null, DEFENSIVE, CASTING, DEFENSIVE_CASTING
+                    ACCURATE, AGGRESSIVE, null, DEFENSIVE, CASTING, DEFENSIVE_CASTING,
                 };
             }
 
@@ -141,7 +141,7 @@ public enum WeaponType
             {
                 // Partisan
                 return new AttackStyle[]{
-                    ACCURATE, AGGRESSIVE, AGGRESSIVE, DEFENSIVE
+                    ACCURATE, AGGRESSIVE, AGGRESSIVE, DEFENSIVE,
                 };
             }
             return new AttackStyle[0];

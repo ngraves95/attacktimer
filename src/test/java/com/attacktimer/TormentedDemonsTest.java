@@ -123,7 +123,7 @@ public class TormentedDemonsTest extends IntegrationTests
         int mockedNpcId = 13600;
         when(td.getId()).thenReturn(mockedNpcId);
         String[] actions = {
-                "Attack", "Examine"
+                "Attack", "Examine",
         };
         when(mockedCompositions.getActions()).thenReturn(actions);
         when(mockedNpcManager.getHealth(mockedNpcId)).thenReturn(1);
