@@ -25,8 +25,8 @@ package com.attacktimer.VariableSpeed;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.attacktimer.AttackProcedure;
 import com.attacktimer.AnimationData;
+import com.attacktimer.AttackProcedure;
 import net.runelite.api.Client;
 import net.runelite.api.events.GameTick;
 

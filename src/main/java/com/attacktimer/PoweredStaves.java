@@ -25,14 +25,14 @@ package com.attacktimer;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.apache.commons.lang3.StringUtils;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import lombok.Getter;
+import org.apache.commons.lang3.StringUtils;
 
 // https://oldschool.runescape.wiki/w/Powered_staff
 //

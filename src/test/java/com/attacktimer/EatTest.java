@@ -25,16 +25,15 @@ package com.attacktimer;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.mockito.Mockito.when;
 import static org.junit.Assert.assertSame;
-import org.junit.Test;
+import static org.mockito.Mockito.when;
 
 import com.attacktimer.AttackTimerMetronomePlugin.AttackState;
-
 import net.runelite.api.ChatMessageType;
 import net.runelite.api.Player;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameTick;
+import org.junit.Test;
 
 public class EatTest extends IntegrationTests
 {

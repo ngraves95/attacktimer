@@ -40,8 +40,8 @@ import lombok.NonNull;
 import net.runelite.api.Client;
 import net.runelite.api.Perspective;
 import net.runelite.api.Point;
-import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.SpriteID;
+import net.runelite.api.coords.LocalPoint;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayPosition;
@@ -97,7 +97,8 @@ class AttackTimerBarOverlay extends Overlay
         {
             return null;
         }
-        final Point canvasPoint = Perspective.localToCanvas(client, localLocation, client.getTopLevelWorldView().getPlane(), height);
+        final Point canvasPoint = Perspective.localToCanvas(client, localLocation,
+                client.getTopLevelWorldView().getPlane(), height);
         if (canvasPoint == null)
         {
             return null;

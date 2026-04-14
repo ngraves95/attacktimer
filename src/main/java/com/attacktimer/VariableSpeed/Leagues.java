@@ -30,7 +30,6 @@ import com.attacktimer.AnimationData;
 import com.attacktimer.AttackProcedure;
 import com.attacktimer.AttackStyle;
 import com.attacktimer.ClientUtils.Utils;
-
 import net.runelite.api.Client;
 import net.runelite.api.Varbits;
 import net.runelite.api.WorldType;

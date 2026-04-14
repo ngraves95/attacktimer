@@ -26,9 +26,6 @@ package com.attacktimer;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.google.common.collect.ImmutableMap;
-import java.util.Map;
-import lombok.Getter;
 import static com.attacktimer.AttackStyle.ACCURATE;
 import static com.attacktimer.AttackStyle.AGGRESSIVE;
 import static com.attacktimer.AttackStyle.CASTING;
@@ -36,15 +33,18 @@ import static com.attacktimer.AttackStyle.DEFENSIVE;
 import static com.attacktimer.AttackStyle.DEFENSIVE_CASTING;
 import static com.attacktimer.AttackStyle.OTHER;
 import static com.attacktimer.AttackType.CRUSH;
-import static com.attacktimer.AttackType.SLASH;
-import static com.attacktimer.AttackType.STAB;
-import static com.attacktimer.AttackType.RANGED;
 import static com.attacktimer.AttackType.MAGIC;
 import static com.attacktimer.AttackType.NONE;
+import static com.attacktimer.AttackType.RANGED;
+import static com.attacktimer.AttackType.SLASH;
+import static com.attacktimer.AttackType.STAB;
 
+import com.google.common.collect.ImmutableMap;
+import java.util.Map;
+import lombok.Getter;
 import net.runelite.api.Client;
-import net.runelite.api.ParamID;
 import net.runelite.api.EnumID;
+import net.runelite.api.ParamID;
 import net.runelite.api.StructComposition;
 
 public enum WeaponType

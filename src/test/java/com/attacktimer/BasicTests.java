@@ -25,25 +25,18 @@ package com.attacktimer;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.mockito.Mockito.when;
-
-import java.nio.file.Paths;
-
-import static com.attacktimer.IntegrationTests.NO_ANIMATION;
-import static com.attacktimer.IntegrationTests.TESTDATA;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
+import static org.mockito.Mockito.when;
 
 import com.attacktimer.AttackTimerMetronomePlugin.AttackState;
-
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-
+import java.nio.file.Paths;
 import net.runelite.api.ChatMessageType;
 import net.runelite.api.Player;
 import net.runelite.api.events.ChatMessage;
+import org.junit.Test;
 
 public class BasicTests extends IntegrationTests
 {

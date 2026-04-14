@@ -25,9 +25,16 @@ package com.attacktimer;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.inject.Guice;
+import com.google.inject.Inject;
+import com.google.inject.testing.fieldbinder.Bind;
+import com.google.inject.testing.fieldbinder.BoundFieldModule;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
@@ -36,22 +43,6 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Collections;
 import java.util.EnumSet;
-
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.fail;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.inject.Guice;
-import com.google.inject.Inject;
-import com.google.inject.testing.fieldbinder.Bind;
-import com.google.inject.testing.fieldbinder.BoundFieldModule;
-
 import net.runelite.api.Client;
 import net.runelite.api.EnumComposition;
 import net.runelite.api.EnumID;
@@ -68,6 +59,11 @@ import net.runelite.client.config.ConfigManager;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.game.NPCManager;
 import net.runelite.client.ui.overlay.OverlayManager;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class IntegrationTests

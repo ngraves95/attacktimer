@@ -41,7 +41,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
-
 import javax.inject.Inject;
 import net.runelite.api.Actor;
 import net.runelite.api.Client;
@@ -459,6 +458,7 @@ public class AttackTimerMetronomePlugin extends Plugin
         pendingEatDelayTicks -= pendingEats;
     }
 
+    @SuppressWarnings("fallthrough")
     @Subscribe
     public void onGameTick(GameTick tick)
     {

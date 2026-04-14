@@ -25,9 +25,8 @@ package com.attacktimer;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import javax.annotation.Nonnull;
-
 import com.google.common.collect.ImmutableMap;
+import javax.annotation.Nonnull;
 
 public enum Update
 {

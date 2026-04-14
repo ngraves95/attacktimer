@@ -25,15 +25,15 @@ package com.attacktimer.VariableSpeed;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.attacktimer.AnimationData;
+import com.attacktimer.AttackProcedure;
+import com.attacktimer.AttackType;
+import com.attacktimer.ClientUtils.Utils;
+import com.attacktimer.WeaponType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import com.attacktimer.AnimationData;
-import com.attacktimer.AttackProcedure;
-import com.attacktimer.AttackType;
-import com.attacktimer.WeaponType;
-import com.attacktimer.ClientUtils.Utils;
 import net.runelite.api.Client;
 import net.runelite.api.NPC;
 import net.runelite.api.events.GameTick;
