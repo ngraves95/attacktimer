@@ -107,7 +107,7 @@ public class TormentedDemonsTest extends IntegrationTests
         assertSame(AttackState.DELAYED_FIRST_TICK, underTest.attackState);
         assertSame(expected, underTest.attackDelayHoldoffTicks);
 
-        performStateVerificationOrUpdate(channel, Paths.get(testdata + testName + ".txt"));
+        performStateVerificationOrUpdate(channel, Paths.get(TESTDATA + testName + ".txt"));
     }
 
     @Override

@@ -182,6 +182,7 @@ public class IntegrationTests
                 file.write(ByteBuffer.wrap(actualBytes));
                 file.close();
             }
+            fail("Updated file: " + path);
             return;
         default:
             fail("Unexpected Update enum");
