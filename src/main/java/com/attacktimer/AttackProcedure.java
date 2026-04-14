@@ -25,7 +25,8 @@ package com.attacktimer;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-public enum AttackProcedure {
+public enum AttackProcedure
+{
     POWERED_STAVE,
     MANUAL_AUTO_CAST,
     MELEE_OR_RANGE

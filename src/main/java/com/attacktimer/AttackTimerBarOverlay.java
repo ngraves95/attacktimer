@@ -13,10 +13,10 @@ package com.attacktimer;
  * modification, are permitted provided that the following conditions are met:
  *
  * 1. Redistributions of source code must retain the above copyright notice, this
- *	list of conditions and the following disclaimer.
+ *    list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
- *	this list of conditions and the following disclaimer in the documentation
- *	and/or other materials provided with the distribution.
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -40,8 +40,8 @@ import lombok.NonNull;
 import net.runelite.api.Client;
 import net.runelite.api.Perspective;
 import net.runelite.api.Point;
-import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.SpriteID;
+import net.runelite.api.coords.LocalPoint;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayPosition;
@@ -65,8 +65,7 @@ class AttackTimerBarOverlay extends Overlay
     private boolean shouldShowBar = false;
 
     @Inject
-    private AttackTimerBarOverlay(final Client client, final AttackTimerMetronomeConfig config,
-            final AttackTimerMetronomePlugin plugin)
+    private AttackTimerBarOverlay(final Client client, final AttackTimerMetronomeConfig config, final AttackTimerMetronomePlugin plugin)
     {
         this.client = client;
         this.config = config;
@@ -97,7 +96,8 @@ class AttackTimerBarOverlay extends Overlay
         {
             return null;
         }
-        final Point canvasPoint = Perspective.localToCanvas(client, localLocation, client.getTopLevelWorldView().getPlane(), height);
+        final Point canvasPoint = Perspective.localToCanvas(client, localLocation,
+                client.getTopLevelWorldView().getPlane(), height);
         if (canvasPoint == null)
         {
             return null;

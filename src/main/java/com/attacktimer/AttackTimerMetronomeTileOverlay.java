@@ -27,21 +27,21 @@ package com.attacktimer;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import javax.inject.Inject;
 import net.runelite.api.Client;
 import net.runelite.api.Perspective;
-import net.runelite.api.Point;
 import net.runelite.api.Player;
+import net.runelite.api.Point;
 import net.runelite.api.coords.LocalPoint;
 import net.runelite.client.ui.FontManager;
 import net.runelite.client.ui.overlay.Overlay;
-import net.runelite.client.ui.overlay.OverlayPosition;
-import net.runelite.client.ui.overlay.OverlayUtil;
-import javax.inject.Inject;
-import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.awt.Font;
 import net.runelite.client.ui.overlay.OverlayLayer;
+import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.OverlayPriority;
+import net.runelite.client.ui.overlay.OverlayUtil;
 
 
 public class AttackTimerMetronomeTileOverlay extends Overlay
@@ -70,7 +70,8 @@ public class AttackTimerMetronomeTileOverlay extends Overlay
     {
         player = client.getLocalPlayer();
         plugin.renderedState = plugin.attackState;
-        if (plugin.attackState == AttackTimerMetronomePlugin.AttackState.NOT_ATTACKING) {
+        if (plugin.attackState == AttackTimerMetronomePlugin.AttackState.NOT_ATTACKING)
+        {
             return null;
         }
 
@@ -96,7 +97,8 @@ public class AttackTimerMetronomeTileOverlay extends Overlay
             final LocalPoint localLocation = client.getLocalPlayer().getLocalLocation();
             Point playerPoint = null;
 
-            switch (config.ticksPosition()) {
+            switch (config.ticksPosition())
+            {
                 case TOP:
                     playerPoint = Perspective.localToCanvas(client, localLocation, client.getTopLevelWorldView().getPlane(), 214 + config.heightTickOffset());
                     break;
@@ -114,7 +116,8 @@ public class AttackTimerMetronomeTileOverlay extends Overlay
                     playerPoint = Perspective.localToCanvas(client, localLocation, client.getTopLevelWorldView().getPlane(), height);
                     break;
             }
-            if (playerPoint != null) {
+            if (playerPoint != null)
+            {
                 int displayTicksRemaining = config.useZeroBasedTickCount() ? ticksRemaining - 1 : ticksRemaining;
                 OverlayUtil.renderTextLocation(graphics, playerPoint, String.valueOf(displayTicksRemaining), ticksRemaining == 1 ? config.LastColor() : config.NumberColor());
             }

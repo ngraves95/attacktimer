@@ -86,7 +86,7 @@ enum CastingSoundData
     }
 
 
-    private static final ImmutableMap<Integer, CastingSoundData> sounds;
+    private static final ImmutableMap<Integer, CastingSoundData> SOUNDS;
 
     static
     {
@@ -97,20 +97,20 @@ enum CastingSoundData
             builder.put(data.id, data);
         }
 
-        sounds = builder.build();
+        SOUNDS = builder.build();
     }
 
     public static boolean isCastingSound(int id)
     {
-        return sounds.containsKey(id);
+        return SOUNDS.containsKey(id);
     }
 
     public static Spellbook getSpellBookFromId(int id)
     {
-        if (!sounds.containsKey(id))
+        if (!SOUNDS.containsKey(id))
         {
             return null;
         }
-        return sounds.get(id).spellbook;
+        return SOUNDS.get(id).spellbook;
     }
 }

@@ -27,6 +27,7 @@ package com.attacktimer;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
+
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.helpers.MessageFormatter;
@@ -70,7 +71,7 @@ public class EnumTests
         {
             for (int id : staff.getIds())
             {
-                boolean containsKey = PoweredStaves.poweredStaves.get(id).containsKey(PoweredStaves.UNKNOWN_SPELL);
+                boolean containsKey = PoweredStaves.POWERED_STAVES.get(id).containsKey(PoweredStaves.UNKNOWN_SPELL);
                 if (containsKey)
                 {
                     failed = true;

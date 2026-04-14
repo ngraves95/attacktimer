@@ -26,6 +26,9 @@ jobs:
       - name: Compile Tests
         run: ./gradlew compileTestJava
 
+      - name: Lint & Formatting
+        run: ./gradlew checkstyleMain checkstyleTest
+
       - name: Run Tests
         run: ./gradlew test
 

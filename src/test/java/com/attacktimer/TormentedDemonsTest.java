@@ -25,20 +25,16 @@ package com.attacktimer;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.EnumSet;
-
-import static org.junit.Assert.assertSame;
-import org.junit.Test;
 
 import com.attacktimer.AttackTimerMetronomePlugin.AttackState;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.EnumSet;
 import net.runelite.api.EnumComposition;
 import net.runelite.api.EnumID;
 import net.runelite.api.IndexedObjectSet;
@@ -53,6 +49,7 @@ import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.game.ItemEquipmentStats;
 import net.runelite.client.game.ItemStats;
+import org.junit.Test;
 
 public class TormentedDemonsTest extends IntegrationTests
 {
@@ -107,7 +104,7 @@ public class TormentedDemonsTest extends IntegrationTests
         assertSame(AttackState.DELAYED_FIRST_TICK, underTest.attackState);
         assertSame(expected, underTest.attackDelayHoldoffTicks);
 
-        performStateVerificationOrUpdate(channel, Paths.get(testdata + testName + ".txt"));
+        performStateVerificationOrUpdate(channel, Paths.get(TESTDATA + testName + ".txt"));
     }
 
     @Override
@@ -126,7 +123,7 @@ public class TormentedDemonsTest extends IntegrationTests
         int mockedNpcId = 13600;
         when(td.getId()).thenReturn(mockedNpcId);
         String[] actions = {
-                "Attack", "Examine"
+                "Attack", "Examine",
         };
         when(mockedCompositions.getActions()).thenReturn(actions);
         when(mockedNpcManager.getHealth(mockedNpcId)).thenReturn(1);

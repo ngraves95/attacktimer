@@ -32,10 +32,10 @@ import net.runelite.api.events.GameTick;
 
 public class BloodMoonSet implements IVariableSpeed
 {
-    private static final int BloodMoonSetAnimId = 2792;
+    private static final int BLOOD_MOON_SET_ANIM_ID = 2792;
     public int apply(final Client client, final AnimationData curAnimation, final AttackProcedure atkProcedure, final int baseSpeed, final int curSpeed)
     {
-        if (client.getLocalPlayer().hasSpotAnim(BloodMoonSetAnimId))
+        if (client.getLocalPlayer().hasSpotAnim(BLOOD_MOON_SET_ANIM_ID))
         {
             return curSpeed-1;
         }

@@ -261,8 +261,8 @@ public enum AnimationData
     HIGH_ALCH(713, AttackStyle.NON_ATTACK);
 
     private static final Map<Integer, AnimationData> DATA;
-    private static final Map<Spellbook, Set<AnimationData>> spellBookAnimations;
-    private static final Map<Integer, AnimationData> notAttacks;
+    private static final Map<Spellbook, Set<AnimationData>> SPELL_BOOK_ANIMATIONS;
+    private static final Map<Integer, AnimationData> NOT_ATTACKS;
 
     public final int animationId;
     public final boolean isSpecial;
@@ -338,8 +338,8 @@ public enum AnimationData
         }
 
         DATA = builder.build();
-        notAttacks = notAttacksBuilder.build();
-        spellBookAnimations = spellBookBuilder;
+        NOT_ATTACKS = notAttacksBuilder.build();
+        SPELL_BOOK_ANIMATIONS = spellBookBuilder;
     }
 
     public static AnimationData fromId(int animationId)
@@ -349,7 +349,7 @@ public enum AnimationData
 
     public static Set<AnimationData> getAnimationsForSpellbook(Spellbook s)
     {
-        return spellBookAnimations.get(s);
+        return SPELL_BOOK_ANIMATIONS.get(s);
     }
 
     public static boolean isManualCasting(AnimationData animationData)
@@ -359,14 +359,14 @@ public enum AnimationData
         {
             // We tell a manual cast by the animation data:
             return animationData.attackStyle == AttackStyle.MAGIC &&
-                spellBookAnimations.get(animationData.spellbook).contains(animationData);
+                SPELL_BOOK_ANIMATIONS.get(animationData.spellbook).contains(animationData);
         }
         return false;
     }
 
     public static boolean isBlockListAnimation(int animationId)
     {
-        return notAttacks.containsKey(animationId);
+        return NOT_ATTACKS.containsKey(animationId);
     }
 
     @Override

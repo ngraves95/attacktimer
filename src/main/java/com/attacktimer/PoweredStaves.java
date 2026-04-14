@@ -25,14 +25,14 @@ package com.attacktimer;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.apache.commons.lang3.StringUtils;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import lombok.Getter;
+import org.apache.commons.lang3.StringUtils;
 
 // https://oldschool.runescape.wiki/w/Powered_staff
 //
@@ -128,7 +128,7 @@ enum PoweredStaves
 
     protected static final boolean LOCAL_DEBUGGING = false;
     protected static final int UNKNOWN_SPELL = 0xDEADBEEF;
-    protected static final ImmutableMap<Integer, ImmutableMap<Integer, PoweredStaves>> poweredStaves;
+    protected static final ImmutableMap<Integer, ImmutableMap<Integer, PoweredStaves>> POWERED_STAVES;
 
     static
     {
@@ -164,12 +164,12 @@ enum PoweredStaves
             builder.put(21006, spellMap.build());
         }
 
-        poweredStaves = builder.build();
+        POWERED_STAVES = builder.build();
     }
 
     public static PoweredStaves getPoweredStaves(int weaponId, AnimationData animation)
     {
-        ImmutableMap<Integer, PoweredStaves> weaponMap = poweredStaves.get(weaponId);
+        ImmutableMap<Integer, PoweredStaves> weaponMap = POWERED_STAVES.get(weaponId);
         if (weaponMap == null || animation == null)
         {
             return null;

@@ -26,9 +26,6 @@ package com.attacktimer;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.google.common.collect.ImmutableMap;
-import java.util.Map;
-import lombok.Getter;
 import static com.attacktimer.AttackStyle.ACCURATE;
 import static com.attacktimer.AttackStyle.AGGRESSIVE;
 import static com.attacktimer.AttackStyle.CASTING;
@@ -36,15 +33,18 @@ import static com.attacktimer.AttackStyle.DEFENSIVE;
 import static com.attacktimer.AttackStyle.DEFENSIVE_CASTING;
 import static com.attacktimer.AttackStyle.OTHER;
 import static com.attacktimer.AttackType.CRUSH;
-import static com.attacktimer.AttackType.SLASH;
-import static com.attacktimer.AttackType.STAB;
-import static com.attacktimer.AttackType.RANGED;
 import static com.attacktimer.AttackType.MAGIC;
 import static com.attacktimer.AttackType.NONE;
+import static com.attacktimer.AttackType.RANGED;
+import static com.attacktimer.AttackType.SLASH;
+import static com.attacktimer.AttackType.STAB;
 
+import com.google.common.collect.ImmutableMap;
+import java.util.Map;
+import lombok.Getter;
 import net.runelite.api.Client;
-import net.runelite.api.ParamID;
 import net.runelite.api.EnumID;
+import net.runelite.api.ParamID;
 import net.runelite.api.StructComposition;
 
 public enum WeaponType
@@ -91,7 +91,7 @@ public enum WeaponType
     PARTISAN(MAGIC, MAGIC, null, MAGIC),
     PARTISAN_2(STAB, STAB, CRUSH, STAB);
 
-    private static final Map<Integer, WeaponType> weaponTypes;
+    private static final Map<Integer, WeaponType> WEAPON_TYPES;
 
     @Getter
     private final AttackType[] attackTypes;
@@ -105,7 +105,7 @@ public enum WeaponType
             builder.put(weaponType.ordinal(), weaponType);
         }
 
-        weaponTypes = builder.build();
+        WEAPON_TYPES = builder.build();
     }
 
     WeaponType(AttackType... attackTypes)
@@ -133,7 +133,7 @@ public enum WeaponType
             if (weaponType == 22)
             {
                 return new AttackStyle[]{
-                    ACCURATE, AGGRESSIVE, null, DEFENSIVE, CASTING, DEFENSIVE_CASTING
+                    ACCURATE, AGGRESSIVE, null, DEFENSIVE, CASTING, DEFENSIVE_CASTING,
                 };
             }
 
@@ -141,7 +141,7 @@ public enum WeaponType
             {
                 // Partisan
                 return new AttackStyle[]{
-                    ACCURATE, AGGRESSIVE, AGGRESSIVE, DEFENSIVE
+                    ACCURATE, AGGRESSIVE, AGGRESSIVE, DEFENSIVE,
                 };
             }
             return new AttackStyle[0];
@@ -175,6 +175,6 @@ public enum WeaponType
 
     public static WeaponType getWeaponType(int id)
     {
-        return weaponTypes.get(id);
+        return WEAPON_TYPES.get(id);
     }
 }
