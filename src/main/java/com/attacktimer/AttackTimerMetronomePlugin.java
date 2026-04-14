@@ -74,7 +74,8 @@ import net.runelite.client.ui.overlay.OverlayManager;
 )
 public class AttackTimerMetronomePlugin extends Plugin
 {
-    public enum AttackState {
+    public enum AttackState
+    {
         NOT_ATTACKING,
         DELAYED_FIRST_TICK,
         DELAYED,
@@ -225,7 +226,8 @@ public class AttackTimerMetronomePlugin extends Plugin
 
     private int getItemIdFromContainer(ItemContainer container, int slotID)
     {
-        if (container == null) {
+        if (container == null)
+        {
             return -1;
         }
         final Item item = container.getItem(slotID);
@@ -299,7 +301,8 @@ public class AttackTimerMetronomePlugin extends Plugin
         }
 
         ItemStats weaponStats = getWeaponStats(weaponId);
-        if (weaponStats == null) {
+        if (weaponStats == null)
+        {
             return VariableSpeed.computeSpeed(client, curAnimation, AttackProcedure.MELEE_OR_RANGE, 4); // Assume barehanded == 4t
         }
         // Deadline for next available attack.
@@ -432,12 +435,15 @@ public class AttackTimerMetronomePlugin extends Plugin
 
         Player p = client.getLocalPlayer();
 
-        if (source.equals(p) && (target instanceof NPC)) {
-            switch (attackState) {
+        if (source.equals(p) && (target instanceof NPC))
+        {
+            switch (attackState)
+            {
                 case NOT_ATTACKING:
                     // If not previously attacking, this action can result in a queued attack or
                     // an instant attack. If its queued, don't trigger the cooldown yet.
-                    if (isPlayerAttacking()) {
+                    if (isPlayerAttacking())
+                    {
                         performAttack();
                     }
                     break;
@@ -452,7 +458,8 @@ public class AttackTimerMetronomePlugin extends Plugin
         applyAndClearEats();
     }
 
-    private void applyAndClearEats() {
+    private void applyAndClearEats()
+    {
         int pendingEats = pendingEatDelayTicks;
         attackDelayHoldoffTicks += pendingEats;
         pendingEatDelayTicks -= pendingEats;
@@ -465,11 +472,15 @@ public class AttackTimerMetronomePlugin extends Plugin
         if (!config.enableMetronome()) return;
         VariableSpeed.onGameTick(client, tick);
         boolean isAttacking = isPlayerAttacking();
-        switch (attackState) {
+        switch (attackState)
+        {
             case NOT_ATTACKING:
-                if (isAttacking) {
+                if (isAttacking)
+                {
                     performAttack(); // Sets state to DELAYED_FIRST_TICK.
-                } else {
+                }
+                else
+                {
                     uiHideDebounceTickCount--;
                 }
                 break;
@@ -478,10 +489,14 @@ public class AttackTimerMetronomePlugin extends Plugin
                 attackState = AttackState.DELAYED;
                 // fallthrough
             case DELAYED:
-                if (attackDelayHoldoffTicks <= 0) { // Eligible for a new attack
-                    if (isAttacking) {
+                if (attackDelayHoldoffTicks <= 0)
+                { // Eligible for a new attack
+                    if (isAttacking)
+                    {
                         performAttack();
-                    } else {
+                    }
+                    else
+                    {
                         attackState = AttackState.NOT_ATTACKING;
                     }
                 }

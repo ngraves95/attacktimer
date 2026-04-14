@@ -30,8 +30,8 @@ import com.attacktimer.AttackProcedure;
 import net.runelite.api.Client;
 import net.runelite.api.events.GameTick;
 
-public class VariableSpeed {
-
+public class VariableSpeed
+{
     /**
      * computeSpeed will forward the client, animation data and current weapon speed to all the known classes
      * which can affect the base speed of a weapon. See implementations of IVariableSpeed.

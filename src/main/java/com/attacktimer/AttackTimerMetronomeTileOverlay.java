@@ -70,7 +70,8 @@ public class AttackTimerMetronomeTileOverlay extends Overlay
     {
         player = client.getLocalPlayer();
         plugin.renderedState = plugin.attackState;
-        if (plugin.attackState == AttackTimerMetronomePlugin.AttackState.NOT_ATTACKING) {
+        if (plugin.attackState == AttackTimerMetronomePlugin.AttackState.NOT_ATTACKING)
+        {
             return null;
         }
 
@@ -96,7 +97,8 @@ public class AttackTimerMetronomeTileOverlay extends Overlay
             final LocalPoint localLocation = client.getLocalPlayer().getLocalLocation();
             Point playerPoint = null;
 
-            switch (config.ticksPosition()) {
+            switch (config.ticksPosition())
+            {
                 case TOP:
                     playerPoint = Perspective.localToCanvas(client, localLocation, client.getTopLevelWorldView().getPlane(), 214 + config.heightTickOffset());
                     break;
@@ -114,7 +116,8 @@ public class AttackTimerMetronomeTileOverlay extends Overlay
                     playerPoint = Perspective.localToCanvas(client, localLocation, client.getTopLevelWorldView().getPlane(), height);
                     break;
             }
-            if (playerPoint != null) {
+            if (playerPoint != null)
+            {
                 int displayTicksRemaining = config.useZeroBasedTickCount() ? ticksRemaining - 1 : ticksRemaining;
                 OverlayUtil.renderTextLocation(graphics, playerPoint, String.valueOf(displayTicksRemaining), ticksRemaining == 1 ? config.LastColor() : config.NumberColor());
             }
