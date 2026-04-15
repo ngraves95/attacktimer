@@ -30,7 +30,6 @@ import com.attacktimer.AttackProcedure;
 import com.attacktimer.ClientUtils.Utils;
 import net.runelite.api.Client;
 import net.runelite.api.coords.WorldPoint;
-import net.runelite.api.events.GameTick;
 
 /**
  * Scurrius: https://oldschool.runescape.wiki/w/Scurrius/Strategies#Strategies
@@ -62,7 +61,7 @@ public class Scurrius implements IVariableSpeed
         return correctWeapon && correctCoords && correctRegion && correctEnemy;
     }
 
-    public int apply(final Client client, final AnimationData curAnimation, final AttackProcedure atkProcedure, final int baseSpeed, final int curSpeed)
+    public int apply(Client client, AnimationData curAnimation, AttackProcedure atkType, int damageDealt, int lastSpecDelta, int baseSpeed, int curSpeed)
     {
         final WorldPoint location = Utils.getLocation(client);
         final int weaponId = Utils.getWeaponId(client);
@@ -73,5 +72,4 @@ public class Scurrius implements IVariableSpeed
         }
         return curSpeed;
     }
-    public void onGameTick(final Client client, final GameTick tick) {}
 }

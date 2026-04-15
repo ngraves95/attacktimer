@@ -56,7 +56,7 @@ import net.runelite.api.events.GameTick;
  */
 public class TormentedDemons implements IVariableSpeed
 {
-    public int apply(final Client client, final AnimationData curAnimation, final AttackProcedure atkProcedure, final int baseSpeed, final int curSpeed)
+    public int apply(Client client, AnimationData curAnimation, AttackProcedure atkType, int damageDealt, int lastSpecDelta, int baseSpeed, int curSpeed)
     {
         int targetId = Utils.getTargetId(client);
         if (!isTormentedDemon(targetId))
@@ -81,7 +81,7 @@ public class TormentedDemons implements IVariableSpeed
             return curSpeed;
         }
         // Finally the last checks, only certain attack styles and weapons can trigger the effect.
-        switch (atkProcedure)
+        switch (atkType)
         {
             case POWERED_STAVE:
                 // Powered staves cannot trigger the effect

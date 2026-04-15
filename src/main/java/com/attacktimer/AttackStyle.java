@@ -51,4 +51,10 @@ public enum AttackStyle
         this.name = name;
         this.skills = skills;
     }
+
+    @Override
+    public String toString()
+    {
+        return this.name;
+    }
 }
