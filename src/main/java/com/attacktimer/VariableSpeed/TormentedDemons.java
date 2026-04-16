@@ -25,15 +25,15 @@ package com.attacktimer.VariableSpeed;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.attacktimer.AnimationData;
+import com.attacktimer.AttackProcedure;
+import com.attacktimer.AttackType;
+import com.attacktimer.ClientUtils.Utils;
+import com.attacktimer.WeaponType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import com.attacktimer.AnimationData;
-import com.attacktimer.AttackProcedure;
-import com.attacktimer.AttackType;
-import com.attacktimer.WeaponType;
-import com.attacktimer.ClientUtils.Utils;
 import net.runelite.api.Client;
 import net.runelite.api.NPC;
 import net.runelite.api.events.GameTick;
@@ -56,7 +56,7 @@ import net.runelite.api.events.GameTick;
  */
 public class TormentedDemons implements IVariableSpeed
 {
-    public int apply(final Client client, final AnimationData curAnimation, final AttackProcedure atkProcedure, final int baseSpeed, final int curSpeed)
+    public int apply(Client client, AnimationData curAnimation, AttackProcedure atkType, int damageDealt, int lastSpecDelta, int baseSpeed, int curSpeed)
     {
         int targetId = Utils.getTargetId(client);
         if (!isTormentedDemon(targetId))
@@ -81,7 +81,7 @@ public class TormentedDemons implements IVariableSpeed
             return curSpeed;
         }
         // Finally the last checks, only certain attack styles and weapons can trigger the effect.
-        switch (atkProcedure)
+        switch (atkType)
         {
             case POWERED_STAVE:
                 // Powered staves cannot trigger the effect
@@ -131,7 +131,10 @@ public class TormentedDemons implements IVariableSpeed
         tickCount++;
         for (NPC npc : client.getTopLevelWorldView().npcs())
         {
-            if (!isTormentedDemon(npc.getId())) { continue; }
+            if (!isTormentedDemon(npc.getId()))
+            {
+                continue;
+            }
             boolean isVulnerable = npc.hasSpotAnim(TORMENTED_DEMON_VULN_SPOT_ANIM);
             if (tormentedDemons.containsKey(npc))
             {
@@ -169,7 +172,7 @@ public class TormentedDemons implements IVariableSpeed
     {
         // VulTicksAfterEnd is just a guess the wiki isn't clear how long this period is, from testing 10
         // ticks feels about right.
-        private static final int VulTicksAfterEnd = 10;
+        private static final int VULN_TICKS_AFTER_END = 10;
         private int lastSpotted;
         private Integer vulnerableStart;
         private Integer vulnerableFinish;
@@ -212,7 +215,7 @@ public class TormentedDemons implements IVariableSpeed
             {
                 return false;
             }
-            return (this.vulnerableFinish + VulTicksAfterEnd) > tick;
+            return (this.vulnerableFinish + VULN_TICKS_AFTER_END) > tick;
         }
 
         // isStale returns true if the last time this demon was spotted by the client was too long ago.
@@ -235,7 +238,7 @@ public class TormentedDemons implements IVariableSpeed
                 this.consumeVuln(tick);
                 return false;
             }
-            else if (this.attacked > tick + VulTicksAfterEnd)
+            else if (this.attacked > tick + VULN_TICKS_AFTER_END)
             {
                 // already attacked within the window don't consume the vuln again we let update handle this
                 return true;

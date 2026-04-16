@@ -25,41 +25,45 @@ package com.attacktimer.VariableSpeed;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.attacktimer.AttackProcedure;
 import com.attacktimer.AnimationData;
+import com.attacktimer.AttackProcedure;
 import net.runelite.api.Client;
+import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameTick;
 
-public class VariableSpeed {
-
+public class VariableSpeed
+{
     /**
      * computeSpeed will forward the client, animation data and current weapon speed to all the known classes
      * which can affect the base speed of a weapon. See implementations of IVariableSpeed.
-     * @param client
-     * @param curAnimation
-     * @param atkType
-     * @param baseSpeed
-     * @return
      */
-    public static int computeSpeed(final Client client, final AnimationData curAnimation, final AttackProcedure atkProcedure, final int baseSpeed)
+    public static int computeSpeed(Client client, AnimationData curAnimation, AttackProcedure atkType, int damageDealt, int lastSpecDelta, int baseSpeed)
     {
         int newSpeed = baseSpeed;
-        for (IVariableSpeed i : toApply)
+        for (IVariableSpeed i : TO_APPLY)
         {
-            newSpeed = i.apply(client, curAnimation, atkProcedure, baseSpeed, newSpeed);
+            newSpeed = i.apply(client, curAnimation, atkType, damageDealt, lastSpecDelta, baseSpeed, newSpeed);
         }
         return newSpeed;
     }
 
     public static void onGameTick(Client client, GameTick tick)
     {
-        for (IVariableSpeed i : toApply)
+        for (IVariableSpeed i : TO_APPLY)
         {
             i.onGameTick(client, tick);
         }
     }
 
-    private static final IVariableSpeed[] toApply = {
+    public static void onChatMessage(ChatMessage event)
+    {
+        for (IVariableSpeed i : TO_APPLY)
+        {
+            i.onChatMessage(event);
+        }
+    }
+
+    private static final IVariableSpeed[] TO_APPLY = {
         // Order matters, apply leagues first, then any incremental modifications like rapid, or set effects.
         // Then overriding speeds last, which set a speed.
         new Leagues(),
@@ -68,6 +72,7 @@ public class VariableSpeed {
         new BloodMoonSet(),
         new RapidAttackStyle(),
         new RedKerisSpec(),
+        new PurgingStaffSpec(),
         new EyeOfAyak(),
         new TormentedDemons(),
 

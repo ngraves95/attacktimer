@@ -25,9 +25,16 @@ package com.attacktimer;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.inject.Guice;
+import com.google.inject.Inject;
+import com.google.inject.testing.fieldbinder.Bind;
+import com.google.inject.testing.fieldbinder.BoundFieldModule;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
@@ -36,22 +43,6 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Collections;
 import java.util.EnumSet;
-
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.fail;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.inject.Guice;
-import com.google.inject.Inject;
-import com.google.inject.testing.fieldbinder.Bind;
-import com.google.inject.testing.fieldbinder.BoundFieldModule;
-
 import net.runelite.api.Client;
 import net.runelite.api.EnumComposition;
 import net.runelite.api.EnumID;
@@ -68,6 +59,11 @@ import net.runelite.client.config.ConfigManager;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.game.NPCManager;
 import net.runelite.client.ui.overlay.OverlayManager;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class IntegrationTests
@@ -119,7 +115,7 @@ public class IntegrationTests
         when(mockedConfig.enableMetronome()).thenReturn(true);
         // Create player
         Player mockedPlayer = mock(Player.class);
-        when(mockedPlayer.getAnimation()).thenReturn(noAnimation);
+        when(mockedPlayer.getAnimation()).thenReturn(NO_ANIMATION);
 
         // Create the enemy
         NPC mockedTarget = mock(NPC.class);
@@ -128,7 +124,7 @@ public class IntegrationTests
         int mockedNpcId = 0xFFFF;
         when(mockedTarget.getId()).thenReturn(mockedNpcId);
         String[] actions = {
-                "Attack", "Examine"
+                "Attack", "Examine",
         };
         when(mockedCompositions.getActions()).thenReturn(actions);
         when(mockedNpcManager.getHealth(mockedNpcId)).thenReturn(1);
@@ -182,6 +178,7 @@ public class IntegrationTests
                 file.write(ByteBuffer.wrap(actualBytes));
                 file.close();
             }
+            fail("Updated file: " + path);
             return;
         default:
             fail("Unexpected Update enum");
@@ -196,16 +193,16 @@ public class IntegrationTests
 
     protected void writeTestMessage(String message, ByteArrayDataOutput file)
     {
-        file.write(testMessagePrefix);
+        file.write(PREFIX);
         file.write(message.getBytes(StandardCharsets.UTF_8));
-        file.write(testMessageSuffix);
+        file.write(SUFFIX);
     }
 
-    protected static final int noAnimation = -1;
-    protected static final String testdata = "src/test/java/com/attacktimer/testdata/";
+    protected static final int NO_ANIMATION = -1;
+    protected static final String TESTDATA = "src/test/java/com/attacktimer/testdata/";
 
-    private static final byte[] testMessagePrefix = "[TEST MESSAGE] ".getBytes(StandardCharsets.UTF_8);
-    private static final byte[] testMessageSuffix = "\n".getBytes(StandardCharsets.UTF_8);
+    private static final byte[] PREFIX = "[TEST MESSAGE] ".getBytes(StandardCharsets.UTF_8);
+    private static final byte[] SUFFIX = "\n".getBytes(StandardCharsets.UTF_8);
 
     // This needs at least one public test to keep mockito happy but having real tests in this file would
     // result in any future test which extends this test class also having to run and make that test pass.

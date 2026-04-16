@@ -19,7 +19,8 @@ public enum FontTypes
     private final String name;
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return name;
     }
 }

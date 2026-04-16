@@ -1,5 +1,6 @@
 package com.attacktimer.VariableSpeed;
 
+
 /*
  * Copyright (c) 2024, Lexer747 <https://github.com/Lexer747>
  * All rights reserved.
@@ -28,6 +29,7 @@ package com.attacktimer.VariableSpeed;
 import com.attacktimer.AnimationData;
 import com.attacktimer.AttackProcedure;
 import net.runelite.api.Client;
+import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameTick;
 
 public interface IVariableSpeed
@@ -43,13 +45,15 @@ public interface IVariableSpeed
      * @param curAnimation the animation currently being used to attack.
      * @param atkType the overarching "attack type" for this attack, this is based on all the inference made
      * about manual casts, etc. For more details about the attack {@see com.attacktimer.ClientUtils.Utils}.
+     *
+     *
      * @param baseSpeed the speed at which the attack speed started before any other variable speeds have
      * changed it.
      * @param curSpeed the current speed at which the attack is now after variable speeds have been applied,
      * e.g. rapid with range style.
      * @return the new attack speed if the pre-conditions for this variable attack speed where met.
      */
-    public int apply(Client client, AnimationData curAnimation, AttackProcedure atkType, int baseSpeed, int curSpeed);
+    public int apply(Client client, AnimationData curAnimation, AttackProcedure atkType, int damageDealt, int lastSpecDelta, int baseSpeed, int curSpeed);
     /**
      * onGameTick is pseudo subscription method, a variable speed implementation can implement this if the
      * condition for the variable speed requires some larger state tracking and cannot be implemented in apply
@@ -57,5 +61,8 @@ public interface IVariableSpeed
      * @param client the RuneScape client.
      * @param tick the current tick.
      */
-    public void onGameTick(Client client, GameTick tick);
+    default public void onGameTick(Client client, GameTick tick) {};
+
+    // TODO docs
+    default public void onChatMessage(ChatMessage event) {};
 }

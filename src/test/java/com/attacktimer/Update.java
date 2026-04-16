@@ -25,9 +25,8 @@ package com.attacktimer;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import javax.annotation.Nonnull;
-
 import com.google.common.collect.ImmutableMap;
+import javax.annotation.Nonnull;
 
 public enum Update
 {
@@ -42,7 +41,7 @@ public enum Update
         this.value = value;
     }
 
-    private static final ImmutableMap<String, Update> updates;
+    private static final ImmutableMap<String, Update> UPDATES;
 
     static
     {
@@ -53,14 +52,14 @@ public enum Update
             builder.put(data.value, data);
         }
 
-        updates = builder.build();
+        UPDATES = builder.build();
     }
 
     public static Update of(String value)
     {
         if (value == null)
             return NONE;
-        Update update = updates.get(value.toLowerCase());
+        Update update = UPDATES.get(value.toLowerCase());
         if (update == null)
             return NONE;
         return update;

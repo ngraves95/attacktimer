@@ -30,15 +30,13 @@ import com.attacktimer.AnimationData;
 import com.attacktimer.AttackProcedure;
 import com.attacktimer.AttackStyle;
 import com.attacktimer.ClientUtils.Utils;
-
 import net.runelite.api.Client;
 import net.runelite.api.Varbits;
 import net.runelite.api.WorldType;
-import net.runelite.api.events.GameTick;
 
 public class Leagues implements IVariableSpeed
 {
-    public int apply(final Client client, final AnimationData curAnimation, final AttackProcedure atkProcedure, final int baseSpeed, final int curSpeed)
+    public int apply(Client client, AnimationData curAnimation, AttackProcedure atkType, int damageDealt, int lastSpecDelta, int baseSpeed, int curSpeed)
     {
         if (!client.getWorldType().contains(WorldType.SEASONAL))
         {
@@ -86,6 +84,4 @@ public class Leagues implements IVariableSpeed
         }
         return baseSpeed;
     }
-
-    public void onGameTick(Client client, GameTick tick) {}
 }

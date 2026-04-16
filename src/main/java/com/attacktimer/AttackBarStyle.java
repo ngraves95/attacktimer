@@ -7,15 +7,15 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum AttackBarStyle
 {
-	AUTO("Auto"),
-	STANDARD("Standard"),
-	HIGH_DETAIL("High Detail");
+    AUTO("Auto"),
+    STANDARD("Standard"),
+    HIGH_DETAIL("High Detail");
 
-	private final String name;
+    private final String name;
 
-	@Override
-	public String toString()
-	{
-		return name;
-	}
+    @Override
+    public String toString()
+    {
+        return name;
+    }
 }

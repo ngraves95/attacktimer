@@ -41,7 +41,7 @@ enum Spellbook
         this.id = id;
     }
 
-    private static final ImmutableMap<Integer, Spellbook> books;
+    private static final ImmutableMap<Integer, Spellbook> BOOKS;
 
     static
     {
@@ -52,11 +52,11 @@ enum Spellbook
             builder.put(data.id, data);
         }
 
-        books = builder.build();
+        BOOKS = builder.build();
     }
 
     public static Spellbook fromVarbit(int varbit)
     {
-        return books.get(varbit);
+        return BOOKS.get(varbit);
     }
 }

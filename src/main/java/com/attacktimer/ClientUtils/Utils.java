@@ -29,17 +29,20 @@ package com.attacktimer.ClientUtils;
 import com.attacktimer.AttackStyle;
 import com.attacktimer.AttackType;
 import com.attacktimer.WeaponType;
+import java.util.ArrayDeque;
 import net.runelite.api.Actor;
 import net.runelite.api.Client;
 import net.runelite.api.EquipmentInventorySlot;
-import net.runelite.api.InventoryID;
 import net.runelite.api.Item;
 import net.runelite.api.ItemContainer;
 import net.runelite.api.NPC;
-import net.runelite.api.VarPlayer;
-import net.runelite.api.Varbits;
+import net.runelite.api.WorldView;
 import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldPoint;
+import net.runelite.api.gameval.InventoryID;
+import net.runelite.api.gameval.VarPlayerID;
+import net.runelite.api.gameval.VarbitID;
+import org.apache.commons.lang3.ArrayUtils;
 
 public class Utils
 {
@@ -55,7 +58,7 @@ public class Utils
 
     public static int getWeaponId(Client client)
     {
-        return getItemIdFromContainer(client.getItemContainer(InventoryID.EQUIPMENT),
+        return getItemIdFromContainer(client.getItemContainer(InventoryID.WORN),
                 EquipmentInventorySlot.WEAPON.getSlotIdx());
     }
 
@@ -72,9 +75,17 @@ public class Utils
     public static AttackStyle getAttackStyle(Client client)
     {
         final AttackStyle[] attackStyles = getWeaponType(client).getAttackStyles(client);
-        final int currentAttackStyleVarbit = client.getVarpValue(VarPlayer.ATTACK_STYLE);
+        int currentAttackStyleVarbit = client.getVarpValue(VarPlayerID.COM_MODE);
+        final int castingMode = client.getVarbitValue(VarbitID.AUTOCAST_DEFMODE);
         if (currentAttackStyleVarbit < attackStyles.length)
         {
+            // from script4525
+            // Even though the client has 5 attack styles for Staffs, only attack styles 0-4 are used, with an additional
+            // casting mode set for defensive casting
+            if (currentAttackStyleVarbit == 4)
+            {
+                currentAttackStyleVarbit += castingMode;
+            }
             return attackStyles[currentAttackStyleVarbit];
         }
 
@@ -84,7 +95,7 @@ public class Utils
     // returns null for unknown weapons
     public static WeaponType getWeaponType(Client client)
     {
-        final int currentEquippedWeaponTypeVarbit = client.getVarbitValue(Varbits.EQUIPPED_WEAPON_TYPE);
+        final int currentEquippedWeaponTypeVarbit = client.getVarbitValue(VarbitID.COMBAT_WEAPON_CATEGORY);
         return WeaponType.getWeaponType(currentEquippedWeaponTypeVarbit);
     }
 
@@ -92,7 +103,7 @@ public class Utils
     public static AttackType getAttackType(Client client)
     {
         final WeaponType weaponType = getWeaponType(client);
-        final int currentAttackStyleVarbit = client.getVarpValue(VarPlayer.ATTACK_STYLE);
+        final int currentAttackStyleVarbit = client.getVarpValue(VarPlayerID.COM_MODE);
         if (currentAttackStyleVarbit < weaponType.getAttackTypes().length)
         {
             return weaponType.getAttackTypes()[currentAttackStyleVarbit];
@@ -124,4 +135,40 @@ public class Utils
         return null;
     }
 
+    // TODO comment
+    public static boolean isInRegionId(Client client, int id)
+    {
+        WorldView wv = client.getTopLevelWorldView();
+        if (wv == null)
+        {
+            return false;
+        }
+
+        int[] regions = wv.getMapRegions();
+        if (regions == null || regions.length == 0)
+        {
+            return false;
+        }
+
+        return ArrayUtils.contains(regions, id);
+    }
+
+    // TODO comment
+    public static int getLastDelta(ArrayDeque<Integer> events)
+    {
+        int i = 0, last = -1, secondLast = -1;
+        var it = events.descendingIterator();
+        while (it.hasNext())
+        {
+            if (i == 0)
+                last = it.next();
+            else if (i == 1)
+                secondLast = it.next();
+            else
+                break;
+            i++;
+        }
+        var delta = last - secondLast;
+        return delta;
+    }
 }

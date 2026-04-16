@@ -30,7 +30,6 @@ import com.attacktimer.AttackProcedure;
 import com.attacktimer.AttackType;
 import com.attacktimer.ClientUtils.Utils;
 import net.runelite.api.Client;
-import net.runelite.api.events.GameTick;
 
 /**
  * There is no cooldown when attacking the skulls with melee.
@@ -41,7 +40,7 @@ public class TombsOfAmascut implements IVariableSpeed
     // https://oldschool.runescape.wiki/w/Energy_Siphon
     private static final int ENERGY_SIPHON_ID = 11772;
 
-    public int apply(final Client client, final AnimationData curAnimation, final AttackProcedure atkProcedure, final int baseSpeed, final int curSpeed)
+    public int apply(Client client, AnimationData curAnimation, AttackProcedure atkType, int damageDealt, int lastSpecDelta, int baseSpeed, int curSpeed)
     {
         final int targetId = Utils.getTargetId(client);
         final AttackType attkType = Utils.getAttackType(client);
@@ -51,5 +50,4 @@ public class TombsOfAmascut implements IVariableSpeed
         }
         return curSpeed;
     }
-    public void onGameTick(Client client, GameTick tick) {}
 }
