@@ -75,7 +75,6 @@ public class Utils
     public static AttackStyle getAttackStyle(Client client)
     {
         final AttackStyle[] attackStyles = getWeaponType(client).getAttackStyles(client);
-        System.out.println("getAttackStyle attackStyles (DEFENCE): " + attackStyles.toString());
         int currentAttackStyleVarbit = client.getVarpValue(VarPlayerID.COM_MODE);
         final int castingMode = client.getVarbitValue(VarbitID.AUTOCAST_DEFMODE);
         if (currentAttackStyleVarbit < attackStyles.length)

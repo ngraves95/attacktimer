@@ -1,6 +1,5 @@
 package com.attacktimer;
 
-import com.attacktimer.ClientUtils.Utils;
 
 /*
  * Copyright (c) 2022, Nick Graves <https://github.com/ngraves95>
@@ -29,6 +28,7 @@ import com.attacktimer.ClientUtils.Utils;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.attacktimer.ClientUtils.Utils;
 import com.attacktimer.VariableSpeed.VariableSpeed;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableMap;
@@ -48,7 +48,6 @@ import javax.inject.Inject;
 import net.runelite.api.Actor;
 import net.runelite.api.Client;
 import net.runelite.api.EquipmentInventorySlot;
-import net.runelite.api.GameState;
 import net.runelite.api.Item;
 import net.runelite.api.ItemContainer;
 import net.runelite.api.NPC;
@@ -278,16 +277,19 @@ public class AttackTimerMetronomePlugin extends Plugin
 
     private int computeDamage(AttackStyle attackStyle, AttackProcedure atkType, AnimationData curAnimation)
     {
-        switch (atkType) {
+        switch (atkType)
+        {
             case POWERED_STAVE:
                 // TODO not needed for any variable speed
                 return -1;
             case MANUAL_AUTO_CAST:
-                if (attackStyle == AttackStyle.DEFENSIVE_CASTING || attackStyle == AttackStyle.DEFENSIVE) {
+                if (attackStyle == AttackStyle.DEFENSIVE_CASTING || attackStyle == AttackStyle.DEFENSIVE)
+                {
                     // just use the defense exp to compute the damage
-                    System.out.println("computeDamage (DEFENCE): " + Utils.getLastDelta(combatExpEarned.get(Skill.DEFENCE)) + " | " + combatExpEarned.get(Skill.DEFENCE));
                     return Utils.getLastDelta(combatExpEarned.get(Skill.DEFENCE));
-                } else {
+                }
+                else
+                {
                     // deduct the fixed exp based on the spell
                     // (for now this only works for dark demon bane which awkwardly gives fractional exp)
                     var mageExp = Utils.getLastDelta(combatExpEarned.get(Skill.MAGIC));
@@ -295,7 +297,6 @@ public class AttackTimerMetronomePlugin extends Plugin
                     {
                         return -1;
                     }
-                    System.out.println("computeDamage (MAGIC): " + Utils.getLastDelta(combatExpEarned.get(Skill.MAGIC)) + " | " + combatExpEarned.get(Skill.MAGIC));
                     return (int) Math.ceil(((double) mageExp - 43.5D) / 2.0D);
                 }
             case MELEE_OR_RANGE:

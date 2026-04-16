@@ -27,7 +27,6 @@ package com.attacktimer.VariableSpeed;
 
 import com.attacktimer.AnimationData;
 import com.attacktimer.AttackProcedure;
-import java.util.ArrayDeque;
 import net.runelite.api.Client;
 
 public class EyeOfAyak implements IVariableSpeed

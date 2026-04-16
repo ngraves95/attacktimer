@@ -28,13 +28,9 @@ package com.attacktimer.VariableSpeed;
 import com.attacktimer.AnimationData;
 import com.attacktimer.AttackProcedure;
 import com.attacktimer.ClientUtils.Utils;
-import com.attacktimer.VariableSpeed.PurgingStaffSpec.YamaData;
-import com.attacktimer.VariableSpeed.PurgingStaffSpec.YamaPhase;
-import lombok.NonNull;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import lombok.NonNull;
 import net.runelite.api.Client;
 import net.runelite.api.NPC;
 import net.runelite.api.events.ChatMessage;
@@ -68,7 +64,7 @@ public class PurgingStaffSpec implements IVariableSpeed
             return curSpeed;
         }
         var target = Utils.getTargetNPC(client);
-        var flare = isEitherAVoidFlare(target, lastTarget);
+        var flare = isEitherVoidFlare(target, lastTarget);
         lastTarget = target;
         if (flare == null)
         {
@@ -79,8 +75,6 @@ public class PurgingStaffSpec implements IVariableSpeed
             return curSpeed;
         }
 
-
-        System.out.println("damageDealt: " + Integer.valueOf(damageDealt).toString());
         yama.dealVoidFlareDamage(flare, damageDealt);
         if (lastSpecDelta != -250)
         {
@@ -118,7 +112,6 @@ public class PurgingStaffSpec implements IVariableSpeed
         {
             if (npc.getId() == YAMA_ID)
             {
-                System.out.println("new yama data");
                 yama = new YamaData(npc);
                 return;
             }
@@ -131,12 +124,11 @@ public class PurgingStaffSpec implements IVariableSpeed
         if (yama == null) return;
         if (event.getMessage().startsWith("Your Yama success count is:"))
         {
-            System.out.println("yama.killed()");
             yama.killed();
         }
     }
 
-    private static NPC isEitherAVoidFlare(NPC a, NPC b)
+    private static NPC isEitherVoidFlare(NPC a, NPC b)
     {
         if (a != null && a.getId() == VOID_FLARE_ID) return a;
         if (b != null && b.getId() == VOID_FLARE_ID) return b;
@@ -162,7 +154,6 @@ public class PurgingStaffSpec implements IVariableSpeed
         {
             if (!this.voidFlares.containsKey(target)) return false;
             Boolean dead = this.voidFlares.get(target) <= 0;
-            System.out.println("getVoidFlareDead => "+dead.toString());
             return dead;
         }
 
@@ -175,7 +166,6 @@ public class PurgingStaffSpec implements IVariableSpeed
             else
             {
                 var hp = this.getVoidFlareHp()-damageDealt;
-                System.out.println("tracking new void flare, started with "+ this.getVoidFlareHp()+" hp - "+damageDealt+" total: "+hp+" hp");
                 this.voidFlares.put(target, hp);
             }
         }
@@ -184,7 +174,6 @@ public class PurgingStaffSpec implements IVariableSpeed
         {
             if (phaseChangeCooldown == 0 && this.yama.getAnimation() == YAMA_PHASE_TRANSITION_ANIMATION_ID)
             {
-                System.out.println("yama moving to next phase");
                 this.phaseChangeCooldown = 20;
                 this.phase = this.phase.nextPhase();
             }
@@ -194,7 +183,8 @@ public class PurgingStaffSpec implements IVariableSpeed
 
         private int getVoidFlareHp()
         {
-            switch (this.phase) {
+            switch (this.phase)
+            {
                 case P1:
                 case P2:
                     return VOID_FLARE_HP_P1_P2;
@@ -209,14 +199,16 @@ public class PurgingStaffSpec implements IVariableSpeed
         }
     }
 
-    enum YamaPhase {
+    enum YamaPhase
+    {
         P1,
         P2,
         P3;
 
         private YamaPhase nextPhase()
         {
-            switch (this) {
+            switch (this)
+            {
                 case P1:
                     return P2;
                 case P2:

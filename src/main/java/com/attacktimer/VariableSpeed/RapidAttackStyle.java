@@ -30,7 +30,6 @@ import com.attacktimer.AnimationData;
 import com.attacktimer.AttackProcedure;
 import com.attacktimer.AttackStyle;
 import com.attacktimer.ClientUtils.Utils;
-import java.util.ArrayDeque;
 import net.runelite.api.Client;
 import net.runelite.api.VarPlayer;
 
