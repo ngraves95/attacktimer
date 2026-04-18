@@ -149,8 +149,6 @@ public class IntegrationTests
         LocalPoint localPoint = new LocalPoint(0, 0, mockedPlane);
         when(mockedPlayer.getWorldLocation()).thenReturn(worldPoint);
         when(mockedPlayer.getLocalLocation()).thenReturn(localPoint);
-        var memsWorld = EnumSet.of(WorldType.MEMBERS);
-        when(mockedClient.getWorldType()).thenReturn(memsWorld);
         // -- NPCs
         IndexedObjectSet mockedNpcs = mock(IndexedObjectSet.class);
         when(mockedNpcs.iterator()).thenReturn(Collections.emptyIterator());
