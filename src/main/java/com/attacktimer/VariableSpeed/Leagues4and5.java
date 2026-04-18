@@ -36,7 +36,7 @@ import net.runelite.api.Varbits;
 import net.runelite.api.WorldType;
 import net.runelite.api.events.GameTick;
 
-public class Leagues implements IVariableSpeed
+public class Leagues4and5 implements IVariableSpeed
 {
     public int apply(final Client client, final AnimationData curAnimation, final AttackProcedure atkProcedure, final int baseSpeed, final int curSpeed)
     {

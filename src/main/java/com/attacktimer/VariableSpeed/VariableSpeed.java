@@ -62,7 +62,7 @@ public class VariableSpeed {
     private static final IVariableSpeed[] toApply = {
         // Order matters, apply leagues first, then any incremental modifications like rapid, or set effects.
         // Then overriding speeds last, which set a speed.
-        new Leagues(),
+        // new Leagues4and5(),
 
         // Incremental:
         new BloodMoonSet(),
