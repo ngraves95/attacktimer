@@ -128,6 +128,7 @@ public enum AnimationData
     MELEE_SARA_SWORD_SPEC(1132, AttackStyle.MELEE, true), // https://oldschool.runescape.wiki/w/Saradomin_sword assumed to be the same for the blessed version
     MELEE_RED_KERIS_SPEC(9544, AttackStyle.MELEE, true), // https://oldschool.runescape.wiki/w/Keris_partisan_of_corruption
     MELEE_SALAMANDER(5247, AttackStyle.MELEE), // https://oldschool.runescape.wiki/w/Salamander
+    MELEE_INFERNAL_TECPATL(12342, AttackStyle.MELEE), // https://oldschool.runescape.wiki/w/Infernal_tecpatl
 
     // RANGED
     RANGED_CHINCHOMPA(7618, AttackStyle.RANGED),
