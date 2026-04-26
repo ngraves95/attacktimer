@@ -61,6 +61,7 @@ import net.runelite.api.events.VarbitChanged;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
+import net.runelite.client.game.ItemEquipmentStats;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.game.ItemStats;
 import net.runelite.client.game.NPCManager;
@@ -135,6 +136,16 @@ public class AttackTimerMetronomePlugin extends Plugin
     private static final int TWINFLAME_STAFF_WEAPON_ID = 30634;
     private static final int ECHO_VENATOR_BOW_WEAPON_ID = 30434;
     private static final int VENATOR_BOW_WEAPON_ID = 27610;
+    private static final int BLACK_GEM_KERIS_ID = 30891; // https://oldschool.runescape.wiki/w/Keris_partisan_of_amascut
+
+    // Add other weapons here if in the Runelite dev shell this prints a different value to it's actual speed:
+    //
+    //  var itemManager = inject(ItemManager.class);
+    //  log.info("Speed {}", itemManager.getItemStats(<id_to_test>).getEquipment().getAspeed());
+    private static final Map<Integer, Integer> NON_STANDARD_ATTACK_SPEEDS =
+            new ImmutableMap.Builder<Integer, Integer>()
+                    .put(BLACK_GEM_KERIS_ID, 4)
+                    .build();
 
     // These animations are the ones which exceed the duration of their attack cooldown
     // so in this case DO NOT fall back the animation as it is un-reliable.
@@ -245,6 +256,11 @@ public class AttackTimerMetronomePlugin extends Plugin
 
     private ItemStats getWeaponStats(int weaponId)
     {
+        if (NON_STANDARD_ATTACK_SPEEDS.containsKey(weaponId))
+        {
+            return new ItemStats(true, -1, -1,
+                    ItemEquipmentStats.builder().aspeed(NON_STANDARD_ATTACK_SPEEDS.get(weaponId)).build());
+        }
         return itemManager.getItemStats(weaponId);
     }
 
