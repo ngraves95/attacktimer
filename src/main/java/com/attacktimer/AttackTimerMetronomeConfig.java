@@ -53,12 +53,12 @@ public interface AttackTimerMetronomeConfig extends Config
     @ConfigSection(
             name = "Attack Cooldown Tick Settings",
             description = "Change attack tick cooldown settings",
-            position = 1
+            position = 10
     )
     final String TICK_NUMBER_SETTINGS = "Attack Cooldown Tick Settings";
 
     @ConfigItem(
-            position = 1,
+            position = 10,
             keyName = "showTick",
             name = "Show Attack Cooldown Ticks",
             description = "Shows number of ticks until next attack",
@@ -71,7 +71,7 @@ public interface AttackTimerMetronomeConfig extends Config
 
 
     @ConfigItem(
-            position = 2,
+            position = 20,
             keyName = "disableFontScaling",
             name = "Disable Font Size Scaling (Metronome Tick Only)",
             description = "Disables font size scaling for metronome tick number",
@@ -83,7 +83,7 @@ public interface AttackTimerMetronomeConfig extends Config
     }
 
     @ConfigItem(
-            position = 3,
+            position = 30,
             keyName = "fontSize",
             name = "Font Size (Overhead Tick Only)",
             description = "Change the font size of the overhead attack cooldown ticks",
@@ -96,7 +96,7 @@ public interface AttackTimerMetronomeConfig extends Config
     }
 
     @ConfigItem(
-            position = 4,
+            position = 40,
             keyName = "countColor",
             name = "Tick Number Color",
             description = "Configures the color of tick number",
@@ -108,7 +108,7 @@ public interface AttackTimerMetronomeConfig extends Config
     }
 
     @ConfigItem(
-            position = 5,
+            position = 50,
             keyName = "lastColor",
             name = "Last Tick Color",
             description = "Configures the color of tick number when it says 1",
@@ -120,7 +120,7 @@ public interface AttackTimerMetronomeConfig extends Config
     }
 
     @ConfigItem(
-            position = 6,
+            position = 60,
             keyName = "fontType",
             name = "Font Type",
             description = "Change the font of the tick number",
@@ -132,7 +132,7 @@ public interface AttackTimerMetronomeConfig extends Config
     }
 
     @ConfigItem(
-            position = 7,
+            position = 70,
             keyName = "ticksPosition",
             name = "Ticks Position",
             description = "Position of the tick number respective to the player",
@@ -144,7 +144,7 @@ public interface AttackTimerMetronomeConfig extends Config
     }
 
     @ConfigItem(
-            position = 8,
+            position = 80,
             keyName = "tickHeightOffset",
             name = "Height Offset",
             description = "Height offset for minor adjustments of the tick number",
@@ -157,7 +157,7 @@ public interface AttackTimerMetronomeConfig extends Config
     }
 
     @ConfigItem(
-            position = 9,
+            position = 90,
             keyName = "useZeroBasedTickCount",
             name = "Zero-based Tick Count",
             description = "Count ticks to 0 instead of 1",
@@ -171,12 +171,12 @@ public interface AttackTimerMetronomeConfig extends Config
     @ConfigSection(
             name = "Attack Bar",
             description = "Change the colors and number of colors to cycle through",
-            position = 2
+            position = 20
     )
     final String ATTACK_BAR_SETTINGS = "Attack Cooldown Bar Settings";
 
     @ConfigItem(
-            position = 1,
+            position = 10,
             keyName = "attackBar",
             name = "Show Attack Bar",
             description = "Show the attack bar",
@@ -188,7 +188,7 @@ public interface AttackTimerMetronomeConfig extends Config
     }
 
     @ConfigItem(
-            position = 2,
+            position = 20,
             keyName = "attackBarHeightOffset",
             name = "Height Offset",
             description = "Height offset for the bar from top of player model",
@@ -201,7 +201,7 @@ public interface AttackTimerMetronomeConfig extends Config
     }
 
     @ConfigItem(
-            position = 3,
+            position = 30,
             keyName = "attackBarEmpties",
             name = "Empties Before Attack",
             description = "Controls whether the attack bar will fully empty before a new attack can occur",
@@ -213,7 +213,7 @@ public interface AttackTimerMetronomeConfig extends Config
     }
 
     @ConfigItem(
-            position = 4,
+            position = 40,
             keyName = "attackBarFills",
             name = "Fills Before Attack",
             description = "Controls whether the attack bar will fill completely after an attack",
@@ -225,7 +225,7 @@ public interface AttackTimerMetronomeConfig extends Config
     }
 
     @ConfigItem(
-            position = 5,
+            position = 50,
             keyName = "attackBarDirection",
             name = "Attack Bar Fills or Drains",
             description = "Controls whether the attack bar will fill or drain as a cooldown",
@@ -237,7 +237,7 @@ public interface AttackTimerMetronomeConfig extends Config
     }
 
     @ConfigItem(
-            position = 6,
+            position = 60,
             keyName = "attackBarStyle",
             name = "Attack Bar Style",
             description = "Auto matches HD/SD from Interface Styles plugin. Standard forces the basic bar. High Detail forces the HD bar.",
@@ -246,6 +246,25 @@ public interface AttackTimerMetronomeConfig extends Config
     default AttackBarStyle barStyle()
     {
         return AttackBarStyle.AUTO;
+    }
+
+    @ConfigSection(
+            name = "Attack Timer Debug Settings",
+            description = "Debug",
+            position = 30
+    )
+    final String ATTACK_TIMER_DEBUG_SETTINGS = "Attack Timer Debug Settings";
+
+    @ConfigItem(
+            position = 10,
+            keyName = "debugLogs",
+            name = "Enable Logging",
+            description = "Turns on state machine logging for bugs",
+            section = ATTACK_TIMER_DEBUG_SETTINGS
+    )
+    default boolean debugLogs()
+    {
+        return false;
     }
 
     @Getter

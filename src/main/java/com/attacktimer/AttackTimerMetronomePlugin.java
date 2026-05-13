@@ -45,6 +45,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
+import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Actor;
 import net.runelite.api.Client;
 import net.runelite.api.NPC;
@@ -70,6 +71,7 @@ import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.overlay.OverlayManager;
 
+@Slf4j
 @PluginDescriptor(
         name = "Attack Timer Metronome",
         description = "Shows a visual cue on an overlay every game tick to help timing based activities",
@@ -225,9 +227,10 @@ public class AttackTimerMetronomePlugin extends Plugin
             return;
         }
         combatExpEarned.get(event.getSkill()).addLast(event.getXp());
-        if (attackState == AttackState.DELAYED_FIRST_TICK)
+        if (inPreAttackWindow())
         {
             // We recompute attack speed here incase the hitsplat mattered (e.g. purging staff)
+            logStateTrace("onFakeXpDrop");
             performAttack();
         }
     }
@@ -240,9 +243,10 @@ public class AttackTimerMetronomePlugin extends Plugin
             return;
         }
         combatExpEarned.get(event.getSkill()).addLast(event.getXp());
-        if (attackState == AttackState.DELAYED_FIRST_TICK)
+        if (inPreAttackWindow())
         {
             // We recompute attack speed here incase the hitsplat mattered (e.g. purging staff)
+            logStateTrace("onStatChanged");
             performAttack();
         }
     }
@@ -509,6 +513,7 @@ public class AttackTimerMetronomePlugin extends Plugin
                     // an instant attack. If its queued, don't trigger the cooldown yet.
                     if (isPlayerAttacking())
                     {
+                        logStateTrace("onInteractingChanged");
                         performAttack();
                     }
                     break;
@@ -541,6 +546,7 @@ public class AttackTimerMetronomePlugin extends Plugin
             case NOT_ATTACKING:
                 if (isAttacking)
                 {
+                    logStateTrace("onGameTick");
                     performAttack(); // Sets state to DELAYED_FIRST_TICK.
                 }
                 else
@@ -557,6 +563,7 @@ public class AttackTimerMetronomePlugin extends Plugin
                 { // Eligible for a new attack
                     if (isAttacking)
                     {
+                        logStateTrace("onGameTick");
                         performAttack();
                     }
                     else
@@ -614,6 +621,23 @@ public class AttackTimerMetronomePlugin extends Plugin
     @VisibleForTesting
     public void writeState(ByteArrayDataOutput outChannel)
     {
+        StringBuilder sb = getState();
+        byte[] bytes = sb.toString().getBytes(StandardCharsets.UTF_8);
+        outChannel.write(bytes);
+    }
+
+    public void logStateTrace(String trace)
+    {
+        if (!config.debugLogs())
+        {
+            return;
+        }
+        StringBuilder sb = getState();
+        log.debug("["+trace+"]: "+sb.toString());
+    }
+
+    private StringBuilder getState()
+    {
         StringBuilder sb = new StringBuilder();
         // @formatter:off
         sb.append("tickPeriod: "); sb.append(this.tickPeriod);sb.append(SEPARATOR);
@@ -626,9 +650,9 @@ public class AttackTimerMetronomePlugin extends Plugin
         sb.append("soundEffectTick: "); sb.append(this.soundEffectTick);sb.append(SEPARATOR);
         sb.append("soundEffectId: "); sb.append(this.soundEffectId);sb.append("\n");
         // @formatter:on
-        byte[] bytes = sb.toString().getBytes(StandardCharsets.UTF_8);
-        outChannel.write(bytes);
+        return sb;
     }
+
     private static final String SEPARATOR = ", ";
 
 
@@ -655,14 +679,27 @@ public class AttackTimerMetronomePlugin extends Plugin
 
         // This windowing safe guards of from late swaps inside a tick, if we have already rendered the tick
         // then we shouldn't perform another attack.
-        final boolean preAttackWindow = attackState == AttackState.DELAYED_FIRST_TICK && renderedState != attackState;
-        if (preAttackWindow && weaponMisMatch)
+        if (inPreAttackWindow() && weaponMisMatch)
         {
+            logStateTrace("checkForLateWeaponSwaps");
             // "Perform an attack" this is overwrites the last attack since we now know the user swapped
             // "Something" this tick, the equipped weapon detection will pick up specific weapon swaps. Even
             // swapping more than 1 weapon inside a single tick.
             performAttack();
         }
+    }
+
+    /**
+     * inPreAttackWindow returns true if and only if the plugin has computed an attack speed and
+     * determined we are attacking an NPC, but the timer has not been rendered yet. Hence there is time
+     * still to adjust the speed if new data would change the result.
+     *
+     * @return true if an attack is detected and the plugin has not yet rendered the timer for the
+     *         current attack, false in every other case.
+     */
+    private boolean inPreAttackWindow()
+    {
+        return attackState == AttackState.DELAYED_FIRST_TICK && renderedState != attackState;
     }
 
 }
