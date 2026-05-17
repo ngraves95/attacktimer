@@ -663,6 +663,7 @@ public class AttackTimerMetronomePlugin extends Plugin
 
         if (delta != 0)
         {
+            logStateTrace("onRender");
             attackDelayHoldoffTicks += delta;
             // if a change in attack delay would cause the delay to be less than 0 we hide the display
             if (attackDelayHoldoffTicks < 0)

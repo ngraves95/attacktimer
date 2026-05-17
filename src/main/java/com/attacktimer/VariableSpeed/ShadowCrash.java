@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.GraphicsObject;
 import net.runelite.api.Player;
@@ -40,6 +41,7 @@ import net.runelite.api.WorldView;
 import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldPoint;
 
+@Slf4j
 public class ShadowCrash
 {
     private static final int FIREBALL_ID = 3262;
@@ -100,12 +102,14 @@ public class ShadowCrash
             // improved by a tick.
             consumed = tickCount.get();
             // theres a bug/feature in the yama mechanic, if you are using a mage weapon then the speed up
-            // doesn't apply if the global cooldown is 2 or less. It might also affect range but no-one uses
+            // doesn't apply if the global cooldown is 1 or less. It might also affect range but no-one uses
             // that at yama so IDC. Another reason to prefer melee P3.
-            if (attackDelayHoldoffTicks <= 2 && isUsingMagic)
+            if (attackDelayHoldoffTicks <= 1 && isUsingMagic)
             {
+                log.debug("shadowCrash success, but magic and low CD");
                 return 0;
             }
+            log.debug("shadowCrash success");
             return -1;
         }
         return 0;
