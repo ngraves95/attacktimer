@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.GraphicsObject;
 import net.runelite.api.Player;
@@ -40,6 +41,7 @@ import net.runelite.api.WorldView;
 import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldPoint;
 
+@Slf4j
 public class ShadowCrash
 {
     private static final int FIREBALL_ID = 3262;
@@ -87,7 +89,7 @@ public class ShadowCrash
     //
     // This function will adjust the attackDelayHoldoffTicks if the player successfully dodges the shadowcrash
     // in the sweet spot.
-    public int onRender(final Client client, final int attackDelayHoldoffTicks, final boolean isUsingMagic)
+    public int onRender(final Client client, final int attackDelayHoldoffTicks, final boolean isUsingMagic, final boolean debugLogs)
     {
         // if mark of darkness isn't active then no speed up can be gained.
         if (!yama.inYamaRegion || yama.phase() != YamaPhase.P3 || !mod.isActive())
@@ -100,11 +102,19 @@ public class ShadowCrash
             // improved by a tick.
             consumed = tickCount.get();
             // theres a bug/feature in the yama mechanic, if you are using a mage weapon then the speed up
-            // doesn't apply if the global cooldown is 2 or less. It might also affect range but no-one uses
+            // doesn't apply if the global cooldown is 1 or less. It might also affect range but no-one uses
             // that at yama so IDC. Another reason to prefer melee P3.
-            if (attackDelayHoldoffTicks <= 2 && isUsingMagic)
+            if (attackDelayHoldoffTicks <= 1 && isUsingMagic)
             {
+                if (debugLogs)
+                {
+                    log.debug("shadowCrash success, but magic and low CD");
+                }
                 return 0;
+            }
+            if (debugLogs)
+            {
+                log.debug("shadowCrash success");
             }
             return -1;
         }

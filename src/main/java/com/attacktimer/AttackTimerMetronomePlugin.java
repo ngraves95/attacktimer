@@ -659,10 +659,11 @@ public class AttackTimerMetronomePlugin extends Plugin
     public void onRender()
     {
         int delta = 0;
-        delta = VariableSpeed.SHADOW_CRASH.onRender(client, attackDelayHoldoffTicks, isUsingMagic);
+        delta = VariableSpeed.SHADOW_CRASH.onRender(client, attackDelayHoldoffTicks, isUsingMagic, config.debugLogs());
 
         if (delta != 0)
         {
+            logStateTrace("onRender");
             attackDelayHoldoffTicks += delta;
             // if a change in attack delay would cause the delay to be less than 0 we hide the display
             if (attackDelayHoldoffTicks < 0)
