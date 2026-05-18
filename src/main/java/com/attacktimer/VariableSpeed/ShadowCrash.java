@@ -89,7 +89,7 @@ public class ShadowCrash
     //
     // This function will adjust the attackDelayHoldoffTicks if the player successfully dodges the shadowcrash
     // in the sweet spot.
-    public int onRender(final Client client, final int attackDelayHoldoffTicks, final boolean isUsingMagic)
+    public int onRender(final Client client, final int attackDelayHoldoffTicks, final boolean isUsingMagic, final boolean debugLogs)
     {
         // if mark of darkness isn't active then no speed up can be gained.
         if (!yama.inYamaRegion || yama.phase() != YamaPhase.P3 || !mod.isActive())
@@ -106,10 +106,16 @@ public class ShadowCrash
             // that at yama so IDC. Another reason to prefer melee P3.
             if (attackDelayHoldoffTicks <= 1 && isUsingMagic)
             {
-                log.debug("shadowCrash success, but magic and low CD");
+                if (debugLogs)
+                {
+                    log.debug("shadowCrash success, but magic and low CD");
+                }
                 return 0;
             }
-            log.debug("shadowCrash success");
+            if (debugLogs)
+            {
+                log.debug("shadowCrash success");
+            }
             return -1;
         }
         return 0;

@@ -659,7 +659,7 @@ public class AttackTimerMetronomePlugin extends Plugin
     public void onRender()
     {
         int delta = 0;
-        delta = VariableSpeed.SHADOW_CRASH.onRender(client, attackDelayHoldoffTicks, isUsingMagic);
+        delta = VariableSpeed.SHADOW_CRASH.onRender(client, attackDelayHoldoffTicks, isUsingMagic, config.debugLogs());
 
         if (delta != 0)
         {
