@@ -1,7 +1,7 @@
 package com.attacktimer;
 
 /*
- * Copyright (c) 2024, Lexer747 <https://github.com/Lexer747>
+ * Copyright (c) 2024-2026, Lexer747 <https://github.com/Lexer747>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,6 +32,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.Getter;
+import net.runelite.api.gameval.ItemID;
 import org.apache.commons.lang3.StringUtils;
 
 // https://oldschool.runescape.wiki/w/Powered_staff
@@ -42,11 +43,11 @@ import org.apache.commons.lang3.StringUtils;
 // 5. This Enum is only to contain the staves which allow magic at 4 ticks.
 public enum PoweredStaves
 {
-    WEAPON_ACCURSED( Set.of(AnimationData.MAGIC_STANDARD_WAVE_STAFF, AnimationData.MAGIC_ACCURSED_SCEPTRE_SPEC), Projectiles(2337, 2339), 27665, 27666), // https://oldschool.runescape.wiki/w/Accursed_sceptre
-    WEAPON_BLUE_C_STAFF_A(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(1720), 23899), // https://oldschool.runescape.wiki/w/Crystal_staff_(attuned)
-    WEAPON_BLUE_C_STAFF_B(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(1720), 23898), // https://oldschool.runescape.wiki/w/Crystal_staff_(basic)
-    WEAPON_BLUE_C_STAFF_P(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(1720),23900), // https://oldschool.runescape.wiki/w/Crystal_staff_(perfected)
-    WEAPON_BONE_STAFF(AnimationData.MELEE_GENERIC_SLASH, Projectiles(2647),  28796, 28797), //https://oldschool.runescape.wiki/w/Bone_staff
+    WEAPON_ACCURSED(Set.of(AnimationData.MAGIC_STANDARD_WAVE_STAFF, AnimationData.MAGIC_ACCURSED_SCEPTRE_SPEC), Projectiles(2337, 2339), ItemID.WILD_CAVE_ACCURSED_CHARGED, 27666), // https://oldschool.runescape.wiki/w/Accursed_sceptre
+    WEAPON_BLUE_C_STAFF_A(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(1720), ItemID.GAUNTLET_MAGIC_T2), // https://oldschool.runescape.wiki/w/Crystal_staff_(attuned)
+    WEAPON_BLUE_C_STAFF_B(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(1720), ItemID.GAUNTLET_MAGIC_T1), // https://oldschool.runescape.wiki/w/Crystal_staff_(basic)
+    WEAPON_BLUE_C_STAFF_P(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(1720), ItemID.GAUNTLET_MAGIC_T3), // https://oldschool.runescape.wiki/w/Crystal_staff_(perfected)
+    WEAPON_BONE_STAFF(AnimationData.MELEE_GENERIC_SLASH, Projectiles(2647), ItemID.RAT_BONE_STAFF, 28797), //https://oldschool.runescape.wiki/w/Bone_staff
     WEAPON_DAWNBRINGER(AnimationData.MAGIC_STANDARD_WAVE_STAFF,  Projectiles(1544, 1547),22516), // https://oldschool.runescape.wiki/w/Dawnbringer
     WEAPON_HARM(Set.of(
             AnimationData.MAGIC_STANDARD_STRIKE_STAFF,
@@ -60,19 +61,19 @@ public enum PoweredStaves
             133, 136, 139, 130, /* blasts */
             159, 162, 165, 156, /* waves */
             1456, 1459, 1462, 1465 /* surges */),
-        24423), // https://oldschool.runescape.wiki/w/Harmonised_nightmare_staff
-    WEAPON_RED_C_STAFF_A(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(1723), 23853), // https://oldschool.runescape.wiki/w/Corrupted_staff_(attuned)
-    WEAPON_RED_C_STAFF_B(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(1723), 23852), // https://oldschool.runescape.wiki/w/Corrupted_staff_(basic)
-    WEAPON_RED_C_STAFF_P(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(1723), 23854), // https://oldschool.runescape.wiki/w/Corrupted_staff_(perfected)
-    WEAPON_SANG(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(1539), 22323), // https://oldschool.runescape.wiki/w/Sanguinesti_staff#Charged
-    WEAPON_SANG_KIT(AnimationData.MAGIC_STANDARD_WAVE_STAFF, 25731), // https://oldschool.runescape.wiki/w/Holy_sanguinesti_staff#Charged
-    WEAPON_STARTER_STAFF(22335, 22336, 28557, 28558), // https://oldschool.runescape.wiki/w/Starter_staff TODO get the animation when DMM goes live
-    WEAPON_SWAMP(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(1040),12899), // https://oldschool.runescape.wiki/w/Trident_of_the_swamp#Charged
-    WEAPON_SWAMP_E(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(1252),22292), // https://oldschool.runescape.wiki/w/Trident_of_the_swamp_(e)#Charged
-    WEAPON_THAMMARON(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(2340),22555, 22556), //https://oldschool.runescape.wiki/w/Thammaron%27s_sceptre
-    WEAPON_TRIDENT(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(1252), 11907), // https://oldschool.runescape.wiki/w/Trident_of_the_seas#Partially_charged
-    WEAPON_TRIDENT_E(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(1252),22288), // https://oldschool.runescape.wiki/w/Trident_of_the_seas_(e)#Charged
-    WEAPON_WARPED_SCEPTRE(AnimationData.MAGIC_WARPED_SCEPTRE, 28585, 28586); // https://oldschool.runescape.wiki/w/Warped_sceptre
+        ItemID.NIGHTMARE_STAFF_HARMONISED), // https://oldschool.runescape.wiki/w/Harmonised_nightmare_staff
+    WEAPON_RED_C_STAFF_A(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(1723), ItemID.GAUNTLET_MAGIC_T2_HM), // https://oldschool.runescape.wiki/w/Corrupted_staff_(attuned)
+    WEAPON_RED_C_STAFF_B(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(1723), ItemID.GAUNTLET_MAGIC_T1_HM), // https://oldschool.runescape.wiki/w/Corrupted_staff_(basic)
+    WEAPON_RED_C_STAFF_P(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(1723), ItemID.GAUNTLET_MAGIC_T3_HM), // https://oldschool.runescape.wiki/w/Corrupted_staff_(perfected)
+    WEAPON_SANG(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(1539), ItemID.SANGUINESTI_STAFF), // https://oldschool.runescape.wiki/w/Sanguinesti_staff#Charged
+    WEAPON_SANG_KIT(AnimationData.MAGIC_STANDARD_WAVE_STAFF, ItemID.SANGUINESTI_STAFF_OR), // https://oldschool.runescape.wiki/w/Holy_sanguinesti_staff#Charged
+    WEAPON_STARTER_STAFF(ItemID.DEADMAN_STARTER_STAFF, 22336, ItemID.DEADMAN_APOCALYPSE_STAFF, 28558), // https://oldschool.runescape.wiki/w/Starter_staff TODO get the animation when DMM goes live
+    WEAPON_SWAMP(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(1040), ItemID.TOXIC_TOTS_CHARGED), // https://oldschool.runescape.wiki/w/Trident_of_the_swamp#Charged
+    WEAPON_SWAMP_E(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(1252), ItemID.TOXIC_TOTS_I_CHARGED), // https://oldschool.runescape.wiki/w/Trident_of_the_swamp_(e)#Charged
+    WEAPON_THAMMARON(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(2340), ItemID.WILD_CAVE_SCEPTRE_CHARGED, 22556), //https://oldschool.runescape.wiki/w/Thammaron%27s_sceptre
+    WEAPON_TRIDENT(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(1252), ItemID.TOTS_CHARGED, ItemID.TOTS), // https://oldschool.runescape.wiki/w/Trident_of_the_seas#Partially_charged
+    WEAPON_TRIDENT_E(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(1252), ItemID.TOTS_I_CHARGED), // https://oldschool.runescape.wiki/w/Trident_of_the_seas_(e)#Charged
+    WEAPON_WARPED_SCEPTRE(AnimationData.MAGIC_WARPED_SCEPTRE, ItemID.WARPED_SCEPTRE, 28586); // https://oldschool.runescape.wiki/w/Warped_sceptre
 
     @Getter
     private final Set<Integer> ids;

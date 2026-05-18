@@ -35,8 +35,6 @@ import net.runelite.api.gameval.ItemID;
 
 public class PurgingStaffSpec implements IVariableSpeed
 {
-    private static final int PURGING_STAFF_ID = ItemID.PURGING_STAFF;
-
     private Yama yama;
     public NPC lastTarget;
 
@@ -72,7 +70,7 @@ public class PurgingStaffSpec implements IVariableSpeed
             // not using the spec
             return curSpeed;
         }
-        if (Utils.getWeaponId(client) != PURGING_STAFF_ID)
+        if (Utils.getWeaponId(client) != ItemID.PURGING_STAFF)
         {
             // not using a purging staff
             return curSpeed;
