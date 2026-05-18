@@ -36,8 +36,6 @@ import net.runelite.api.gameval.ItemID;
 
 public class PurgingStaffSpec implements IVariableSpeed
 {
-    private static final int PURGING_STAFF_ID = ItemID.PURGING_STAFF;
-
     private Yama yama;
     public NPC lastTarget;
 
@@ -65,7 +63,7 @@ public class PurgingStaffSpec implements IVariableSpeed
         }
 
         yama.dealVoidFlareDamage(flare, damageDealt);
-        if (lastSpecDelta != -250 || Utils.getWeaponId(client) != PURGING_STAFF_ID || spellbook != Spellbook.ARCEUUS)
+        if (lastSpecDelta != -250 || Utils.getWeaponId(client) != ItemID.PURGING_STAFF || spellbook != Spellbook.ARCEUUS)
         {
             // not using the spec
             // not using a purging staff
