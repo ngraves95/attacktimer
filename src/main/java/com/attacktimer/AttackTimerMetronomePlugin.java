@@ -58,6 +58,8 @@ import net.runelite.api.events.InteractingChanged;
 import net.runelite.api.events.SoundEffectPlayed;
 import net.runelite.api.events.StatChanged;
 import net.runelite.api.events.VarbitChanged;
+import net.runelite.api.gameval.ItemID;
+import net.runelite.api.gameval.SpotanimID;
 import net.runelite.api.gameval.VarPlayerID;
 import net.runelite.api.gameval.VarbitID;
 import net.runelite.client.config.ConfigManager;
@@ -144,20 +146,13 @@ public class AttackTimerMetronomePlugin extends Plugin
     private static final int ATTACK_DELAY_NONE = 0;
     public static final int DEFAULT_SIZE_UNIT_PX = 25;
 
-    public static final int SALAMANDER_SET_ANIM_ID = 952; // Used by all 4 types of salamander https://oldschool.runescape.wiki/w/Salamander
-
-    private static final int TWINFLAME_STAFF_WEAPON_ID = 30634;
-    private static final int ECHO_VENATOR_BOW_WEAPON_ID = 30434;
-    private static final int VENATOR_BOW_WEAPON_ID = 27610;
-    private static final int BLACK_GEM_KERIS_ID = 30891; // https://oldschool.runescape.wiki/w/Keris_partisan_of_amascut
-
     // Add other weapons here if in the Runelite dev shell this prints a different value to it's actual speed:
     //
     //  var itemManager = inject(ItemManager.class);
     //  log.info("Speed {}", itemManager.getItemStats(<id_to_test>).getEquipment().getAspeed());
     private static final Map<Integer, Integer> NON_STANDARD_ATTACK_SPEEDS =
             new ImmutableMap.Builder<Integer, Integer>()
-                    .put(BLACK_GEM_KERIS_ID, 4)
+                    .put(ItemID.KERIS_PARTISAN_AMASCUT, 4) // https://oldschool.runescape.wiki/w/Keris_partisan_of_amascut
                     .build();
 
     // These animations are the ones which exceed the duration of their attack cooldown
@@ -172,14 +167,14 @@ public class AttackTimerMetronomePlugin extends Plugin
 
     private static final Map<Integer, Integer> NON_STANDARD_MAGIC_WEAPON_SPEEDS =
             new ImmutableMap.Builder<Integer, Integer>()
-                    .put(TWINFLAME_STAFF_WEAPON_ID, 6)
+                    .put(ItemID.TWINFLAME_STAFF, 6)
                     .build();
 
     // Map of problematic itemIds to equivalent working ones.
     // The Echo Venator Bow's ItemStats are returning null, so use the regular bow instead.
     private static final Map<Integer, Integer> WEAPON_ID_MAPPING_WORKAROUNDS =
             new ImmutableMap.Builder<Integer, Integer>()
-                    .put(ECHO_VENATOR_BOW_WEAPON_ID, VENATOR_BOW_WEAPON_ID)
+                    .put(ItemID.VENATOR_BOW_ORNAMENT, ItemID.VENATOR_BOW)
                     .build();
 
 
@@ -188,7 +183,6 @@ public class AttackTimerMetronomePlugin extends Plugin
     private final int DEFAULT_FOOD_ATTACK_DELAY_TICKS = 3;
     private final int FAST_EAT_ATTACK_DELAY_TICKS = 2;
 
-    public static final int EQUIPPING_MONOTONIC = 384; // From empirical testing this clientint seems to always increase whenever the player equips an item
     public static final Dimension DEFAULT_SIZE = new Dimension(DEFAULT_SIZE_UNIT_PX, DEFAULT_SIZE_UNIT_PX);
 
 
@@ -309,7 +303,7 @@ public class AttackTimerMetronomePlugin extends Plugin
 
     private boolean getSalamanderAttack()
     {
-        return client.getLocalPlayer().hasSpotAnim(SALAMANDER_SET_ANIM_ID);
+        return client.getLocalPlayer().hasSpotAnim(SpotanimID.FIREBREATH);
     }
 
     private void setAttackDelay()
