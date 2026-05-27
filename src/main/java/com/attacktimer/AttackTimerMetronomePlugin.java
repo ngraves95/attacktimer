@@ -676,7 +676,7 @@ public class AttackTimerMetronomePlugin extends Plugin
 
     public void checkForLateWeaponSwaps()
     {
-        final boolean weaponMisMatch = Utils.getWeaponId(client) != lastUsedWeaponId;
+        final boolean weaponMisMatch = getWeaponId() != lastUsedWeaponId;
 
         // This windowing safe guards of from late swaps inside a tick, if we have already rendered the tick
         // then we shouldn't perform another attack.
