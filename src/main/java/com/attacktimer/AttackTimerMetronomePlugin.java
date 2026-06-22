@@ -48,6 +48,7 @@ import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Actor;
 import net.runelite.api.Client;
+import net.runelite.api.ItemID;
 import net.runelite.api.NPC;
 import net.runelite.api.Player;
 import net.runelite.api.Skill;
@@ -151,6 +152,7 @@ public class AttackTimerMetronomePlugin extends Plugin
     private static final int VENATOR_BOW_WEAPON_ID = 27610;
     private static final int BLACK_GEM_KERIS_ID = 30891; // https://oldschool.runescape.wiki/w/Keris_partisan_of_amascut
     private static final int DRAGON_CROSSBOW_LMS_ID = 33460; // https://oldschool.runescape.wiki/w/Dragon_crossbow_(Last_Man_Standing)
+    private static final int GAUNTLET_WEAPON_ATTACK_SPEED = 4;
 
     // Add other weapons here if in the Runelite dev shell this prints a different value to it's actual speed:
     //
@@ -160,6 +162,24 @@ public class AttackTimerMetronomePlugin extends Plugin
             new ImmutableMap.Builder<Integer, Integer>()
                     .put(BLACK_GEM_KERIS_ID, 4)
                     .put(DRAGON_CROSSBOW_LMS_ID, 6)
+                    .put(ItemID.CORRUPTED_HALBERD_BASIC, GAUNTLET_WEAPON_ATTACK_SPEED)
+                    .put(ItemID.CORRUPTED_HALBERD_ATTUNED, GAUNTLET_WEAPON_ATTACK_SPEED)
+                    .put(ItemID.CORRUPTED_HALBERD_PERFECTED, GAUNTLET_WEAPON_ATTACK_SPEED)
+                    .put(ItemID.CORRUPTED_STAFF_BASIC, GAUNTLET_WEAPON_ATTACK_SPEED)
+                    .put(ItemID.CORRUPTED_STAFF_ATTUNED, GAUNTLET_WEAPON_ATTACK_SPEED)
+                    .put(ItemID.CORRUPTED_STAFF_PERFECTED, GAUNTLET_WEAPON_ATTACK_SPEED)
+                    .put(ItemID.CORRUPTED_BOW_BASIC, GAUNTLET_WEAPON_ATTACK_SPEED)
+                    .put(ItemID.CORRUPTED_BOW_ATTUNED, GAUNTLET_WEAPON_ATTACK_SPEED)
+                    .put(ItemID.CORRUPTED_BOW_PERFECTED, GAUNTLET_WEAPON_ATTACK_SPEED)
+                    .put(ItemID.CRYSTAL_HALBERD_BASIC, GAUNTLET_WEAPON_ATTACK_SPEED)
+                    .put(ItemID.CRYSTAL_HALBERD_ATTUNED, GAUNTLET_WEAPON_ATTACK_SPEED)
+                    .put(ItemID.CRYSTAL_HALBERD_PERFECTED, GAUNTLET_WEAPON_ATTACK_SPEED)
+                    .put(ItemID.CRYSTAL_STAFF_BASIC, GAUNTLET_WEAPON_ATTACK_SPEED)
+                    .put(ItemID.CRYSTAL_STAFF_ATTUNED, GAUNTLET_WEAPON_ATTACK_SPEED)
+                    .put(ItemID.CRYSTAL_STAFF_PERFECTED, GAUNTLET_WEAPON_ATTACK_SPEED)
+                    .put(ItemID.CRYSTAL_BOW_BASIC, GAUNTLET_WEAPON_ATTACK_SPEED)
+                    .put(ItemID.CRYSTAL_BOW_ATTUNED, GAUNTLET_WEAPON_ATTACK_SPEED)
+                    .put(ItemID.CRYSTAL_BOW_PERFECTED, GAUNTLET_WEAPON_ATTACK_SPEED)
                     .build();
 
     // These animations are the ones which exceed the duration of their attack cooldown
