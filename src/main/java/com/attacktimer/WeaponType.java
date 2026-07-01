@@ -89,7 +89,12 @@ public enum WeaponType
     BULWARK(CRUSH, CRUSH, null, CRUSH),
     POWERED_WAND(CRUSH, null, null, NONE),
     PARTISAN(MAGIC, MAGIC, null, MAGIC),
-    PARTISAN_2(STAB, STAB, CRUSH, STAB);
+    PARTISAN_2(STAB, STAB, CRUSH, STAB), // 30
+    PLACE_HOLDER_0(null, null, null), // 31
+    PLACE_HOLDER_1(null, null, null), // 32
+    PLACE_HOLDER_2(null, null, null), // 33
+    PLACE_HOLDER_3(null, null, null), // 34
+    FLAIL(SLASH, SLASH, null, SLASH); // 35
 
     private static final Map<Integer, WeaponType> WEAPON_TYPES;
 

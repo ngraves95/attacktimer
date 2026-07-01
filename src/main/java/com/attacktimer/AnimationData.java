@@ -129,6 +129,7 @@ public enum AnimationData
     MELEE_RED_KERIS_SPEC(9544, AttackStyle.MELEE, true), // https://oldschool.runescape.wiki/w/Keris_partisan_of_corruption
     MELEE_SALAMANDER(5247, AttackStyle.MELEE), // https://oldschool.runescape.wiki/w/Salamander
     MELEE_INFERNAL_TECPATL(12342, AttackStyle.MELEE), // https://oldschool.runescape.wiki/w/Infernal_tecpatl
+    MELEE_HALLOWED_FLAIL(14244, AttackStyle.MELEE), // https://oldschool.runescape.wiki/w/Hallowed_flail
 
     // RANGED
     RANGED_CHINCHOMPA(7618, AttackStyle.RANGED),
