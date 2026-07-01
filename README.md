@@ -9,6 +9,12 @@ Ticks until next attack may be enabled over your player's head.
 
 ## Updates
 
+## 1.2.5
+
+* Blood moon rises support (Hallowed Flail, Sunspear)
+* Dragon crossbow in LMS
+* Venator Bow Kit
+
 ## 1.2
 
 Overlay improvements!
