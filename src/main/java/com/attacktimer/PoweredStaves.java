@@ -67,11 +67,9 @@ public enum PoweredStaves
     WEAPON_SANG(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(1539), 22323), // https://oldschool.runescape.wiki/w/Sanguinesti_staff#Charged
     WEAPON_SANG_KIT(AnimationData.MAGIC_STANDARD_WAVE_STAFF, 25731), // https://oldschool.runescape.wiki/w/Holy_sanguinesti_staff#Charged
     WEAPON_STARTER_STAFF(22335, 22336, 28557, 28558), // https://oldschool.runescape.wiki/w/Starter_staff TODO get the animation when DMM goes live
-    WEAPON_SWAMP(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(1040),12899), // https://oldschool.runescape.wiki/w/Trident_of_the_swamp#Charged
-    WEAPON_SWAMP_E(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(1252),22292), // https://oldschool.runescape.wiki/w/Trident_of_the_swamp_(e)#Charged
+    WEAPON_SWAMP(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(1040), 12899, 22292, 33314, 33318), // https://oldschool.runescape.wiki/w/Trident_of_the_swamp
     WEAPON_THAMMARON(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(2340),22555, 22556), //https://oldschool.runescape.wiki/w/Thammaron%27s_sceptre
-    WEAPON_TRIDENT(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(1252), 11907), // https://oldschool.runescape.wiki/w/Trident_of_the_seas#Partially_charged
-    WEAPON_TRIDENT_E(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(1252),22288), // https://oldschool.runescape.wiki/w/Trident_of_the_seas_(e)#Charged
+    WEAPON_TRIDENT(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(1252), 11905, 11907, 22288, 33322, 33323, 33326), // https://oldschool.runescape.wiki/w/Trident_of_the_seas
     WEAPON_WARPED_SCEPTRE(AnimationData.MAGIC_WARPED_SCEPTRE, 28585, 28586); // https://oldschool.runescape.wiki/w/Warped_sceptre
 
     @Getter
