@@ -494,7 +494,7 @@ public class AttackTimerMetronomePlugin extends Plugin
 
         if (EAT_MESSAGE.matcher(message).find())
         {
-            int attackDelay = DEFAULT_FOOD_ATTACK_DELAY_TICKS;
+            int attackDelay;
             if (FAST_EAT.matcher(message).find())
             {
                 attackDelay = FAST_EAT_ATTACK_DELAY_TICKS;
@@ -502,6 +502,10 @@ public class AttackTimerMetronomePlugin extends Plugin
             else if (SLOW_FOOD.matcher(message).find())
             {
                 attackDelay = SLOW_FOOD_ATTACK_DELAY_TICKS;
+            }
+            else
+            {
+                attackDelay = DEFAULT_FOOD_ATTACK_DELAY_TICKS;
             }
 
             // We should always add eat delay
