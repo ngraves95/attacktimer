@@ -9,11 +9,12 @@ Ticks until next attack may be enabled over your player's head.
 
 ## Updates
 
-## 1.2.5
+## 1.2.5 - 1.2.7
 
-* Blood moon rises support (Hallowed Flail, Sunspear)
+* Blood moon rises support (Hallowed Flail, Sunspear) - Stymphike Tartare
 * Dragon crossbow in LMS
 * Venator Bow Kit
+* Demonic Pacts trident Kits
 
 ## 1.2
 
