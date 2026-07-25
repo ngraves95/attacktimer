@@ -463,12 +463,13 @@ public class AttackTimerMetronomePlugin extends Plugin
 
 
     private static final String GENERIC_EAT = "You eat";
+    private static final String VAMPYRIUM_EAT = "Your stomach doesn't like it... but it heals some health"; // https://oldschool.runescape.wiki/w/Stymphike_tartare
     private static final String BARBARIAN_POTIONS = "You drink the lumpy potion"; // barbarian potions https://oldschool.runescape.wiki/w/Barbarian_Training#Barbarian_potions
     private static final String JUG_OF_WINE = "You drink the wine"; // Wine https://oldschool.runescape.wiki/w/Jug_of_wine
 
     // Match only the start of the line with `^` and the Pattern.MULTILINE
     private static final Pattern EAT_MESSAGE = Pattern
-            .compile("^(" + GENERIC_EAT + "|" + BARBARIAN_POTIONS + "|" + JUG_OF_WINE + ")", Pattern.MULTILINE & Pattern.CASE_INSENSITIVE);
+            .compile("^(" + GENERIC_EAT + "|" + BARBARIAN_POTIONS + "|" + JUG_OF_WINE + "|" + VAMPYRIUM_EAT + ")", Pattern.MULTILINE & Pattern.CASE_INSENSITIVE);
 
     // gnome foods are also fast eats (Note these are not the food names as the wiki lists them, but the name
     // as written in chat), also pre-made and handmade have the same chat message.
