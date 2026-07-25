@@ -125,6 +125,7 @@ public class AttackTimerMetronomePlugin extends Plugin
 
     private Spellbook currentSpellBook = Spellbook.STANDARD;
     private int lastUsedWeaponId = -1;
+    private Actor lastTarget = null;
     private int soundEffectTick = -1;
     private int soundEffectId = -1;
     private boolean isUsingMagic = false;
@@ -385,26 +386,27 @@ public class AttackTimerMetronomePlugin extends Plugin
 
     private boolean isPlayerAttacking()
     {
-        int animationId = client.getLocalPlayer().getAnimation();
+        final Player localPlayer = client.getLocalPlayer();
+        final int animationId = localPlayer.getAnimation();
         if (AnimationData.isBlockListAnimation(animationId))
         {
             return false;
         }
 
-        // Not walking is either any player animation or the edge cases which don't trigger an animation, e.g Salamander.
-        boolean notWalking = animationId != -1 || getSalamanderAttack();
+        // Not walking is either ANY player animation or the edge cases which don't trigger an animation, e.g Salamander.
+        final boolean notWalking = animationId != -1 || getSalamanderAttack();
 
         // Testing if we are attacking by checking the target is more future
         // proof to new weapons which don't need custom code and the weapon
         // stats are enough.
-        Actor target = client.getLocalPlayer().getInteracting();
+        final Actor target = localPlayer.getInteracting();
         if (target != null && (target instanceof NPC))
         {
             final NPC npc = (NPC) target;
-            boolean containsAttackOption = Arrays.stream(npc.getComposition().getActions()).anyMatch("Attack"::equals);
-            Integer health = npcManager.getHealth(npc.getId());
-            boolean hasHealthAndLevel = health != null && health > 0 && target.getCombatLevel() > 0;
-            boolean attackingNPC = hasHealthAndLevel || SPECIAL_NPCS.contains(npc.getId()) || containsAttackOption;
+            final boolean containsAttackOption = Arrays.stream(npc.getComposition().getActions()).anyMatch("Attack"::equals);
+            final Integer health = npcManager.getHealth(npc.getId());
+            final boolean hasHealthAndLevel = health != null && health > 0 && target.getCombatLevel() > 0;
+            final boolean attackingNPC = hasHealthAndLevel || SPECIAL_NPCS.contains(npc.getId()) || containsAttackOption;
             // just having a target is not enough the player may be out of range, we must wait for any
             // animation which isn't running/walking/etc
             return attackingNPC && notWalking;
@@ -413,9 +415,14 @@ public class AttackTimerMetronomePlugin extends Plugin
         {
             return notWalking;
         }
+        if (target == null)
+        {
+            // Not attacking anything
+            return false;
+        }
 
-        AnimationData fromId = AnimationData.fromId(animationId);
         // Do not use any animations from this set
+        final AnimationData fromId = AnimationData.fromId(animationId);
         if (UNRELIABLE_ANIMATIONS.contains(fromId))
         {
             return false;
@@ -432,8 +439,8 @@ public class AttackTimerMetronomePlugin extends Plugin
         // to detect this type of attack as a cast, only sound is an indication that the player is on
         // cooldown, melee attacks, etc will trigger an animation overwriting the last frame of the blowpipe's
         // idle animation.
-        boolean castingFromSound = client.getTickCount() == soundEffectTick ? CastingSoundData.isCastingSound(soundEffectId) : false;
-        boolean castingFromAnimation = AnimationData.isManualCasting(curId);
+        final boolean castingFromSound = client.getTickCount() == soundEffectTick ? CastingSoundData.isCastingSound(soundEffectId) : false;
+        final boolean castingFromAnimation = AnimationData.isManualCasting(curId);
         return castingFromSound || castingFromAnimation;
     }
 
@@ -443,6 +450,7 @@ public class AttackTimerMetronomePlugin extends Plugin
         setAttackDelay();
         tickPeriod = attackDelayHoldoffTicks;
         uiHideDebounceTickCount = UI_HIDE_DEBOUNCE_TICKS_MAX;
+        lastTarget = client.getLocalPlayer().getInteracting();
     }
 
     public int getTicksUntilNextAttack()
@@ -667,6 +675,7 @@ public class AttackTimerMetronomePlugin extends Plugin
         sb.append("attackDelayHoldoffTicks: "); sb.append(this.attackDelayHoldoffTicks);sb.append(SEPARATOR);
         sb.append("attackState: "); sb.append(this.attackState);sb.append(SEPARATOR);
         sb.append("renderedState: "); sb.append(this.renderedState);sb.append(SEPARATOR);
+        sb.append("lastTarget: "); sb.append(this.lastTarget == null ? "null" : this.lastTarget.getName());sb.append("\n");
         sb.append("pendingEatDelayTicks: "); sb.append(this.pendingEatDelayTicks);sb.append(SEPARATOR);
         sb.append("currentSpellBook: "); sb.append(this.currentSpellBook);sb.append(SEPARATOR);
         sb.append("soundEffectTick: "); sb.append(this.soundEffectTick);sb.append(SEPARATOR);
@@ -680,8 +689,7 @@ public class AttackTimerMetronomePlugin extends Plugin
 
     public void onRender()
     {
-        int delta = 0;
-        delta = VariableSpeed.SHADOW_CRASH.onRender(client, attackDelayHoldoffTicks, isUsingMagic, config.debugLogs());
+        final int delta = VariableSpeed.SHADOW_CRASH.onRender(client, attackDelayHoldoffTicks, isUsingMagic, config.debugLogs());
 
         if (delta != 0)
         {
@@ -701,7 +709,8 @@ public class AttackTimerMetronomePlugin extends Plugin
         final boolean weaponMisMatch = getWeaponId() != lastUsedWeaponId;
 
         // This windowing safe guards of from late swaps inside a tick, if we have already rendered the tick
-        // then we shouldn't perform another attack.
+        // then we shouldn't perform another attack. We don't need to check for a valid target
+        // (isPlayerAttacking) as this must have already been check to be in `DELAYED_FIRST_TICK`
         if (inPreAttackWindow() && weaponMisMatch)
         {
             logStateTrace("checkForLateWeaponSwaps");

@@ -122,6 +122,7 @@ public class IntegrationTests
         when(mockedTarget.getComposition()).thenReturn(mockedCompositions);
         int mockedNpcId = 0xFFFF;
         when(mockedTarget.getId()).thenReturn(mockedNpcId);
+        when(mockedTarget.getName()).thenReturn("mockedNpc");
         String[] actions = {
                 "Attack", "Examine",
         };

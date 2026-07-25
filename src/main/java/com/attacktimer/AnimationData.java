@@ -130,6 +130,7 @@ public enum AnimationData
     MELEE_SALAMANDER(5247, AttackStyle.MELEE), // https://oldschool.runescape.wiki/w/Salamander
     MELEE_INFERNAL_TECPATL(12342, AttackStyle.MELEE), // https://oldschool.runescape.wiki/w/Infernal_tecpatl
     MELEE_HALLOWED_FLAIL(14244, AttackStyle.MELEE), // https://oldschool.runescape.wiki/w/Hallowed_flail
+    MELEE_FELLING_AXE(10079, AttackStyle.MELEE), // https://oldschool.runescape.wiki/w/Crystal_felling_axe
 
     // RANGED
     RANGED_CHINCHOMPA(7618, AttackStyle.RANGED),

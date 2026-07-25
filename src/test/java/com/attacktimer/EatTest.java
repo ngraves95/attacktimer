@@ -29,6 +29,8 @@ import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.when;
 
 import com.attacktimer.AttackTimerMetronomePlugin.AttackState;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import net.runelite.api.ChatMessageType;
 import net.runelite.api.Player;
 import net.runelite.api.events.ChatMessage;
@@ -73,5 +75,9 @@ public class EatTest extends IntegrationTests
             curEatDelayTicks += 2;
             assertSame(curEatDelayTicks, underTest.pendingEatDelayTicks);
         }
+        // We don't care about this output for the test but want the mock to be happy this test is actually
+        // fetching the state.
+        ByteArrayDataOutput channel = ByteStreams.newDataOutput();
+        underTest.writeState(channel);
     }
 }
