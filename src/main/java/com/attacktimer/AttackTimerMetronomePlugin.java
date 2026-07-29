@@ -150,9 +150,7 @@ public class AttackTimerMetronomePlugin extends Plugin
     private static final int TWINFLAME_STAFF_WEAPON_ID = 30634;
     private static final int ECHO_VENATOR_BOW_WEAPON_ID = 30434;
     private static final int VENATOR_BOW_WEAPON_ID = 27610;
-    private static final int BLACK_GEM_KERIS_ID = 30891; // https://oldschool.runescape.wiki/w/Keris_partisan_of_amascut
-    private static final int DRAGON_CROSSBOW_LMS_ID = 33460; // https://oldschool.runescape.wiki/w/Dragon_crossbow_(Last_Man_Standing)
-    private static final int SUNSPEAR_ID = 33722; // https://oldschool.runescape.wiki/w/Sunspear
+    private static final int HALLOWFELL_ID = 34027; // https://oldschool.runescape.wiki/w/Hallowfell
 
     // Add other weapons here if in the Runelite dev shell this prints a different value to it's actual speed:
     //
@@ -160,9 +158,7 @@ public class AttackTimerMetronomePlugin extends Plugin
     //  log.info("Speed {}", itemManager.getItemStats(<id_to_test>).getEquipment().getAspeed());
     private static final Map<Integer, Integer> NON_STANDARD_ATTACK_SPEEDS =
             new ImmutableMap.Builder<Integer, Integer>()
-                    .put(BLACK_GEM_KERIS_ID, 4)
-                    .put(DRAGON_CROSSBOW_LMS_ID, 6)
-                    .put(SUNSPEAR_ID, 5)
+                    .put(HALLOWFELL_ID, 6)
                     .build();
 
     // These animations are the ones which exceed the duration of their attack cooldown
