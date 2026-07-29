@@ -131,6 +131,7 @@ public enum AnimationData
     MELEE_INFERNAL_TECPATL(12342, AttackStyle.MELEE), // https://oldschool.runescape.wiki/w/Infernal_tecpatl
     MELEE_HALLOWED_FLAIL(14244, AttackStyle.MELEE), // https://oldschool.runescape.wiki/w/Hallowed_flail
     MELEE_FELLING_AXE(10079, AttackStyle.MELEE), // https://oldschool.runescape.wiki/w/Crystal_felling_axe
+    MELEE_HALLOWFELL(14470, AttackStyle.MELEE),
 
     // RANGED
     RANGED_CHINCHOMPA(7618, AttackStyle.RANGED),
@@ -259,6 +260,8 @@ public enum AnimationData
     TAKING_HIT_UNARMED(424, AttackStyle.NON_ATTACK),
     TAKING_HIT_VERACS_FLAIL(2063, AttackStyle.NON_ATTACK),
     TAKING_HIT_WHIP(1659, AttackStyle.NON_ATTACK),
+    TAKING_HIT_KISTEN(14257, AttackStyle.NON_ATTACK),
+    TAKING_HIT_HALLOWFELL(14472, AttackStyle.NON_ATTACK),
 
     LOW_ALCH(712, AttackStyle.NON_ATTACK),
     HIGH_ALCH(713, AttackStyle.NON_ATTACK);

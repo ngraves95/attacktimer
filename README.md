@@ -9,13 +9,14 @@ Ticks until next attack may be enabled over your player's head.
 
 ## Updates
 
-## 1.2.8
+## 1.2.8 - 1.2.9
 
+* Fixes for Wyrmscraig (Hallowfell)
 * Fix regression in 1.1, greater corruption triggering cooldown
 
 ## 1.2.3 - 1.2.7
 
-* Blood moon rises support (Hallowed Flail, Sunspear) - Stymphike Tartare
+* Blood moon rises support (Hallowed Flail, Kisten, Sunspear) - Stymphike Tartare
 * Dragon crossbow in LMS
 * Venator Bow Kit
 * Demonic Pacts trident Kits
