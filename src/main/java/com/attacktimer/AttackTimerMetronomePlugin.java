@@ -263,31 +263,45 @@ public class AttackTimerMetronomePlugin extends Plugin
 
     private int computeDamage(AttackStyle attackStyle, AttackProcedure atkType, AnimationData curAnimation)
     {
+        // https://oldschool.runescape.wiki/w/Combat#Experience_gain
         switch (atkType)
         {
-            case POWERED_STAVE:
+        case POWERED_STAVE:
+            // TODO not needed for any variable speed
+            return -1;
+        case MANUAL_AUTO_CAST:
+            if (attackStyle == AttackStyle.DEFENSIVE_CASTING || attackStyle == AttackStyle.DEFENSIVE)
+            {
+                // just use the defense exp to compute the damage
+                return Utils.getLastDelta(combatExpEarned.get(Skill.DEFENCE));
+            }
+            else
+            {
+                // deduct the fixed exp based on the spell
+                // (for now this only works for dark demon bane which awkwardly gives fractional exp)
+                final var mageExp = Utils.getLastDelta(combatExpEarned.get(Skill.MAGIC));
+                if (curAnimation != AnimationData.MAGIC_ARCEUUS_DEMONBANE)
+                {
+                    return -1;
+                }
+                return (int) Math.ceil(((double) mageExp - 43.5D) / 2.0D);
+            }
+        case MELEE_OR_RANGE:
+            switch (attackStyle)
+            {
+            case ACCURATE:
+                final var attackExp = Utils.getLastDelta(combatExpEarned.get(Skill.ATTACK));
+                return (int) ((double) attackExp / 4.0D);
+            case AGGRESSIVE:
+                final var strExp = Utils.getLastDelta(combatExpEarned.get(Skill.STRENGTH));
+                return (int) ((double) strExp / 4.0D);
+            case DEFENSIVE:
+                final var defExp = Utils.getLastDelta(combatExpEarned.get(Skill.DEFENCE));
+                return (int) ((double) defExp / 4.0D);
+            default:
                 // TODO not needed for any variable speed
                 return -1;
-            case MANUAL_AUTO_CAST:
-                if (attackStyle == AttackStyle.DEFENSIVE_CASTING || attackStyle == AttackStyle.DEFENSIVE)
-                {
-                    // just use the defense exp to compute the damage
-                    return Utils.getLastDelta(combatExpEarned.get(Skill.DEFENCE));
-                }
-                else
-                {
-                    // deduct the fixed exp based on the spell
-                    // (for now this only works for dark demon bane which awkwardly gives fractional exp)
-                    var mageExp = Utils.getLastDelta(combatExpEarned.get(Skill.MAGIC));
-                    if (curAnimation != AnimationData.MAGIC_ARCEUUS_DEMONBANE)
-                    {
-                        return -1;
-                    }
-                    return (int) Math.ceil(((double) mageExp - 43.5D) / 2.0D);
-                }
-            case MELEE_OR_RANGE:
-                // TODO not needed for any variable speed
-                return -1;
+            }
         }
         return -1;
     }
@@ -487,7 +501,9 @@ public class AttackTimerMetronomePlugin extends Plugin
     private static final String FAST_GNOME_FOOD = "worm hole|tangled toads legs|veg ball|chocolate bomb|worm crunchies|toad crunchies|"
             + "choc chip crunchies|spicy crunchies|fruit batta|cheese and tomato batta|toad batta|vegetable batta|worm batta";
     private static final String FAST_FOOD = "karambwan|halibut";
-    // TODO ^ find out the food messages for https://oldschool.runescape.wiki/w/Crystal_paddlefish and https://oldschool.runescape.wiki/w/Corrupted_paddlefish
+    // Unfortunately these have just the generic "You eat the food." so there is no easy way to tell if you
+    // have the quicker eat delay. https://oldschool.runescape.wiki/w/Crystal_paddlefish and
+    // https://oldschool.runescape.wiki/w/Corrupted_paddlefish
     private static final Pattern FAST_EAT = Pattern.compile("(" + FAST_FOOD + "|" + FAST_GNOME_FOOD + ")", Pattern.CASE_INSENSITIVE);
 
     @Subscribe

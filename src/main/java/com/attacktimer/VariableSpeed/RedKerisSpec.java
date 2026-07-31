@@ -34,9 +34,14 @@ public class RedKerisSpec implements IVariableSpeed
     public int apply(final Client client, final AnimationData curAnimation, final AttackProcedure atkType,
             final int damageDealt, final int lastSpecDelta, final int baseSpeed, final int curSpeed)
     {
-        if (curAnimation == AnimationData.MELEE_RED_KERIS_SPEC)
+        // https://oldschool.runescape.wiki/w/Keris_partisan_of_corruption#Special_attack
+        if (lastSpecDelta != -750 || curAnimation != AnimationData.MELEE_RED_KERIS_SPEC)
         {
-            // TODO add miss/hit tracking code, if we missed this delay is not applied
+            return curSpeed;
+        }
+        // We are using the special attack, but we only slow down if we hit a number
+        if (damageDealt > 0)
+        {
             return curSpeed + 4;
         }
         return curSpeed;
