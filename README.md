@@ -9,10 +9,11 @@ Ticks until next attack may be enabled over your player's head.
 
 ## Updates
 
-## 1.2.8 - 1.2.9
+## 1.2.8 - 1.2.10
 
 * Fixes for Wyrmscraig (Hallowfell)
 * Fix regression in 1.1, greater corruption triggering cooldown
+* Red Keris Special Attack will now only be 8 ticks when landing the hit
 
 ## 1.2.3 - 1.2.7
 
