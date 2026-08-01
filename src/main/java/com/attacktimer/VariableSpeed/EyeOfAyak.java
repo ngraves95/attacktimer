@@ -27,12 +27,14 @@ package com.attacktimer.VariableSpeed;
 
 import com.attacktimer.AnimationData;
 import com.attacktimer.AttackProcedure;
+import com.attacktimer.Spellbook;
 import net.runelite.api.Client;
 
 public class EyeOfAyak implements IVariableSpeed
 {
     public int apply(final Client client, final AnimationData curAnimation, final AttackProcedure atkType,
-            final int damageDealt, final int lastSpecDelta, final int baseSpeed, final int curSpeed)
+            final Spellbook spellbook, final int damageDealt, final int lastSpecDelta, final int baseSpeed,
+            final int curSpeed)
     {
         // https://oldschool.runescape.wiki/w/Eye_of_ayak#Charged
         // https://oldschool.runescape.wiki/w/Eye_of_ayak#Special_attack

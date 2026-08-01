@@ -28,14 +28,14 @@ package com.attacktimer.VariableSpeed;
 import com.attacktimer.AnimationData;
 import com.attacktimer.AttackProcedure;
 import com.attacktimer.ClientUtils.Utils;
+import com.attacktimer.Spellbook;
 import net.runelite.api.Client;
 import net.runelite.api.coords.WorldPoint;
 
 /**
- * Scurrius: https://oldschool.runescape.wiki/w/Scurrius/Strategies#Strategies
- *
- * When attacking the giant rats summoned by Scurrius and attacking them with a bone weapon the player has no
- * attack delay.
+ * Scurrius: https://oldschool.runescape.wiki/w/Scurrius/Strategies#Strategies When attacking the
+ * giant rats summoned by Scurrius and attacking them with a bone weapon the player has no attack
+ * delay.
  */
 public class Scurrius implements IVariableSpeed
 {
@@ -52,7 +52,8 @@ public class Scurrius implements IVariableSpeed
     private static final int SCURRIUS_MIN_Y = 9859;
     private static final int SCURRIUS_MAX_Y = 9876;
 
-    private static boolean attackingGiantRatWithBoneWeapon(final int equipped, final int regionId, final int x, final int y, final int target)
+    private static boolean attackingGiantRatWithBoneWeapon(final int equipped, final int regionId, final int x,
+            final int y, final int target)
     {
         final boolean correctWeapon = equipped == BONE_STAFF_ID || equipped == BONE_MACE_ID || equipped == BONE_BOW_ID;
         final boolean correctCoords = x >= SCURRIUS_MIN_X && x <= SCURRIUS_MAX_X && y >= SCURRIUS_MIN_Y && y <= SCURRIUS_MAX_Y;
@@ -62,12 +63,14 @@ public class Scurrius implements IVariableSpeed
     }
 
     public int apply(final Client client, final AnimationData curAnimation, final AttackProcedure atkType,
-            final int damageDealt, final int lastSpecDelta, final int baseSpeed, final int curSpeed)
+            final Spellbook spellbook, final int damageDealt, final int lastSpecDelta, final int baseSpeed,
+            final int curSpeed)
     {
         final WorldPoint location = Utils.getLocation(client);
         final int weaponId = Utils.getWeaponId(client);
         final int targetId = Utils.getTargetId(client);
-        if (attackingGiantRatWithBoneWeapon(weaponId, location.getRegionID(), location.getX(), location.getY(), targetId))
+        if (attackingGiantRatWithBoneWeapon(weaponId, location.getRegionID(), location.getX(), location.getY(),
+                targetId))
         {
             return 1;
         }

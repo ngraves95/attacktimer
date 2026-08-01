@@ -29,6 +29,7 @@ import com.attacktimer.AnimationData;
 import com.attacktimer.AttackProcedure;
 import com.attacktimer.AttackType;
 import com.attacktimer.ClientUtils.Utils;
+import com.attacktimer.Spellbook;
 import com.attacktimer.VariableSpeed.State.TickCount;
 import com.attacktimer.WeaponType;
 import java.util.ArrayList;
@@ -65,7 +66,8 @@ public class TormentedDemons implements IVariableSpeed
     }
 
     public int apply(final Client client, final AnimationData curAnimation, final AttackProcedure atkType,
-            final int damageDealt, final int lastSpecDelta, final int baseSpeed, final int curSpeed)
+            final Spellbook spellbook, final int damageDealt, final int lastSpecDelta, final int baseSpeed,
+            final int curSpeed)
     {
         int targetId = Utils.getTargetId(client);
         if (!isTormentedDemon(targetId))

@@ -27,6 +27,7 @@ package com.attacktimer.VariableSpeed;
 
 import com.attacktimer.AnimationData;
 import com.attacktimer.AttackProcedure;
+import com.attacktimer.Spellbook;
 import com.attacktimer.VariableSpeed.State.IStateTracker;
 import net.runelite.api.Client;
 
@@ -56,6 +57,7 @@ public interface IVariableSpeed extends IStateTracker
         final Client client,
         final AnimationData curAnimation,
         final AttackProcedure atkType,
+        final Spellbook spellbook,
         final int damageDealt,
         final int lastSpecDelta,
         final int baseSpeed,
