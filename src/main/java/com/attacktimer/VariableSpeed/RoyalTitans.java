@@ -28,16 +28,21 @@ package com.attacktimer.VariableSpeed;
 import com.attacktimer.AnimationData;
 import com.attacktimer.AttackProcedure;
 import com.attacktimer.ClientUtils.Utils;
+import com.attacktimer.VariableSpeed.State.IStateTracker;
 import com.attacktimer.Spellbook;
 import com.google.common.collect.ImmutableSet;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.NPC;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.GameTick;
+import net.runelite.api.events.NpcDespawned;
+import net.runelite.api.events.NpcSpawned;
 
+@Slf4j
 public class RoyalTitans implements IVariableSpeed
 {
 
@@ -52,11 +57,11 @@ public class RoyalTitans implements IVariableSpeed
     private Set<NPC> iceElementals = new HashSet<NPC>();
     private Set<NPC> fireElementals = new HashSet<NPC>();
 
+    private boolean removeDead = false;
+
     private static final Set<AnimationData> STANDARD_SPELLS = new ImmutableSet.Builder<AnimationData>()
             .add(AnimationData.MAGIC_STANDARD_STRIKE_BOLT_BLAST)
             .add(AnimationData.MAGIC_STANDARD_STRIKE_BOLT_BLAST_STAFF)
-            .add(AnimationData.MAGIC_STANDARD_STRIKE_MANUAL)
-            .add(AnimationData.MAGIC_STANDARD_STRIKE_STAFF)
             .add(AnimationData.MAGIC_STANDARD_SURGE_STAFF)
             .add(AnimationData.MAGIC_STANDARD_WAVE)
             .add(AnimationData.MAGIC_STANDARD_WAVE_STAFF)
@@ -78,32 +83,55 @@ public class RoyalTitans implements IVariableSpeed
         {
             return curSpeed;
         }
+        final NPC target = Utils.getTargetNPC(client);
+        if (target == null)
+        {
+            return curSpeed;
+        }
+        // We are now in the royal titan region, attacking an elemental using magic and one of the standard
+        // spells which could one shot it.
+        log.debug("[RoyalTitans] Attacking elemental With correct spell");
         // Awkwardly you only got awarded the exp (and therefore computed damage) against the one of the
         // elementals, hence the 3x3 AoE isn't seen in the damage dealt.
         if (damageDealt < ELEMENTAL_HP)
         {
+            log.debug("[RoyalTitans] didn't do enough damage");
             // Don't bother computing partial damage assume most players are one-shotting
             return curSpeed;
         }
-
+        log.debug("[RoyalTitans] enough damage");
         // Compute the number of elementals in the a 3x3 from our target:
         final var set = targetId == FIRE_ELEMENTAL_ID ? fireElementals : iceElementals;
+        log.debug("[RoyalTitans] elemental set: {}", set);
         int count = 1;
-        final var iter = set.iterator();
-        if (!iter.hasNext())
+        final var reference = target.getWorldLocation();
+        log.debug("[RoyalTitans] reference {}", reference);
+        for (final NPC elemental : set)
         {
-            return curSpeed - count;
+            if (elemental == target)
+            {
+                log.debug("[RoyalTitans] distance check skipped - is target");
+                continue;
+            }
+            final WorldPoint worldLocation = elemental.getWorldLocation();
+            final int distanceTo2D = reference.distanceTo2D(worldLocation);
+            log.debug("[RoyalTitans] distance check new {}, distance {}", worldLocation, distanceTo2D);
+            if (distanceTo2D <= 1)
+            {
+                count++;
+            }
         }
-        final var reference = iter.next().getWorldLocation();
-        if (isNpcNearReference(iter, reference)) count++;
-        if (isNpcNearReference(iter, reference)) count++;
+        log.debug("[RoyalTitans] success, reduced by {}", count);
+        // despawn happens much later than is dead (hence how Entity Hider works) so we need to remove them
+        // now if we succeeded in apply. Deferred till the next onGameTick is called.
+        removeDead = true;
         return curSpeed - count;
     }
 
     private static boolean earlyExit(final Client client, final AttackProcedure atkType, final int damageDealt,
             final Spellbook spellbook)
     {
-        return inRegion(client) &&
+        return notInRegion(client) &&
                atkType != AttackProcedure.MANUAL_AUTO_CAST &&
                damageDealt <= 0 &&
                spellbook != Spellbook.STANDARD;
@@ -112,45 +140,60 @@ public class RoyalTitans implements IVariableSpeed
     @Override
     public void onGameTick(Client client, GameTick tick)
     {
-        if (!inRegion(client))
+        if (removeDead)
+        {
+            var before = iceElementals.size() + fireElementals.size();
+            var removed = iceElementals.removeIf(npc -> npc.isDead());
+            removed |= fireElementals.removeIf(npc -> npc.isDead());
+            var after = iceElementals.size() + fireElementals.size();
+            if (removed)
+            {
+                log.debug("[RoyalTitans] removed dead elementals in onGameTick - before {}, after {}", before, after);
+                removeDead = false;
+            }
+        }
+    }
+
+    @Override
+    public void onNpcSpawned(final Client client, final NpcSpawned npcSpawned)
+    {
+        if (notInRegion(client))
         {
             return;
         }
-        fireElementals.removeIf(npc -> npc.isDead());
-        iceElementals.removeIf(npc -> npc.isDead());
-        addElementals(client);
-    }
-
-    private void addElementals(Client client)
-    {
-        for (NPC npc : client.getTopLevelWorldView().npcs())
+        final NPC npc = npcSpawned.getNpc();
+        final int id = npc.getId();
+        if (id == ICE_ELEMENTAL_ID)
         {
-            final int id = npc.getId();
-            if (!isElemental(id))
-            {
-                continue;
-            }
-            if (id == FIRE_ELEMENTAL_ID && !fireElementals.contains(npc))
-            {
-                fireElementals.add(npc);
-            }
-            else if (id == ICE_ELEMENTAL_ID && !iceElementals.contains(npc))
-            {
-                iceElementals.add(npc);
-            }
+            log.debug("[RoyalTitans] added ice elemental");
+            iceElementals.add(npc);
+        }
+        else if (id == FIRE_ELEMENTAL_ID)
+        {
+            log.debug("[RoyalTitans] added fire elemental");
+            fireElementals.add(npc);
         }
     }
 
-    private boolean isNpcNearReference(final Iterator<NPC> iter, final WorldPoint reference)
+    @Override
+    public void onNpcDespawned(final Client client, final NpcDespawned npcDespawned)
     {
-        if (iter.hasNext())
+        if (notInRegion(client))
         {
-            if (reference.distanceTo2D(iter.next().getWorldLocation()) <= 1)
-            {
-                return true;
-            }
+            return;
         }
-        return false;
+        final NPC npc = npcDespawned.getNpc();
+        final int id = npc.getId();
+        if (id == ICE_ELEMENTAL_ID)
+        {
+            log.debug("[RoyalTitans] removed ice elemental");
+            iceElementals.remove(npc);
+        }
+        else if (id == FIRE_ELEMENTAL_ID)
+        {
+            log.debug("[RoyalTitans] removed fire elemental");
+            fireElementals.remove(npc);
+        }
     }
 
     private static boolean isElemental(int id)
@@ -158,7 +201,7 @@ public class RoyalTitans implements IVariableSpeed
         return id == FIRE_ELEMENTAL_ID || id == ICE_ELEMENTAL_ID;
     }
 
-    private static boolean inRegion(final Client client)
+    private static boolean notInRegion(final Client client)
     {
         return Utils.getLocation(client).getRegionID() != ROYAL_TITANS_REGION_ID;
     }

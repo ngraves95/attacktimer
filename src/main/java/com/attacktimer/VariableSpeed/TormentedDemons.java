@@ -39,6 +39,8 @@ import java.util.Map.Entry;
 import net.runelite.api.Client;
 import net.runelite.api.NPC;
 import net.runelite.api.events.GameTick;
+import net.runelite.api.events.NpcDespawned;
+import net.runelite.api.events.NpcSpawned;
 
 /**
  * TormentedDemons is the variable speed implementation for the "punish" attack a player can do against a
@@ -136,6 +138,7 @@ public class TormentedDemons implements IVariableSpeed
 
     private Map<NPC, DemonData> tormentedDemons = new HashMap<NPC, DemonData>();
 
+    @Override
     public void onGameTick(Client client, GameTick tick)
     {
         for (NPC npc : client.getTopLevelWorldView().npcs())
@@ -156,7 +159,7 @@ public class TormentedDemons implements IVariableSpeed
             }
         }
         // Only check for staleness every so often
-        if (tickCount.get() % 100 == 0)
+        if (tickCount.get() % 100 == 0 && tormentedDemons.entrySet().size() > 0)
         {
             var toDelete = new ArrayList<NPC>();
             for (Entry<NPC, DemonData> td : tormentedDemons.entrySet())
@@ -170,6 +173,35 @@ public class TormentedDemons implements IVariableSpeed
             {
                 tormentedDemons.remove(td);
             }
+        }
+    }
+
+    @Override
+    public void onNpcSpawned(final Client client, final NpcSpawned npcSpawned)
+    {
+        final NPC npc = npcSpawned.getNpc();
+        if (isTormentedDemon(npc.getId()))
+        {
+            boolean isVulnerable = npc.hasSpotAnim(TORMENTED_DEMON_VULN_SPOT_ANIM);
+            if (tormentedDemons.containsKey(npc))
+            {
+                DemonData d = tormentedDemons.get(npc);
+                d.update(tickCount.get(), isVulnerable);
+            }
+            else
+            {
+                tormentedDemons.put(npc, new DemonData(tickCount.get(), isVulnerable));
+            }
+        }
+    }
+
+    @Override
+    public void onNpcDespawned(final Client client, final NpcDespawned npcDespawned)
+    {
+        final NPC npc = npcDespawned.getNpc();
+        if (isTormentedDemon(npc.getId()))
+        {
+            tormentedDemons.remove(npc);
         }
     }
 

@@ -28,6 +28,8 @@ package com.attacktimer.VariableSpeed.State;
 import net.runelite.api.Client;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameTick;
+import net.runelite.api.events.NpcDespawned;
+import net.runelite.api.events.NpcSpawned;
 
 public interface IStateTracker
 {
@@ -49,5 +51,21 @@ public interface IStateTracker
      * @param event  the chat message event.
      */
     default public void onChatMessage(final Client client, final ChatMessage event)
+    {};
+
+    /**
+     * TODO
+     *
+     * @param npcSpawned
+     */
+    default public void onNpcSpawned(final Client client, final NpcSpawned npcSpawned)
+    {};
+
+    /**
+     * TODO
+     *
+     * @param npcDespawned
+     */
+    default public void onNpcDespawned(final Client client, final NpcDespawned npcDespawned)
     {};
 }

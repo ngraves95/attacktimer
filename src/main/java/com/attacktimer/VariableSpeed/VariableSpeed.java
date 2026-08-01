@@ -35,6 +35,8 @@ import com.attacktimer.VariableSpeed.State.Yama;
 import net.runelite.api.Client;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameTick;
+import net.runelite.api.events.NpcDespawned;
+import net.runelite.api.events.NpcSpawned;
 
 public class VariableSpeed
 {
@@ -74,6 +76,30 @@ public class VariableSpeed
         for (IStateTracker i : TO_APPLY)
         {
             i.onChatMessage(client, event);
+        }
+    }
+
+    public static void onNpcSpawned(final Client client, final NpcSpawned npcSpawned)
+    {
+        for (IStateTracker i : TO_TRACK)
+        {
+            i.onNpcSpawned(client, npcSpawned);
+        }
+        for (IStateTracker i : TO_APPLY)
+        {
+            i.onNpcSpawned(client, npcSpawned);
+        }
+    }
+
+    public static void onNpcDespawned(final Client client, final NpcDespawned npcDespawned)
+    {
+        for (IStateTracker i : TO_TRACK)
+        {
+            i.onNpcDespawned(client, npcDespawned);
+        }
+        for (IStateTracker i : TO_APPLY)
+        {
+            i.onNpcDespawned(client, npcDespawned);
         }
     }
 

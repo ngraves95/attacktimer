@@ -33,6 +33,7 @@ import net.runelite.api.Client;
 import net.runelite.api.NPC;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameTick;
+import net.runelite.api.events.NpcSpawned;
 
 /**
  * Yama tracks various bits of state related to the boss https://oldschool.runescape.wiki/w/Yama.
@@ -54,6 +55,7 @@ public class Yama implements IStateTracker
     public boolean inYamaRegion;
     public NPC lastTarget;
 
+    @Override
     public void onGameTick(Client client, GameTick tick)
     {
         inYamaRegion = Utils.isInRegionId(client, YAMA_REGION_ID);
@@ -67,16 +69,9 @@ public class Yama implements IStateTracker
             yama.determineYamaPhase();
             return;
         }
-        for (NPC npc : client.getTopLevelWorldView().npcs())
-        {
-            if (npc.getId() == YAMA_ID)
-            {
-                yama = new YamaData(npc);
-                return;
-            }
-        }
     }
 
+    @Override
     public void onChatMessage(Client client, ChatMessage event)
     {
         if (!inYamaRegion || yama == null)
@@ -86,6 +81,24 @@ public class Yama implements IStateTracker
         if (event.getMessage().startsWith("Your Yama success count is:"))
         {
             yama.killed();
+        }
+    }
+
+    @Override
+    public void onNpcSpawned(final Client client, final NpcSpawned npcSpawned)
+    {
+        if (!inYamaRegion)
+        {
+            return;
+        }
+        if (yama != null)
+        {
+            return;
+        }
+        final NPC npc = npcSpawned.getNpc();
+        if (npc.getId() == YAMA_ID)
+        {
+            yama = new YamaData(npc);
         }
     }
 
