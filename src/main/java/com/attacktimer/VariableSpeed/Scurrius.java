@@ -1,7 +1,7 @@
 package com.attacktimer.VariableSpeed;
 
 /*
- * Copyright (c) 2024, Lexer747 <https://github.com/Lexer747>
+ * Copyright (c) 2024-2026, Lexer747 <https://github.com/Lexer747>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,9 +33,10 @@ import net.runelite.api.Client;
 import net.runelite.api.coords.WorldPoint;
 
 /**
- * Scurrius: https://oldschool.runescape.wiki/w/Scurrius/Strategies#Strategies When attacking the
- * giant rats summoned by Scurrius and attacking them with a bone weapon the player has no attack
- * delay.
+ * Scurrius: https://oldschool.runescape.wiki/w/Scurrius/Strategies#Strategies
+ *
+ * When attacking the giant rats summoned by Scurrius and attacking them with a bone weapon the player has no
+ * attack delay.
  */
 public class Scurrius implements IVariableSpeed
 {
@@ -69,8 +70,7 @@ public class Scurrius implements IVariableSpeed
         final WorldPoint location = Utils.getLocalLocation(client);
         final int weaponId = Utils.getWeaponId(client);
         final int targetId = Utils.getTargetId(client);
-        if (attackingGiantRatWithBoneWeapon(weaponId, location.getRegionID(), location.getX(), location.getY(),
-                targetId))
+        if (attackingGiantRatWithBoneWeapon(weaponId, location.getRegionID(), location.getX(), location.getY(), targetId))
         {
             return 1;
         }

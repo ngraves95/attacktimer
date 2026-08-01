@@ -1,7 +1,7 @@
 package com.attacktimer.VariableSpeed;
 
 /*
- * Copyright (c) 2024-2025, Lexer747 <https://github.com/Lexer747>
+ * Copyright (c) 2024-2026, Lexer747 <https://github.com/Lexer747>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -44,11 +44,11 @@ public class VariableSpeed
      * computeSpeed will forward the client, animation data and current weapon speed to all the known
      * classes which can affect the base speed of a weapon. See implementations of IVariableSpeed.
      */
-    public static int computeSpeed(final Client client, final AnimationData curAnimation, final AttackProcedure atkType,
+    public static int compute(final Client client, final AnimationData curAnimation, final AttackProcedure atkType,
             final Spellbook spellbook, final int damageDealt, final int lastSpecDelta, final int baseSpeed)
     {
         int newSpeed = baseSpeed;
-        for (IVariableSpeed i : TO_APPLY)
+        for (final IVariableSpeed i : TO_APPLY)
         {
             newSpeed = i.apply(client, curAnimation, atkType, spellbook, damageDealt, lastSpecDelta, baseSpeed, newSpeed);
         }
@@ -57,11 +57,11 @@ public class VariableSpeed
 
     public static void onGameTick(final Client client, final GameTick tick)
     {
-        for (IStateTracker i : TO_TRACK)
+        for (final IStateTracker i : TO_TRACK)
         {
             i.onGameTick(client, tick);
         }
-        for (IStateTracker i : TO_APPLY)
+        for (final IStateTracker i : TO_APPLY)
         {
             i.onGameTick(client, tick);
         }
@@ -69,11 +69,11 @@ public class VariableSpeed
 
     public static void onChatMessage(final Client client, final ChatMessage event)
     {
-        for (IStateTracker i : TO_TRACK)
+        for (final IStateTracker i : TO_TRACK)
         {
             i.onChatMessage(client, event);
         }
-        for (IStateTracker i : TO_APPLY)
+        for (final IStateTracker i : TO_APPLY)
         {
             i.onChatMessage(client, event);
         }
@@ -81,11 +81,11 @@ public class VariableSpeed
 
     public static void onNpcSpawned(final Client client, final NpcSpawned npcSpawned)
     {
-        for (IStateTracker i : TO_TRACK)
+        for (final IStateTracker i : TO_TRACK)
         {
             i.onNpcSpawned(client, npcSpawned);
         }
-        for (IStateTracker i : TO_APPLY)
+        for (final IStateTracker i : TO_APPLY)
         {
             i.onNpcSpawned(client, npcSpawned);
         }
@@ -93,11 +93,11 @@ public class VariableSpeed
 
     public static void onNpcDespawned(final Client client, final NpcDespawned npcDespawned)
     {
-        for (IStateTracker i : TO_TRACK)
+        for (final IStateTracker i : TO_TRACK)
         {
             i.onNpcDespawned(client, npcDespawned);
         }
-        for (IStateTracker i : TO_APPLY)
+        for (final IStateTracker i : TO_APPLY)
         {
             i.onNpcDespawned(client, npcDespawned);
         }

@@ -44,7 +44,6 @@ import net.runelite.api.VarPlayer;
 import net.runelite.api.Varbits;
 import net.runelite.api.WorldView;
 import net.runelite.api.coords.LocalPoint;
-import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.game.ItemEquipmentStats;
 import net.runelite.client.game.ItemStats;
 import org.junit.Test;
@@ -138,9 +137,7 @@ public class TormentedDemonsTest extends IntegrationTests
         when(mockedClient.getWorldView(0)).thenReturn(mockedWorldView);
         int mockedPlane = 0;
         when(mockedWorldView.getPlane()).thenReturn(mockedPlane);
-        WorldPoint worldPoint = new WorldPoint(0, 0, mockedPlane);
         LocalPoint localPoint = new LocalPoint(0, 0, mockedPlane);
-        when(mockedPlayer.getWorldLocation()).thenReturn(worldPoint);
         when(mockedPlayer.getLocalLocation()).thenReturn(localPoint);
         // -- NPCs
         worldViewNPCiter(td);

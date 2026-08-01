@@ -56,8 +56,8 @@ public class PurgingStaffSpec implements IVariableSpeed
         {
             return curSpeed;
         }
-        var target = Utils.getTargetNPC(client);
-        var flare = Yama.isEitherVoidFlare(target, lastTarget);
+        final var target = Utils.getTargetNPC(client);
+        final var flare = Yama.isEitherVoidFlare(target, lastTarget);
         lastTarget = target;
         if (flare == null || yama == null)
         {

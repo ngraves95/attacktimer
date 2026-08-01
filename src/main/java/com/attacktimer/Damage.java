@@ -32,37 +32,50 @@ import net.runelite.api.Skill;
 import net.runelite.api.events.FakeXpDrop;
 import net.runelite.api.events.StatChanged;
 
+/**
+ * Damage is a helper store that from the HP exp alone can compute the predicted damage of an attack.
+ *
+ * It works by storing the queue of hp exp drops then computing the delta of those drops then the normal
+ * damage formula (hpExp * 3/4 == damage).
+ *
+ * TODO npc exp modifiers
+ *
+ * TODO global modifiers
+ */
 public class Damage
 {
-    private static final double MODIFIER = 1; // this is where NPC specific modifiers go
-    private static final double GLOBAL_MODIFIER = 1; // this is where global specific modifiers go i.e. leagues
+    private static final double MODIFIER = 1;
+    private static final double GLOBAL_MODIFIER = 1;
 
     private ArrayDeque<Integer> hpExpEarned = new ArrayDeque<Integer>();
     private ArrayDeque<Integer> hpExpEarnedTickCount = new ArrayDeque<Integer>();
 
     public boolean onXpDrop(StatChanged event, TickCount tc)
     {
-        final var skill = event.getSkill();
-        if (skill != Skill.HITPOINTS)
-        {
-            return false;
-        }
-        hpExpEarnedTickCount.addLast(tc.get());
-        hpExpEarned.addLast(event.getXp());
-        return true;
+        return onXpDrop(event.getSkill(), event.getXp(), tc);
     }
+
     public boolean onXpDrop(FakeXpDrop event, TickCount tc)
     {
-        final var skill = event.getSkill();
+        return onXpDrop(event.getSkill(), event.getXp(), tc);
+    }
+
+    private boolean onXpDrop(Skill skill, int xp, TickCount tc)
+    {
         if (skill != Skill.HITPOINTS)
         {
             return false;
         }
         hpExpEarnedTickCount.addLast(tc.get());
-        hpExpEarned.addLast(event.getXp());
+        hpExpEarned.addLast(xp);
         return true;
     }
 
+    /**
+     * compute determines from the previous hp exp drops how much damage the player has dealt on this tick.
+     * @param tc the tick count state
+     * @return the amount of damage dealt this tick
+     */
     public int compute(TickCount tc)
     {
         if (hpExpEarnedTickCount.isEmpty())
@@ -80,13 +93,13 @@ public class Damage
         return (int) Math.round(xp * (3.0d / 4.0d) * MODIFIER * GLOBAL_MODIFIER);
     }
 
-    public void expire()
+    public void cleanup()
     {
-        if (hpExpEarnedTickCount.size() > 5)
+        while (hpExpEarnedTickCount.size() > 5)
         {
             hpExpEarnedTickCount.removeFirst();
         }
-        if (hpExpEarned.size() > 5)
+        while (hpExpEarned.size() > 5)
         {
             hpExpEarned.removeFirst();
         }

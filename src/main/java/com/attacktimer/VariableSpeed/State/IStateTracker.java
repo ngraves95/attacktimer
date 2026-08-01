@@ -54,17 +54,18 @@ public interface IStateTracker
     {};
 
     /**
-     * TODO
+     * subscribe to when npcs are spawned
      *
-     * @param npcSpawned
+     * @param npcSpawned the npc which has spawned
      */
     default public void onNpcSpawned(final Client client, final NpcSpawned npcSpawned)
     {};
 
     /**
-     * TODO
+     * subscribe to when npcs are despawned, note this is not when the NPC is dead but after the death
+     * animation has completed or out of render distance.
      *
-     * @param npcDespawned
+     * @param npcDespawned the npc which has despawned
      */
     default public void onNpcDespawned(final Client client, final NpcDespawned npcDespawned)
     {};

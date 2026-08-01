@@ -2,7 +2,7 @@ package com.attacktimer.ClientUtils;
 
 /*
  * Copyright (c) 2022, Nick Graves <https://github.com/ngraves95>
- * Copyright (c) 2024, Lexer747 <https://github.com/Lexer747>
+ * Copyright (c) 2024-2026, Lexer747 <https://github.com/Lexer747>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without

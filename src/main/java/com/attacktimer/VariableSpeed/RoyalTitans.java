@@ -28,22 +28,23 @@ package com.attacktimer.VariableSpeed;
 import com.attacktimer.AnimationData;
 import com.attacktimer.AttackProcedure;
 import com.attacktimer.ClientUtils.Utils;
-import com.attacktimer.VariableSpeed.State.IStateTracker;
 import com.attacktimer.Spellbook;
 import com.google.common.collect.ImmutableSet;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
-import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.NPC;
-import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.NpcDespawned;
 import net.runelite.api.events.NpcSpawned;
 
-@Slf4j
+/**
+ * RoyalTitans: https://oldschool.runescape.wiki/w/Royal_Titans/Strategies
+ *
+ * For each elemental killed, the player receives a 1-tick reduction to their attack delay, allowing spells to
+ * be cast consecutively much quicker than usual.
+ */
 public class RoyalTitans implements IVariableSpeed
 {
     private static final int TWINFLAME_STAFF_WEAPON_ID = 30634;
@@ -61,7 +62,7 @@ public class RoyalTitans implements IVariableSpeed
 
     private boolean removeDead = false;
 
-    private static final Set<AnimationData> STANDARD_SPELLS = new ImmutableSet.Builder<AnimationData>()
+    private static final Set<AnimationData> ONE_SHOT_SPELLS = new ImmutableSet.Builder<AnimationData>()
             .add(AnimationData.MAGIC_STANDARD_STRIKE_BOLT_BLAST)
             .add(AnimationData.MAGIC_STANDARD_STRIKE_BOLT_BLAST_STAFF)
             .add(AnimationData.MAGIC_STANDARD_SURGE_STAFF)
@@ -79,9 +80,9 @@ public class RoyalTitans implements IVariableSpeed
             return curSpeed;
         }
         final int targetId = Utils.getTargetId(client);
-        if (spellbook != Spellbook.STANDARD ||
-            !isElemental(targetId) ||
-            !STANDARD_SPELLS.contains(curAnimation))
+        if (spellbook != Spellbook.STANDARD
+            || !isElemental(targetId)
+            || !ONE_SHOT_SPELLS.contains(curAnimation))
         {
             return curSpeed;
         }
@@ -92,38 +93,37 @@ public class RoyalTitans implements IVariableSpeed
         }
         // We are now in the royal titan region, attacking an elemental using magic and one of the standard
         // spells which could one shot it.
-        log.debug("[RoyalTitans] Attacking elemental With correct spell");
+
+        // Note that the twinflame second spell does not give Magic or Hitpoints experience and therefore will
+        // not be computed properly by the caller.
+        final boolean wieldingTwinflame = Utils.getWeaponId(client) == TWINFLAME_STAFF_WEAPON_ID;
+        final int computedDamage = wieldingTwinflame ? damageDealt + ((damageDealt * 4) / 10) : damageDealt;
+
         // Awkwardly you only got awarded the exp (and therefore computed damage) against the one of the
         // elementals, hence the 3x3 AoE isn't seen in the damage dealt.
-        if (damageDealt < ELEMENTAL_HP)
+        if (computedDamage < ELEMENTAL_HP)
         {
-            log.debug("[RoyalTitans] didn't do enough damage");
             // Don't bother computing partial damage assume most players are one-shotting
             return curSpeed;
         }
-        log.debug("[RoyalTitans] enough damage");
         // Compute the number of elementals in the a 3x3 from our target:
         final var set = targetId == FIRE_ELEMENTAL_ID ? fireElementals : iceElementals;
-        log.debug("[RoyalTitans] elemental set: {}", set);
         int count = 1;
         final var reference = target.getWorldLocation();
-        log.debug("[RoyalTitans] reference {}", reference);
         for (final NPC elemental : set)
         {
             if (elemental == target)
             {
-                log.debug("[RoyalTitans] distance check skipped - is target");
                 continue;
             }
             final WorldPoint worldLocation = elemental.getWorldLocation();
             final int distanceTo2D = reference.distanceTo2D(worldLocation);
-            log.debug("[RoyalTitans] distance check new {}, distance {}", worldLocation, distanceTo2D);
+            // 3x3 is 1 distance https://en.wikipedia.org/wiki/Chebyshev_distance
             if (distanceTo2D <= 1)
             {
                 count++;
             }
         }
-        log.debug("[RoyalTitans] found AoE will kill: {}", count);
         // Now compute the travel delay, we are only awarded the improved tick delay when the projectile lands
         // (this can be pre-computed) so if we kill 3 elementals 10 tiles away we don't see the full 3 tick
         // improvement but in fact we see the 3 ticks awarded 4 ticks after we attacked. And because of
@@ -146,16 +146,34 @@ public class RoyalTitans implements IVariableSpeed
         // NOTE: This is probably why the purging staff has that bug, because it only awards the 3 ticks of
         // reduction when the spell lands (which is always 2 ticks for dark demon bane).
 
-        final boolean isTwinflame = Utils.getWeaponId(client) == TWINFLAME_STAFF_WEAPON_ID &&
-                                    curAnimation == AnimationData.MAGIC_STANDARD_STRIKE_BOLT_BLAST_STAFF;
-        final int extraHitOffset = isTwinflame ? 1 : 0;
+        // NOTE: this has one edge case also not covered (as well as the same eating one as purging staff)
+        // which is that if the awarded bonus is granted and we already started our next weapon cooldown then
+        // the bonus is applied to that attack instead.
 
+        final boolean isTwinflameKillOnSecondProjectile = wieldingTwinflame &&
+                                    curAnimation == AnimationData.MAGIC_STANDARD_STRIKE_BOLT_BLAST_STAFF;
+        final int extraHitOffset = isTwinflameKillOnSecondProjectile ? 1 : 0; // add an extra tick of delay for the second projectile.
+
+        // https://oldschool.runescape.wiki/w/Hit_delay#Magic However it's not quite the formula, unclear to
+        // me whether the wiki is wrong or if its simply a case of fence post errors counting the tiles.
+        // https://en.wikipedia.org/wiki/Off-by-one_error#Fencepost_error
+        //
+        // from my testing the hit delay was 1 less on the transitions in the table therefore:
+        //
+        // Distance   Hit delay
+        // (tiles)    (wiki)     (measured)
+        //  1         1          1
+        //  2         2          1 (diff)
+        //  3         2          2
+        //  4         2          2
+        //  5         3          2 (diff)
+        //  6         3          3
+        //  7         3          3
+        //  8         4          3 (diff)
+        //  9         4          4
+        //  10        4          4
         final WorldPoint playerLoc = client.getLocalPlayer().getWorldLocation();
         final int distance = playerLoc.distanceTo2D(reference);
-        log.debug("[RoyalTitans] player {} - distance to target {}", playerLoc, distance);
-
-        // https://oldschool.runescape.wiki/w/Hit_delay#Magic
-
         final int hitDelay = 2 + (distance / 3) + extraHitOffset;
 
         // Remaining cooldown when the projectile actually impacts:
@@ -167,14 +185,9 @@ public class RoyalTitans implements IVariableSpeed
         // Total ticks waited = travel time + remaining cooldown after reduction
         final int finalSpeed = Math.min(curSpeed, hitDelay + remainingAfterReduction);
 
-        log.debug("[RoyalTitans] distance: {}, hitDelay: {}, remainingAtImpact: {}, remainingAfterReduction: {}, finalSpeed: {}",
-                distance, hitDelay, remainingAtImpact, remainingAfterReduction, finalSpeed);
-
-
         // despawn happens much later than is dead (hence how Entity Hider works) so we need to remove them
         // now if we succeeded in apply. Deferred till the next onGameTick is called.
         removeDead = true;
-        log.debug("[RoyalTitans] success, final cool down {}", finalSpeed);
         return finalSpeed;
     }
 
@@ -190,15 +203,14 @@ public class RoyalTitans implements IVariableSpeed
     @Override
     public void onGameTick(Client client, GameTick tick)
     {
+        // if we killed some elementals last tick remove them now.
         if (removeDead)
         {
-            var before = iceElementals.size() + fireElementals.size();
+            // don't clear the set(s) do it using the runelite API.
             var removed = iceElementals.removeIf(npc -> npc.isDead());
             removed |= fireElementals.removeIf(npc -> npc.isDead());
-            var after = iceElementals.size() + fireElementals.size();
             if (removed)
             {
-                log.debug("[RoyalTitans] removed dead elementals in onGameTick - before {}, after {}", before, after);
                 removeDead = false;
             }
         }
@@ -215,12 +227,10 @@ public class RoyalTitans implements IVariableSpeed
         final int id = npc.getId();
         if (id == ICE_ELEMENTAL_ID)
         {
-            log.debug("[RoyalTitans] added ice elemental");
             iceElementals.add(npc);
         }
         else if (id == FIRE_ELEMENTAL_ID)
         {
-            log.debug("[RoyalTitans] added fire elemental");
             fireElementals.add(npc);
         }
     }
@@ -236,12 +246,10 @@ public class RoyalTitans implements IVariableSpeed
         final int id = npc.getId();
         if (id == ICE_ELEMENTAL_ID)
         {
-            log.debug("[RoyalTitans] removed ice elemental");
             iceElementals.remove(npc);
         }
         else if (id == FIRE_ELEMENTAL_ID)
         {
-            log.debug("[RoyalTitans] removed fire elemental");
             fireElementals.remove(npc);
         }
     }

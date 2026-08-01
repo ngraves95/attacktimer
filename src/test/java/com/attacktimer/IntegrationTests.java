@@ -143,7 +143,6 @@ public class IntegrationTests
         when(mockedWorldView.getPlane()).thenReturn(mockedPlane);
         WorldPoint worldPoint = new WorldPoint(0, 0, mockedPlane);
         LocalPoint localPoint = new LocalPoint(0, 0, mockedPlane);
-        when(mockedPlayer.getWorldLocation()).thenReturn(worldPoint);
         when(mockedPlayer.getLocalLocation()).thenReturn(localPoint);
         // -- NPCs
         IndexedObjectSet mockedNpcs = mock(IndexedObjectSet.class);
