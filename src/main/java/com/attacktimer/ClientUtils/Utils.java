@@ -63,12 +63,13 @@ public class Utils
     }
 
     // getLocation will return the current world point of the player accounting for instances.
-    public static WorldPoint getLocation(Client client)
+    //
+    // For computing tile based distances you probably don't want this and instead should use
+    // client.getLocalPlayer().getWorldLocation().
+    public static WorldPoint getLocalLocation(Client client)
     {
-        WorldPoint location = client.getLocalPlayer().getWorldLocation();
         final LocalPoint localPoint = client.getLocalPlayer().getLocalLocation();
-        location = WorldPoint.fromLocalInstance(client, localPoint);
-        return location;
+        return WorldPoint.fromLocalInstance(client, localPoint);
     }
 
     // returns ACCURATE for unknown weapons/styles

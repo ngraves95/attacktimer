@@ -66,7 +66,7 @@ public class Scurrius implements IVariableSpeed
             final Spellbook spellbook, final int damageDealt, final int lastSpecDelta, final int baseSpeed,
             final int curSpeed)
     {
-        final WorldPoint location = Utils.getLocation(client);
+        final WorldPoint location = Utils.getLocalLocation(client);
         final int weaponId = Utils.getWeaponId(client);
         final int targetId = Utils.getTargetId(client);
         if (attackingGiantRatWithBoneWeapon(weaponId, location.getRegionID(), location.getX(), location.getY(),

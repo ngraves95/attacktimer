@@ -37,6 +37,7 @@ import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.NPC;
+import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.NpcDespawned;
@@ -45,6 +46,7 @@ import net.runelite.api.events.NpcSpawned;
 @Slf4j
 public class RoyalTitans implements IVariableSpeed
 {
+    private static final int TWINFLAME_STAFF_WEAPON_ID = 30634;
 
     private static final int ROYAL_TITANS_REGION_ID = 11669;
 
@@ -121,11 +123,59 @@ public class RoyalTitans implements IVariableSpeed
                 count++;
             }
         }
-        log.debug("[RoyalTitans] success, reduced by {}", count);
+        log.debug("[RoyalTitans] found AoE will kill: {}", count);
+        // Now compute the travel delay, we are only awarded the improved tick delay when the projectile lands
+        // (this can be pre-computed) so if we kill 3 elementals 10 tiles away we don't see the full 3 tick
+        // improvement but in fact we see the 3 ticks awarded 4 ticks after we attacked. And because of
+        // https://oldschool.runescape.wiki/w/Hit_delay#Processing_order_delay:
+        //
+        // > NPCs are processed earlier than players each tick, so this effect will make all hits on NPCs
+        // > delayed by an additional one tick compared to the numbers listed in this article.
+        //
+        // This means the 3 tick reduction is awarded on tick 5, by which time we're already off-cool down
+        // (assuming manual cast). And if we use the twin-flame (6 tick) we will only get a single tick of the
+        // improvement we earned.
+        //
+        // Therefore this is generalised as:
+        //
+        // We calculate the tick on which the reductions take effect (hitDelay + 1). A reduction of N ticks
+        // only benefits us if it lands **before** the natural attack timer expires.
+        //
+        // Effective ready tick = max(hitDelay + 1, curSpeed - elementals_killed)
+
+        // NOTE: This is probably why the purging staff has that bug, because it only awards the 3 ticks of
+        // reduction when the spell lands (which is always 2 ticks for dark demon bane).
+
+        final boolean isTwinflame = Utils.getWeaponId(client) == TWINFLAME_STAFF_WEAPON_ID &&
+                                    curAnimation == AnimationData.MAGIC_STANDARD_STRIKE_BOLT_BLAST_STAFF;
+        final int extraHitOffset = isTwinflame ? 1 : 0;
+
+        final WorldPoint playerLoc = client.getLocalPlayer().getWorldLocation();
+        final int distance = playerLoc.distanceTo2D(reference);
+        log.debug("[RoyalTitans] player {} - distance to target {}", playerLoc, distance);
+
+        // https://oldschool.runescape.wiki/w/Hit_delay#Magic
+
+        final int hitDelay = 2 + (distance / 3) + extraHitOffset;
+
+        // Remaining cooldown when the projectile actually impacts:
+        final int remainingAtImpact = Math.max(0, curSpeed - hitDelay);
+
+        // Apply reduction to remaining cooldown:
+        final int remainingAfterReduction = Math.max(0, remainingAtImpact - count);
+
+        // Total ticks waited = travel time + remaining cooldown after reduction
+        final int finalSpeed = Math.min(curSpeed, hitDelay + remainingAfterReduction);
+
+        log.debug("[RoyalTitans] distance: {}, hitDelay: {}, remainingAtImpact: {}, remainingAfterReduction: {}, finalSpeed: {}",
+                distance, hitDelay, remainingAtImpact, remainingAfterReduction, finalSpeed);
+
+
         // despawn happens much later than is dead (hence how Entity Hider works) so we need to remove them
         // now if we succeeded in apply. Deferred till the next onGameTick is called.
         removeDead = true;
-        return curSpeed - count;
+        log.debug("[RoyalTitans] success, final cool down {}", finalSpeed);
+        return finalSpeed;
     }
 
     private static boolean earlyExit(final Client client, final AttackProcedure atkType, final int damageDealt,
@@ -203,6 +253,6 @@ public class RoyalTitans implements IVariableSpeed
 
     private static boolean notInRegion(final Client client)
     {
-        return Utils.getLocation(client).getRegionID() != ROYAL_TITANS_REGION_ID;
+        return Utils.getLocalLocation(client).getRegionID() != ROYAL_TITANS_REGION_ID;
     }
 }

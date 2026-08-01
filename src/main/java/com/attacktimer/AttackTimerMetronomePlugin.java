@@ -145,7 +145,7 @@ public class AttackTimerMetronomePlugin extends Plugin
     public static final int SALAMANDER_SET_ANIM_ID = 952; // Used by all 4 types of salamander
                                                           // https://oldschool.runescape.wiki/w/Salamander
 
-    private static final int TWINFLAME_STAFF_WEAPON_ID = 30634;
+    public static final int TWINFLAME_STAFF_WEAPON_ID = 30634;
     private static final int ECHO_VENATOR_BOW_WEAPON_ID = 30434;
     private static final int VENATOR_BOW_WEAPON_ID = 27610;
     private static final int HALLOWFELL_ID = 34027; // https://oldschool.runescape.wiki/w/Hallowfell
@@ -156,21 +156,28 @@ public class AttackTimerMetronomePlugin extends Plugin
     // var itemManager = inject(ItemManager.class);
     // log.info("Speed {}", itemManager.getItemStats(<id_to_test>).getEquipment().getAspeed());
     private static final Map<Integer, Integer> NON_STANDARD_ATTACK_SPEEDS = new ImmutableMap.Builder<Integer, Integer>()
-            .put(HALLOWFELL_ID, 6).build();
+            .put(HALLOWFELL_ID, 6)
+            .build();
 
     // These animations are the ones which exceed the duration of their attack cooldown
     // so in this case DO NOT fall back the animation as it is un-reliable.
     private static final Set<AnimationData> UNRELIABLE_ANIMATIONS = new ImmutableSet.Builder<AnimationData>()
-            .add(AnimationData.RANGED_BLOWPIPE).add(AnimationData.RANGED_BLAZING_BLOWPIPE)
-            .add(AnimationData.MAGIC_EYE_OF_AYAK).add(AnimationData.MAGIC_EYE_OF_AYAK_SPEC).build();
+            .add(AnimationData.RANGED_BLOWPIPE)
+            .add(AnimationData.RANGED_BLAZING_BLOWPIPE)
+            .add(AnimationData.MAGIC_EYE_OF_AYAK)
+            .add(AnimationData.MAGIC_EYE_OF_AYAK_SPEC)
+            .build();
 
     private static final Map<Integer, Integer> NON_STANDARD_MAGIC_WEAPON_SPEEDS = new ImmutableMap.Builder<Integer, Integer>()
-            .put(TWINFLAME_STAFF_WEAPON_ID, 6).build();
+            .put(TWINFLAME_STAFF_WEAPON_ID, 6)
+            .build();
 
     // Map of problematic itemIds to equivalent working ones.
     // The Echo Venator Bow's ItemStats are returning null, so use the regular bow instead.
-    private static final Map<Integer, Integer> WEAPON_ID_MAPPING_WORKAROUNDS = new ImmutableMap.Builder<Integer, Integer>()
-            .put(ECHO_VENATOR_BOW_WEAPON_ID, VENATOR_BOW_WEAPON_ID).build();
+    private static final Map<Integer, Integer> WEAPON_ID_MAPPING_WORKAROUNDS = new ImmutableMap.Builder<Integer, Integer>().put(
+                ECHO_VENATOR_BOW_WEAPON_ID,
+                VENATOR_BOW_WEAPON_ID
+            ).build();
 
     // https://oldschool.runescape.wiki/w/Food/Fast_foods#Food_Delays
     // These constants are not to be confused with eat delay.
