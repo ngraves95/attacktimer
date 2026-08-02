@@ -194,10 +194,10 @@ public class RoyalTitans implements IVariableSpeed
     private static boolean earlyExit(final Client client, final AttackProcedure atkType, final int damageDealt,
             final Spellbook spellbook)
     {
-        return notInRegion(client) &&
-               atkType != AttackProcedure.MANUAL_AUTO_CAST &&
-               damageDealt <= 0 &&
-               spellbook != Spellbook.STANDARD;
+        return notInRegion(client)
+               || atkType != AttackProcedure.MANUAL_AUTO_CAST
+               || damageDealt <= 0
+               || spellbook != Spellbook.STANDARD;
     }
 
     @Override

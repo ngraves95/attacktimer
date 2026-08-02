@@ -52,22 +52,26 @@ public class Damage
 
     public boolean onXpDrop(StatChanged event, TickCount tc)
     {
-        return onXpDrop(event.getSkill(), event.getXp(), tc);
-    }
-
-    public boolean onXpDrop(FakeXpDrop event, TickCount tc)
-    {
-        return onXpDrop(event.getSkill(), event.getXp(), tc);
-    }
-
-    private boolean onXpDrop(Skill skill, int xp, TickCount tc)
-    {
-        if (skill != Skill.HITPOINTS)
+        if (event.getSkill() != Skill.HITPOINTS)
         {
             return false;
         }
         hpExpEarnedTickCount.addLast(tc.get());
-        hpExpEarned.addLast(xp);
+        hpExpEarned.addLast(event.getXp());
+        return true;
+    }
+
+    public boolean onXpDrop(FakeXpDrop event, TickCount tc)
+    {
+        if (event.getSkill() != Skill.HITPOINTS)
+        {
+            return false;
+        }
+        hpExpEarnedTickCount.addLast(tc.get());
+        hpExpEarnedTickCount.addLast(tc.get());
+        // Fake exp doesn't have a delta like real xp
+        hpExpEarned.addLast(0);
+        hpExpEarned.addLast(event.getXp());
         return true;
     }
 

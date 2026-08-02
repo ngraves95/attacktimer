@@ -40,6 +40,7 @@ public class TickCount implements IStateTracker
         return tickCount;
     }
 
+    @Override
     public void onGameTick(Client client, GameTick tick)
     {
         tickCount++;
