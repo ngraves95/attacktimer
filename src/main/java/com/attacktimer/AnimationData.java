@@ -165,7 +165,7 @@ public enum AnimationData
     RANGED_WEBWEAVER_SPEC(AnimationID.HUMAN_SPECIAL01_WEBWEAVER, AttackStyle.RANGED, true), // https://oldschool.runescape.wiki/w/Webweaver_bow#Charged
     RANGED_BONE_CROSSBOW_SPEC(AnimationID.DTTD_PLAYER_FIRE_BONE_CROSSBOW_PVN, AttackStyle.RANGED, true), // https://oldschool.runescape.wiki/w/Dorgeshuun_crossbow
 
-    // MAGIC - Keep in spellbook order (AnimationID.staves last) then alphabetical order and oneline
+    // MAGIC - Keep in spellbook order (staves last) then alphabetical order and oneline
     MAGIC_GOD_SPELL(AnimationID.HUMAN_CASTING, AttackStyle.MAGIC, Spellbook.STANDARD), // https://oldschool.runescape.wiki/w/God_spells
     MAGIC_IBAN_BLAST(AnimationID.HUMAN_CASTIBANBLAST, AttackStyle.MAGIC, Spellbook.STANDARD),
     MAGIC_SLAYER_DART(AnimationID.SLAYER_MAGICDART_CAST, AttackStyle.MAGIC, Spellbook.STANDARD), // https://oldschool.runescape.wiki/w/Magic_Dart
