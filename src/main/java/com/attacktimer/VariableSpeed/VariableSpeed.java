@@ -1,7 +1,7 @@
 package com.attacktimer.VariableSpeed;
 
 /*
- * Copyright (c) 2024-2025, Lexer747 <https://github.com/Lexer747>
+ * Copyright (c) 2024-2026, Lexer747 <https://github.com/Lexer747>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,38 +27,41 @@ package com.attacktimer.VariableSpeed;
 
 import com.attacktimer.AnimationData;
 import com.attacktimer.AttackProcedure;
+import com.attacktimer.AttackTimerMetronomePlugin;
+import com.attacktimer.Spellbook;
 import com.attacktimer.VariableSpeed.State.IStateTracker;
 import com.attacktimer.VariableSpeed.State.MarkOfDarkness;
-import com.attacktimer.VariableSpeed.State.TickCount;
 import com.attacktimer.VariableSpeed.State.Yama;
 import net.runelite.api.Client;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameTick;
+import net.runelite.api.events.NpcDespawned;
+import net.runelite.api.events.NpcSpawned;
 
 public class VariableSpeed
 {
     /**
-     * computeSpeed will forward the client, animation data and current weapon speed to all the known classes
-     * which can affect the base speed of a weapon. See implementations of IVariableSpeed.
+     * computeSpeed will forward the client, animation data and current weapon speed to all the known
+     * classes which can affect the base speed of a weapon. See implementations of IVariableSpeed.
      */
-    public static int computeSpeed(final Client client, final AnimationData curAnimation, final AttackProcedure atkType,
-            final int damageDealt, final int lastSpecDelta, final int baseSpeed)
+    public static int compute(final Client client, final AnimationData curAnimation, final AttackProcedure atkType,
+            final Spellbook spellbook, final int damageDealt, final int lastSpecDelta, final int baseSpeed)
     {
         int newSpeed = baseSpeed;
-        for (IVariableSpeed i : TO_APPLY)
+        for (final IVariableSpeed i : TO_APPLY)
         {
-            newSpeed = i.apply(client, curAnimation, atkType, damageDealt, lastSpecDelta, baseSpeed, newSpeed);
+            newSpeed = i.apply(client, curAnimation, atkType, spellbook, damageDealt, lastSpecDelta, baseSpeed, newSpeed);
         }
         return newSpeed;
     }
 
     public static void onGameTick(final Client client, final GameTick tick)
     {
-        for (IStateTracker i : TO_TRACK)
+        for (final IStateTracker i : TO_TRACK)
         {
             i.onGameTick(client, tick);
         }
-        for (IStateTracker i : TO_APPLY)
+        for (final IStateTracker i : TO_APPLY)
         {
             i.onGameTick(client, tick);
         }
@@ -66,24 +69,47 @@ public class VariableSpeed
 
     public static void onChatMessage(final Client client, final ChatMessage event)
     {
-        for (IStateTracker i : TO_TRACK)
+        for (final IStateTracker i : TO_TRACK)
         {
             i.onChatMessage(client, event);
         }
-        for (IStateTracker i : TO_APPLY)
+        for (final IStateTracker i : TO_APPLY)
         {
             i.onChatMessage(client, event);
         }
     }
 
+    public static void onNpcSpawned(final Client client, final NpcSpawned npcSpawned)
+    {
+        for (final IStateTracker i : TO_TRACK)
+        {
+            i.onNpcSpawned(client, npcSpawned);
+        }
+        for (final IStateTracker i : TO_APPLY)
+        {
+            i.onNpcSpawned(client, npcSpawned);
+        }
+    }
+
+    public static void onNpcDespawned(final Client client, final NpcDespawned npcDespawned)
+    {
+        for (final IStateTracker i : TO_TRACK)
+        {
+            i.onNpcDespawned(client, npcDespawned);
+        }
+        for (final IStateTracker i : TO_APPLY)
+        {
+            i.onNpcDespawned(client, npcDespawned);
+        }
+    }
+
     private static final Yama YAMA = new Yama();
     private static final MarkOfDarkness MARK_OF_DARKNESS = new MarkOfDarkness();
-    private static final TickCount TC = new TickCount();
 
     private static final IStateTracker[] TO_TRACK = {
         // State tracking, these do not contribute themselves to any variable speed weapon/mechanic but
         // provide state tracking which is shared across more than one variable speed weapon/mechanic.
-        TC,
+        AttackTimerMetronomePlugin.TC,
         YAMA,
         MARK_OF_DARKNESS,
     };
@@ -98,7 +124,8 @@ public class VariableSpeed
         new RedKerisSpec(),
         new PurgingStaffSpec(YAMA),
         new EyeOfAyak(),
-        new TormentedDemons(TC),
+        new TormentedDemons(AttackTimerMetronomePlugin.TC),
+        new RoyalTitans(),
 
         // Overriding modifiers:
         new Scurrius(),
@@ -107,6 +134,6 @@ public class VariableSpeed
 
     // Variable speed that doesn't neatly fit in to the IVariable speed pattern (it's not weapon related
     // but boss related).
-    public static final ShadowCrash SHADOW_CRASH = new ShadowCrash(YAMA, MARK_OF_DARKNESS, TC);
+    public static final ShadowCrash SHADOW_CRASH = new ShadowCrash(YAMA, MARK_OF_DARKNESS, AttackTimerMetronomePlugin.TC);
 
 }

@@ -27,6 +27,7 @@ package com.attacktimer.VariableSpeed;
 
 import com.attacktimer.AnimationData;
 import com.attacktimer.AttackProcedure;
+import com.attacktimer.Spellbook;
 import net.runelite.api.Client;
 
 public class BloodMoonSet implements IVariableSpeed
@@ -34,7 +35,8 @@ public class BloodMoonSet implements IVariableSpeed
     private static final int BLOOD_MOON_SET_ANIM_ID = 2792;
 
     public int apply(final Client client, final AnimationData curAnimation, final AttackProcedure atkType,
-            final int damageDealt, final int lastSpecDelta, final int baseSpeed, final int curSpeed)
+            final Spellbook spellbook, final int damageDealt, final int lastSpecDelta, final int baseSpeed,
+            final int curSpeed)
     {
         if (client.getLocalPlayer().hasSpotAnim(BLOOD_MOON_SET_ANIM_ID))
         {

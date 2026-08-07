@@ -9,6 +9,10 @@ Ticks until next attack may be enabled over your player's head.
 
 ## Updates
 
+## 1.2.11
+
+* Support for Royal Titans attack cooldown speedup when killing elementals
+
 ## 1.2.8 - 1.2.10
 
 * Fixes for Wyrmscraig (Hallowfell)

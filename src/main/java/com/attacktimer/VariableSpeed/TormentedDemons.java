@@ -29,15 +29,17 @@ import com.attacktimer.AnimationData;
 import com.attacktimer.AttackProcedure;
 import com.attacktimer.AttackType;
 import com.attacktimer.ClientUtils.Utils;
+import com.attacktimer.Spellbook;
 import com.attacktimer.VariableSpeed.State.TickCount;
 import com.attacktimer.WeaponType;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import net.runelite.api.Client;
 import net.runelite.api.NPC;
 import net.runelite.api.events.GameTick;
+import net.runelite.api.events.NpcDespawned;
+import net.runelite.api.events.NpcSpawned;
 
 /**
  * TormentedDemons is the variable speed implementation for the "punish" attack a player can do against a
@@ -65,9 +67,10 @@ public class TormentedDemons implements IVariableSpeed
     }
 
     public int apply(final Client client, final AnimationData curAnimation, final AttackProcedure atkType,
-            final int damageDealt, final int lastSpecDelta, final int baseSpeed, final int curSpeed)
+            final Spellbook spellbook, final int damageDealt, final int lastSpecDelta, final int baseSpeed,
+            final int curSpeed)
     {
-        int targetId = Utils.getTargetId(client);
+        final int targetId = Utils.getTargetId(client);
         if (!isTormentedDemon(targetId))
         {
             return curSpeed;
@@ -134,40 +137,39 @@ public class TormentedDemons implements IVariableSpeed
 
     private Map<NPC, DemonData> tormentedDemons = new HashMap<NPC, DemonData>();
 
+    @Override
     public void onGameTick(Client client, GameTick tick)
     {
-        for (NPC npc : client.getTopLevelWorldView().npcs())
+        for (final Entry<NPC, DemonData> td : tormentedDemons.entrySet())
         {
-            if (!isTormentedDemon(npc.getId()))
-            {
-                continue;
-            }
-            boolean isVulnerable = npc.hasSpotAnim(TORMENTED_DEMON_VULN_SPOT_ANIM);
-            if (tormentedDemons.containsKey(npc))
-            {
-                DemonData d = tormentedDemons.get(npc);
-                d.update(tickCount.get(), isVulnerable);
-            }
-            else
-            {
-                tormentedDemons.put(npc, new DemonData(tickCount.get(), isVulnerable));
-            }
+            final boolean isVulnerable = td.getKey().hasSpotAnim(TORMENTED_DEMON_VULN_SPOT_ANIM);
+            td.getValue().update(tickCount.get(), isVulnerable);
         }
-        // Only check for staleness every so often
-        if (tickCount.get() % 100 == 0)
+    }
+
+    @Override
+    public void onNpcSpawned(final Client client, final NpcSpawned npcSpawned)
+    {
+        final NPC npc = npcSpawned.getNpc();
+        maybeInsertDemon(npc);
+    }
+
+    private void maybeInsertDemon(final NPC npc)
+    {
+        if (isTormentedDemon(npc.getId()))
         {
-            var toDelete = new ArrayList<NPC>();
-            for (Entry<NPC, DemonData> td : tormentedDemons.entrySet())
-            {
-                if (td.getValue().isStale(tickCount.get()))
-                {
-                    toDelete.add(td.getKey());
-                }
-            }
-            for (NPC td : toDelete)
-            {
-                tormentedDemons.remove(td);
-            }
+            final boolean isVulnerable = npc.hasSpotAnim(TORMENTED_DEMON_VULN_SPOT_ANIM);
+            tormentedDemons.put(npc, new DemonData(tickCount.get(), isVulnerable));
+        }
+    }
+
+    @Override
+    public void onNpcDespawned(final Client client, final NpcDespawned npcDespawned)
+    {
+        final NPC npc = npcDespawned.getNpc();
+        if (isTormentedDemon(npc.getId()))
+        {
+            tormentedDemons.remove(npc);
         }
     }
 
@@ -180,14 +182,12 @@ public class TormentedDemons implements IVariableSpeed
         // VulTicksAfterEnd is just a guess the wiki isn't clear how long this period is, from testing 10
         // ticks feels about right.
         private static final int VULN_TICKS_AFTER_END = 10;
-        private int lastSpotted;
         private Integer vulnerableStart;
         private Integer vulnerableFinish;
         private int attacked;
 
         DemonData(int tick, boolean vuln)
         {
-            lastSpotted = tick;
             this.update(tick, vuln);
             this.attacked = -1;
         }
@@ -196,7 +196,6 @@ public class TormentedDemons implements IVariableSpeed
         {
             // NOTE: we can't use the chat message "The demon's spell binds you" because this doesn't trigger
             // at the start of any kill.
-            lastSpotted = tick;
             if (vuln && this.vulnerableStart == null)
             {
                 this.vulnerableStart = Integer.valueOf(tick);
@@ -224,17 +223,6 @@ public class TormentedDemons implements IVariableSpeed
                 return false;
             }
             return (this.vulnerableFinish + VULN_TICKS_AFTER_END) > tick;
-        }
-
-        // isStale returns true if the last time this demon was spotted by the client was too long ago.
-        boolean isStale(int tick)
-        {
-            if (this.lastSpotted + 50 < tick)
-            {
-                // Last update was over 50 ticks ago, this is stale
-                return true;
-            }
-            return false;
         }
 
         // vulnConsumed returns true if the demon was already attack, false if not and the vuln is still usable
@@ -265,7 +253,7 @@ public class TormentedDemons implements IVariableSpeed
         @Override
         public String toString()
         {
-            return "created: " + String.valueOf(this.lastSpotted) + " vulnerableStart: " + String.valueOf(this.vulnerableStart) + " vulnerableFinish: " + String.valueOf(this.vulnerableFinish);
+            return "vulnerableStart: " + String.valueOf(this.vulnerableStart) + " vulnerableFinish: " + String.valueOf(this.vulnerableFinish);
         }
     }
 

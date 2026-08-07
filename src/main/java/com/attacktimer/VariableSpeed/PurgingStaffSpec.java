@@ -28,6 +28,7 @@ package com.attacktimer.VariableSpeed;
 import com.attacktimer.AnimationData;
 import com.attacktimer.AttackProcedure;
 import com.attacktimer.ClientUtils.Utils;
+import com.attacktimer.Spellbook;
 import com.attacktimer.VariableSpeed.State.Yama;
 import net.runelite.api.Client;
 import net.runelite.api.NPC;
@@ -47,34 +48,28 @@ public class PurgingStaffSpec implements IVariableSpeed
 
     // https://oldschool.runescape.wiki/w/Purging_staff#Special_attack
     public int apply(final Client client, final AnimationData curAnimation, final AttackProcedure atkType,
-            final int damageDealt, final int lastSpecDelta, final int baseSpeed, final int curSpeed)
+            final Spellbook spellbook, final int damageDealt, final int lastSpecDelta, final int baseSpeed,
+            final int curSpeed)
     {
         // For now the plugin only works for yama
         if (!this.yama.inYamaRegion)
         {
             return curSpeed;
         }
-        var target = Utils.getTargetNPC(client);
-        var flare = Yama.isEitherVoidFlare(target, lastTarget);
+        final var target = Utils.getTargetNPC(client);
+        final var flare = Yama.isEitherVoidFlare(target, lastTarget);
         lastTarget = target;
-        if (flare == null)
-        {
-            return curSpeed;
-        }
-        if (yama == null)
+        if (flare == null || yama == null)
         {
             return curSpeed;
         }
 
         yama.dealVoidFlareDamage(flare, damageDealt);
-        if (lastSpecDelta != -250)
+        if (lastSpecDelta != -250 || Utils.getWeaponId(client) != PURGING_STAFF_ID || spellbook != Spellbook.ARCEUUS)
         {
             // not using the spec
-            return curSpeed;
-        }
-        if (Utils.getWeaponId(client) != PURGING_STAFF_ID)
-        {
             // not using a purging staff
+            // not on the arceuss spellbook
             return curSpeed;
         }
 

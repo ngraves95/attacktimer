@@ -30,13 +30,15 @@ import com.attacktimer.AnimationData;
 import com.attacktimer.AttackProcedure;
 import com.attacktimer.AttackStyle;
 import com.attacktimer.ClientUtils.Utils;
+import com.attacktimer.Spellbook;
 import net.runelite.api.Client;
 import net.runelite.api.gameval.VarPlayerID;
 
 public class RapidAttackStyle implements IVariableSpeed
 {
     public int apply(final Client client, final AnimationData curAnimation, final AttackProcedure atkType,
-            final int damageDealt, final int lastSpecDelta, final int baseSpeed, final int curSpeed)
+            final Spellbook spellbook, final int damageDealt, final int lastSpecDelta, final int baseSpeed,
+            final int curSpeed)
     {
         // index 1 == rapid
         final boolean isRapid = client.getVarpValue(VarPlayerID.COM_MODE) == 1;

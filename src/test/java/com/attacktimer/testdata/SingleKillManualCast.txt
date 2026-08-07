@@ -1,0 +1,88 @@
+tickPeriod: 0, uiHideDebounceTickCount: 0, attackDelayHoldoffTicks: 0, dmgDealt: -1, attackState: NOT_ATTACKING, renderedState: NOT_ATTACKING, lastTarget: null
+pendingEatDelayTicks: 0, currentSpellBook: STANDARD, soundEffectTick: -1, soundEffectId: -1
+[TEST MESSAGE] distance 1
+tickPeriod: 4, uiHideDebounceTickCount: 1, attackDelayHoldoffTicks: 3, dmgDealt: 45, attackState: DELAYED_FIRST_TICK, renderedState: NOT_ATTACKING, lastTarget: null
+pendingEatDelayTicks: 0, currentSpellBook: STANDARD, soundEffectTick: -1, soundEffectId: -1
+tickPeriod: 4, uiHideDebounceTickCount: 1, attackDelayHoldoffTicks: 2, dmgDealt: 45, attackState: DELAYED, renderedState: NOT_ATTACKING, lastTarget: null
+pendingEatDelayTicks: 0, currentSpellBook: STANDARD, soundEffectTick: -1, soundEffectId: -1
+tickPeriod: 4, uiHideDebounceTickCount: 1, attackDelayHoldoffTicks: 1, dmgDealt: 45, attackState: DELAYED, renderedState: NOT_ATTACKING, lastTarget: null
+pendingEatDelayTicks: 0, currentSpellBook: STANDARD, soundEffectTick: -1, soundEffectId: -1
+tickPeriod: 4, uiHideDebounceTickCount: 1, attackDelayHoldoffTicks: 0, dmgDealt: 45, attackState: DELAYED, renderedState: NOT_ATTACKING, lastTarget: null
+pendingEatDelayTicks: 0, currentSpellBook: STANDARD, soundEffectTick: -1, soundEffectId: -1
+[TEST MESSAGE] distance 2
+tickPeriod: 4, uiHideDebounceTickCount: 1, attackDelayHoldoffTicks: 3, dmgDealt: 45, attackState: DELAYED_FIRST_TICK, renderedState: NOT_ATTACKING, lastTarget: null
+pendingEatDelayTicks: 0, currentSpellBook: STANDARD, soundEffectTick: -1, soundEffectId: -1
+tickPeriod: 4, uiHideDebounceTickCount: 1, attackDelayHoldoffTicks: 2, dmgDealt: 45, attackState: DELAYED, renderedState: NOT_ATTACKING, lastTarget: null
+pendingEatDelayTicks: 0, currentSpellBook: STANDARD, soundEffectTick: -1, soundEffectId: -1
+tickPeriod: 4, uiHideDebounceTickCount: 1, attackDelayHoldoffTicks: 1, dmgDealt: 45, attackState: DELAYED, renderedState: NOT_ATTACKING, lastTarget: null
+pendingEatDelayTicks: 0, currentSpellBook: STANDARD, soundEffectTick: -1, soundEffectId: -1
+tickPeriod: 4, uiHideDebounceTickCount: 1, attackDelayHoldoffTicks: 0, dmgDealt: 45, attackState: DELAYED, renderedState: NOT_ATTACKING, lastTarget: null
+pendingEatDelayTicks: 0, currentSpellBook: STANDARD, soundEffectTick: -1, soundEffectId: -1
+[TEST MESSAGE] distance 3
+tickPeriod: 4, uiHideDebounceTickCount: 1, attackDelayHoldoffTicks: 3, dmgDealt: 45, attackState: DELAYED_FIRST_TICK, renderedState: NOT_ATTACKING, lastTarget: null
+pendingEatDelayTicks: 0, currentSpellBook: STANDARD, soundEffectTick: -1, soundEffectId: -1
+tickPeriod: 4, uiHideDebounceTickCount: 1, attackDelayHoldoffTicks: 2, dmgDealt: 45, attackState: DELAYED, renderedState: NOT_ATTACKING, lastTarget: null
+pendingEatDelayTicks: 0, currentSpellBook: STANDARD, soundEffectTick: -1, soundEffectId: -1
+tickPeriod: 4, uiHideDebounceTickCount: 1, attackDelayHoldoffTicks: 1, dmgDealt: 45, attackState: DELAYED, renderedState: NOT_ATTACKING, lastTarget: null
+pendingEatDelayTicks: 0, currentSpellBook: STANDARD, soundEffectTick: -1, soundEffectId: -1
+tickPeriod: 4, uiHideDebounceTickCount: 1, attackDelayHoldoffTicks: 0, dmgDealt: 45, attackState: DELAYED, renderedState: NOT_ATTACKING, lastTarget: null
+pendingEatDelayTicks: 0, currentSpellBook: STANDARD, soundEffectTick: -1, soundEffectId: -1
+[TEST MESSAGE] distance 4
+tickPeriod: 4, uiHideDebounceTickCount: 1, attackDelayHoldoffTicks: 3, dmgDealt: 45, attackState: DELAYED_FIRST_TICK, renderedState: NOT_ATTACKING, lastTarget: null
+pendingEatDelayTicks: 0, currentSpellBook: STANDARD, soundEffectTick: -1, soundEffectId: -1
+tickPeriod: 4, uiHideDebounceTickCount: 1, attackDelayHoldoffTicks: 2, dmgDealt: 45, attackState: DELAYED, renderedState: NOT_ATTACKING, lastTarget: null
+pendingEatDelayTicks: 0, currentSpellBook: STANDARD, soundEffectTick: -1, soundEffectId: -1
+tickPeriod: 4, uiHideDebounceTickCount: 1, attackDelayHoldoffTicks: 1, dmgDealt: 45, attackState: DELAYED, renderedState: NOT_ATTACKING, lastTarget: null
+pendingEatDelayTicks: 0, currentSpellBook: STANDARD, soundEffectTick: -1, soundEffectId: -1
+tickPeriod: 4, uiHideDebounceTickCount: 1, attackDelayHoldoffTicks: 0, dmgDealt: 45, attackState: DELAYED, renderedState: NOT_ATTACKING, lastTarget: null
+pendingEatDelayTicks: 0, currentSpellBook: STANDARD, soundEffectTick: -1, soundEffectId: -1
+[TEST MESSAGE] distance 5
+tickPeriod: 4, uiHideDebounceTickCount: 1, attackDelayHoldoffTicks: 3, dmgDealt: 45, attackState: DELAYED_FIRST_TICK, renderedState: NOT_ATTACKING, lastTarget: null
+pendingEatDelayTicks: 0, currentSpellBook: STANDARD, soundEffectTick: -1, soundEffectId: -1
+tickPeriod: 4, uiHideDebounceTickCount: 1, attackDelayHoldoffTicks: 2, dmgDealt: 45, attackState: DELAYED, renderedState: NOT_ATTACKING, lastTarget: null
+pendingEatDelayTicks: 0, currentSpellBook: STANDARD, soundEffectTick: -1, soundEffectId: -1
+tickPeriod: 4, uiHideDebounceTickCount: 1, attackDelayHoldoffTicks: 1, dmgDealt: 45, attackState: DELAYED, renderedState: NOT_ATTACKING, lastTarget: null
+pendingEatDelayTicks: 0, currentSpellBook: STANDARD, soundEffectTick: -1, soundEffectId: -1
+tickPeriod: 4, uiHideDebounceTickCount: 1, attackDelayHoldoffTicks: 0, dmgDealt: 45, attackState: DELAYED, renderedState: NOT_ATTACKING, lastTarget: null
+pendingEatDelayTicks: 0, currentSpellBook: STANDARD, soundEffectTick: -1, soundEffectId: -1
+[TEST MESSAGE] distance 6
+tickPeriod: 4, uiHideDebounceTickCount: 1, attackDelayHoldoffTicks: 3, dmgDealt: 45, attackState: DELAYED_FIRST_TICK, renderedState: NOT_ATTACKING, lastTarget: null
+pendingEatDelayTicks: 0, currentSpellBook: STANDARD, soundEffectTick: -1, soundEffectId: -1
+tickPeriod: 4, uiHideDebounceTickCount: 1, attackDelayHoldoffTicks: 2, dmgDealt: 45, attackState: DELAYED, renderedState: NOT_ATTACKING, lastTarget: null
+pendingEatDelayTicks: 0, currentSpellBook: STANDARD, soundEffectTick: -1, soundEffectId: -1
+tickPeriod: 4, uiHideDebounceTickCount: 1, attackDelayHoldoffTicks: 1, dmgDealt: 45, attackState: DELAYED, renderedState: NOT_ATTACKING, lastTarget: null
+pendingEatDelayTicks: 0, currentSpellBook: STANDARD, soundEffectTick: -1, soundEffectId: -1
+tickPeriod: 4, uiHideDebounceTickCount: 1, attackDelayHoldoffTicks: 0, dmgDealt: 45, attackState: DELAYED, renderedState: NOT_ATTACKING, lastTarget: null
+pendingEatDelayTicks: 0, currentSpellBook: STANDARD, soundEffectTick: -1, soundEffectId: -1
+[TEST MESSAGE] distance 7
+tickPeriod: 4, uiHideDebounceTickCount: 1, attackDelayHoldoffTicks: 3, dmgDealt: 45, attackState: DELAYED_FIRST_TICK, renderedState: NOT_ATTACKING, lastTarget: null
+pendingEatDelayTicks: 0, currentSpellBook: STANDARD, soundEffectTick: -1, soundEffectId: -1
+tickPeriod: 4, uiHideDebounceTickCount: 1, attackDelayHoldoffTicks: 2, dmgDealt: 45, attackState: DELAYED, renderedState: NOT_ATTACKING, lastTarget: null
+pendingEatDelayTicks: 0, currentSpellBook: STANDARD, soundEffectTick: -1, soundEffectId: -1
+tickPeriod: 4, uiHideDebounceTickCount: 1, attackDelayHoldoffTicks: 1, dmgDealt: 45, attackState: DELAYED, renderedState: NOT_ATTACKING, lastTarget: null
+pendingEatDelayTicks: 0, currentSpellBook: STANDARD, soundEffectTick: -1, soundEffectId: -1
+tickPeriod: 4, uiHideDebounceTickCount: 1, attackDelayHoldoffTicks: 0, dmgDealt: 45, attackState: DELAYED, renderedState: NOT_ATTACKING, lastTarget: null
+pendingEatDelayTicks: 0, currentSpellBook: STANDARD, soundEffectTick: -1, soundEffectId: -1
+[TEST MESSAGE] distance 8
+tickPeriod: 4, uiHideDebounceTickCount: 1, attackDelayHoldoffTicks: 3, dmgDealt: 45, attackState: DELAYED_FIRST_TICK, renderedState: NOT_ATTACKING, lastTarget: null
+pendingEatDelayTicks: 0, currentSpellBook: STANDARD, soundEffectTick: -1, soundEffectId: -1
+tickPeriod: 4, uiHideDebounceTickCount: 1, attackDelayHoldoffTicks: 2, dmgDealt: 45, attackState: DELAYED, renderedState: NOT_ATTACKING, lastTarget: null
+pendingEatDelayTicks: 0, currentSpellBook: STANDARD, soundEffectTick: -1, soundEffectId: -1
+tickPeriod: 4, uiHideDebounceTickCount: 1, attackDelayHoldoffTicks: 1, dmgDealt: 45, attackState: DELAYED, renderedState: NOT_ATTACKING, lastTarget: null
+pendingEatDelayTicks: 0, currentSpellBook: STANDARD, soundEffectTick: -1, soundEffectId: -1
+tickPeriod: 4, uiHideDebounceTickCount: 1, attackDelayHoldoffTicks: 0, dmgDealt: 45, attackState: DELAYED, renderedState: NOT_ATTACKING, lastTarget: null
+pendingEatDelayTicks: 0, currentSpellBook: STANDARD, soundEffectTick: -1, soundEffectId: -1
+[TEST MESSAGE] distance 9
+tickPeriod: 5, uiHideDebounceTickCount: 1, attackDelayHoldoffTicks: 4, dmgDealt: 45, attackState: DELAYED_FIRST_TICK, renderedState: NOT_ATTACKING, lastTarget: null
+pendingEatDelayTicks: 0, currentSpellBook: STANDARD, soundEffectTick: -1, soundEffectId: -1
+tickPeriod: 5, uiHideDebounceTickCount: 1, attackDelayHoldoffTicks: 3, dmgDealt: 45, attackState: DELAYED, renderedState: NOT_ATTACKING, lastTarget: null
+pendingEatDelayTicks: 0, currentSpellBook: STANDARD, soundEffectTick: -1, soundEffectId: -1
+tickPeriod: 5, uiHideDebounceTickCount: 1, attackDelayHoldoffTicks: 2, dmgDealt: 45, attackState: DELAYED, renderedState: NOT_ATTACKING, lastTarget: null
+pendingEatDelayTicks: 0, currentSpellBook: STANDARD, soundEffectTick: -1, soundEffectId: -1
+tickPeriod: 5, uiHideDebounceTickCount: 1, attackDelayHoldoffTicks: 1, dmgDealt: 45, attackState: DELAYED, renderedState: NOT_ATTACKING, lastTarget: null
+pendingEatDelayTicks: 0, currentSpellBook: STANDARD, soundEffectTick: -1, soundEffectId: -1
+tickPeriod: 5, uiHideDebounceTickCount: 1, attackDelayHoldoffTicks: 0, dmgDealt: 45, attackState: DELAYED, renderedState: NOT_ATTACKING, lastTarget: null
+pendingEatDelayTicks: 0, currentSpellBook: STANDARD, soundEffectTick: -1, soundEffectId: -1
+[TEST MESSAGE] distance 10
+tickPeriod: 5, uiHideDebounceTickCount: 1, attackDelayHoldoffTicks: 4, dmgDealt: 45, attackState: DELAYED_FIRST_TICK, renderedState: NOT_ATTACKING, lastTarget: null
+pendingEatDelayTicks: 0, currentSpellBook: STANDARD, soundEffectTick: -1, soundEffectId: -1

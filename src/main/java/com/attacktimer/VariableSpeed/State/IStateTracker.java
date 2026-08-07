@@ -28,6 +28,8 @@ package com.attacktimer.VariableSpeed.State;
 import net.runelite.api.Client;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameTick;
+import net.runelite.api.events.NpcDespawned;
+import net.runelite.api.events.NpcSpawned;
 
 public interface IStateTracker
 {
@@ -49,5 +51,22 @@ public interface IStateTracker
      * @param event  the chat message event.
      */
     default public void onChatMessage(final Client client, final ChatMessage event)
+    {};
+
+    /**
+     * subscribe to when npcs are spawned
+     *
+     * @param npcSpawned the npc which has spawned
+     */
+    default public void onNpcSpawned(final Client client, final NpcSpawned npcSpawned)
+    {};
+
+    /**
+     * subscribe to when npcs are despawned, note this is not when the NPC is dead but after the death
+     * animation has completed or out of render distance.
+     *
+     * @param npcDespawned the npc which has despawned
+     */
+    default public void onNpcDespawned(final Client client, final NpcDespawned npcDespawned)
     {};
 }

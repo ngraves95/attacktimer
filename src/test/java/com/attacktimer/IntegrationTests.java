@@ -41,18 +41,15 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.Collections;
 import java.util.EnumSet;
 import net.runelite.api.Client;
 import net.runelite.api.EnumComposition;
 import net.runelite.api.EnumID;
-import net.runelite.api.IndexedObjectSet;
 import net.runelite.api.NPC;
 import net.runelite.api.NPCComposition;
 import net.runelite.api.Player;
 import net.runelite.api.WorldView;
 import net.runelite.api.coords.LocalPoint;
-import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.GameTick;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.game.ItemManager;
@@ -141,14 +138,9 @@ public class IntegrationTests
         when(mockedClient.getWorldView(0)).thenReturn(mockedWorldView);
         int mockedPlane = 0;
         when(mockedWorldView.getPlane()).thenReturn(mockedPlane);
-        WorldPoint worldPoint = new WorldPoint(0, 0, mockedPlane);
         LocalPoint localPoint = new LocalPoint(0, 0, mockedPlane);
-        when(mockedPlayer.getWorldLocation()).thenReturn(worldPoint);
         when(mockedPlayer.getLocalLocation()).thenReturn(localPoint);
         // -- NPCs
-        IndexedObjectSet mockedNpcs = mock(IndexedObjectSet.class);
-        when(mockedNpcs.iterator()).thenReturn(Collections.emptyIterator());
-        when(mockedWorldView.npcs()).thenReturn(mockedNpcs);
         // -- Attack Styles
         EnumComposition mockedWeaponEnum = mock(EnumComposition.class);
         when(mockedClient.getEnum(EnumID.WEAPON_STYLES)).thenReturn(mockedWeaponEnum);
@@ -157,6 +149,18 @@ public class IntegrationTests
         // Finally turn the plugin "on"
         underTest.startUp();
         return mockedPlayer;
+    }
+
+    protected void setNPCMock(NPC npc, int mockedNpcId)
+    {
+        NPCComposition mockedCompositions = mock(NPCComposition.class);
+        when(npc.getComposition()).thenReturn(mockedCompositions);
+        when(npc.getId()).thenReturn(mockedNpcId);
+        String[] actions = {
+                "Attack", "Examine",
+        };
+        when(mockedCompositions.getActions()).thenReturn(actions);
+        when(mockedNpcManager.getHealth(mockedNpcId)).thenReturn(1);
     }
 
     protected void performStateVerificationOrUpdate(ByteArrayDataOutput channel, Path path) throws IOException
@@ -195,6 +199,48 @@ public class IntegrationTests
         file.write(SUFFIX);
     }
 
+    protected bounds getWorldForRegionId(int id)
+    {
+        // getRegionId is -> ((x >> 6) << 8) | (y >> 6)
+        //
+        // so working backwards the bottom 6 bits are the y coord and the top 6 bits are the x coord.
+        final var res = new bounds();
+        res.minX = ((id >> 8) & 0xFFFFFF) * 64;
+        res.maxX = res.minX + 63;
+
+        res.minY = (id & 0xFF) * 64;
+        res.maxY = res.minY + 63;
+        return res;
+    }
+
+    protected int[][][] createInstanceTemplateChunks(int regionId)
+    {
+        // 4 planes, 13x13 scene chunks (104x104 tiles)
+        final int[][][] templateChunks = new int[4][13][13];
+
+        final int regionX = (regionId >> 8) & 0xFF;
+        final int regionY = regionId & 0xFF;
+
+        final int baseWorldChunkX = (regionX * 64) / 8; // region lower-left chunk X
+        final int baseWorldChunkY = (regionY * 64) / 8; // region lower-left chunk Y
+
+        for (int plane = 0; plane < 4; plane++)
+        {
+            for (int x = 0; x < 13; x++)
+            {
+                for (int y = 0; y < 13; y++)
+                {
+                    final int worldChunkX = baseWorldChunkX + x;
+                    final int worldChunkY = baseWorldChunkY + y;
+
+                    // Pack plane, chunkX, chunkY, and rotation (0)
+                    templateChunks[plane][x][y] = (plane << 27) | (worldChunkX << 14) | (worldChunkY << 3);
+                }
+            }
+        }
+        return templateChunks;
+    }
+
     protected static final int NO_ANIMATION = -1;
     protected static final String TESTDATA = "src/test/java/com/attacktimer/testdata/";
 
@@ -209,4 +255,12 @@ public class IntegrationTests
     @Test
     public void noTest()
     {}
+
+    protected class bounds
+    {
+        int minX;
+        int maxX;
+        int minY;
+        int maxY;
+    };
 }

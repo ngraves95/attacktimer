@@ -33,18 +33,15 @@ import com.attacktimer.AttackTimerMetronomePlugin.AttackState;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import net.runelite.api.EnumComposition;
 import net.runelite.api.EnumID;
-import net.runelite.api.IndexedObjectSet;
 import net.runelite.api.NPC;
-import net.runelite.api.NPCComposition;
 import net.runelite.api.Player;
 import net.runelite.api.VarPlayer;
 import net.runelite.api.Varbits;
 import net.runelite.api.WorldView;
 import net.runelite.api.coords.LocalPoint;
-import net.runelite.api.coords.WorldPoint;
+import net.runelite.api.events.NpcSpawned;
 import net.runelite.client.game.ItemEquipmentStats;
 import net.runelite.client.game.ItemStats;
 import org.junit.Test;
@@ -116,15 +113,8 @@ public class TormentedDemonsTest extends IntegrationTests
 
         // Create the tormented demon
         td = mock(NPC.class);
-        NPCComposition mockedCompositions = mock(NPCComposition.class);
-        when(td.getComposition()).thenReturn(mockedCompositions);
         int mockedNpcId = 13600;
-        when(td.getId()).thenReturn(mockedNpcId);
-        String[] actions = {
-                "Attack", "Examine",
-        };
-        when(mockedCompositions.getActions()).thenReturn(actions);
-        when(mockedNpcManager.getHealth(mockedNpcId)).thenReturn(1);
+        setNPCMock(td, mockedNpcId);
 
         // set the player as "attacking" the NPC
         when(mockedClient.getLocalPlayer()).thenReturn(mockedPlayer);
@@ -133,42 +123,22 @@ public class TormentedDemonsTest extends IntegrationTests
         // need some extra mocks to stop the plugin running into an exception on the
         // client APIs
         // -- Mock World
-        mockedWorldView = mock(WorldView.class);
+        WorldView mockedWorldView = mock(WorldView.class);
+        int mockedPlane = 0;
+        LocalPoint localPoint = new LocalPoint(0, 0, mockedPlane);
+        when(mockedPlayer.getLocalLocation()).thenReturn(localPoint);
         when(mockedClient.getTopLevelWorldView()).thenReturn(mockedWorldView);
         when(mockedClient.getWorldView(0)).thenReturn(mockedWorldView);
-        int mockedPlane = 0;
         when(mockedWorldView.getPlane()).thenReturn(mockedPlane);
-        WorldPoint worldPoint = new WorldPoint(0, 0, mockedPlane);
-        LocalPoint localPoint = new LocalPoint(0, 0, mockedPlane);
-        when(mockedPlayer.getWorldLocation()).thenReturn(worldPoint);
-        when(mockedPlayer.getLocalLocation()).thenReturn(localPoint);
         // -- NPCs
-        worldViewNPCiter(td);
 
         // Finally turn the plugin "on"
         underTest.startUp();
+
+        // Only spawn the demon once the plugin is on.
+        underTest.onNpcSpawned(new NpcSpawned(td));
         return mockedPlayer;
     }
 
-    protected WorldView mockedWorldView;
     protected NPC td;
-
-    private void worldViewNPCiter(NPC mockedTarget)
-    {
-        // do a bit of redirection trickery to get a IndexedObjectSet of a non empty list.
-        var npcs = new ArrayList<NPC>(1);
-        npcs.add(mockedTarget);
-        IndexedObjectSet npcsType = mock(IndexedObjectSet.class);
-        when(npcsType.iterator()).thenReturn(npcs.iterator());
-        when(mockedWorldView.npcs()).thenReturn(npcsType);
-    }
-
-    @Override
-    protected void onGameTick(ByteArrayDataOutput file)
-    {
-        super.onGameTick(file);
-        // Since an iterator is stateful and consumed by the plugin we re-mock it each time so it's always
-        // fresh.
-        worldViewNPCiter(td);
-    }
 }
