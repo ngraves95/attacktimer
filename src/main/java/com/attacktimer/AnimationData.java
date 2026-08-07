@@ -47,11 +47,12 @@ public enum AnimationData
     MELEE_SWORD_STAB(AnimationID.HUMAN_SWORD_STAB, AttackStyle.MELEE), // tested w/ dragon sword, obby sword, d long
     MELEE_SCIM_SLASH(AnimationID.HUMAN_SWORD_SLASH, AttackStyle.MELEE), // tested w/ rune & dragon scim, d sword, VLS, obby sword
     MELEE_LANCE_STAB(AnimationID.HUMAN_DHUNTER_LANCE_ATTACK, AttackStyle.MELEE),
-    MELEE_LANCE_CRUSH(AnimationID.HUMAN_DHUNTER_LANCE_SLASH, AttackStyle.MELEE),
-    MELEE_LANCE_SLASH(AnimationID.HUMAN_DHUNTER_LANCE_CRUSH, AttackStyle.MELEE),
+    MELEE_LANCE_CRUSH(AnimationID.HUMAN_DHUNTER_LANCE_CRUSH, AttackStyle.MELEE),
+    MELEE_LANCE_SLASH(AnimationID.HUMAN_DHUNTER_LANCE_SLASH, AttackStyle.MELEE),
     MELEE_FANG_STAB(AnimationID.HUMAN_OSMUMTENS_FANG, AttackStyle.MELEE), // tested w/ fang
     MELEE_FANG_SPEC(AnimationID.OLAF2_BRINE_SABRE_SPECIAL, AttackStyle.MELEE, true), // tested w/ fang spec
     MELEE_GENERIC_SLASH(AnimationID.HUMAN_AXE_CHOP, AttackStyle.MELEE), // tested w/ zuriel's staff, d long slash, dclaws regular slash
+
     MELEE_BATTLEAXE_SLASH(AnimationID.HUMAN_AXE_HACK, AttackStyle.MELEE), // tested w/ rune baxe
     MELEE_MACE_STAB(AnimationID.HUMAN_BLUNT_SPIKE, AttackStyle.MELEE), // tested w/ d mace
     MELEE_BATTLEAXE_CRUSH(AnimationID.HUMAN_BLUNT_POUND, AttackStyle.MELEE), // tested w/ rune baxe, dwh & statius warhammer animation, d mace
@@ -180,6 +181,7 @@ public enum AnimationData
     MAGIC_STANDARD_VULNERABILITY_CURSE(AnimationID.HUMAN_CASTCURSE_STAFF, AttackStyle.MAGIC, Spellbook.STANDARD),
     MAGIC_STANDARD_WAVE(AnimationID.HUMAN_CASTWAVE_WALKMERGE, AttackStyle.MAGIC, Spellbook.STANDARD), // tested w/ wave spells
     MAGIC_STANDARD_WAVE_STAFF(AnimationID.HUMAN_CASTWAVE_STAFF_WALKMERGE, AttackStyle.MAGIC, Spellbook.STANDARD), // tested many staves
+    MAGIC_STANDARD_WEAKEN(AnimationID.HUMAN_CASTWEAKEN_STAFF, AttackStyle.MAGIC, Spellbook.STANDARD),
 
     MAGIC_ANCIENT_MULTI_TARGET(AnimationID.ZAROS_VERTICAL_CASTING_WALKMERGE, AttackStyle.MAGIC, Spellbook.ANCIENT), // Burst & Barrage animations (AnimationID.tested all 8, different weapons)
     MAGIC_ANCIENT_MULTI_TARGET_PVP(AnimationID.ZAROS_VERTICAL_CASTING, AttackStyle.MAGIC, Spellbook.ANCIENT), // Burst & Barrage animations (AnimationID.tested all 8, different weapons)
