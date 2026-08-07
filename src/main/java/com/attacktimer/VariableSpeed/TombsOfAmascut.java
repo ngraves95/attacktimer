@@ -31,23 +31,22 @@ import com.attacktimer.AttackType;
 import com.attacktimer.ClientUtils.Utils;
 import com.attacktimer.Spellbook;
 import net.runelite.api.Client;
+import net.runelite.api.gameval.NpcID;
 
 /**
  * There is no cooldown when attacking the skulls with melee.
+ *
+ * https://oldschool.runescape.wiki/w/Energy_Siphon
  */
 public class TombsOfAmascut implements IVariableSpeed
 {
-    // The skulls during p3 wardens.
-    // https://oldschool.runescape.wiki/w/Energy_Siphon
-    private static final int ENERGY_SIPHON_ID = 11772;
-
     public int apply(final Client client, final AnimationData curAnimation, final AttackProcedure atkType,
             final Spellbook spellbook, final int damageDealt, final int lastSpecDelta, final int baseSpeed,
             final int curSpeed)
     {
         final int targetId = Utils.getTargetId(client);
         final AttackType attkType = Utils.getAttackType(client);
-        if (targetId == ENERGY_SIPHON_ID && attkType.IsMelee())
+        if (targetId == NpcID.WARDENS_P3_ORB_BLUE && attkType.IsMelee())
         {
             return 1;
         }

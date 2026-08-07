@@ -31,6 +31,8 @@ import com.attacktimer.ClientUtils.Utils;
 import com.attacktimer.Spellbook;
 import net.runelite.api.Client;
 import net.runelite.api.coords.WorldPoint;
+import net.runelite.api.gameval.ItemID;
+import net.runelite.api.gameval.NpcID;
 
 /**
  * Scurrius: https://oldschool.runescape.wiki/w/Scurrius/Strategies#Strategies
@@ -40,11 +42,6 @@ import net.runelite.api.coords.WorldPoint;
  */
 public class Scurrius implements IVariableSpeed
 {
-    private static final int BONE_STAFF_ID = 28796;
-    private static final int BONE_MACE_ID = 28792;
-    private static final int BONE_BOW_ID = 28794;
-    private static final int GIANT_RAT = 7223;
-
     private static final int SCURRIUS_REGION_ID = 13210;
 
     private static final int SCURRIUS_MIN_X = 3290;
@@ -56,10 +53,10 @@ public class Scurrius implements IVariableSpeed
     private static boolean attackingGiantRatWithBoneWeapon(final int equipped, final int regionId, final int x,
             final int y, final int target)
     {
-        final boolean correctWeapon = equipped == BONE_STAFF_ID || equipped == BONE_MACE_ID || equipped == BONE_BOW_ID;
+        final boolean correctWeapon = equipped == ItemID.RAT_BONE_STAFF || equipped == ItemID.RAT_BONE_MACE || equipped == ItemID.RAT_BONE_BOW;
         final boolean correctCoords = x >= SCURRIUS_MIN_X && x <= SCURRIUS_MAX_X && y >= SCURRIUS_MIN_Y && y <= SCURRIUS_MAX_Y;
         final boolean correctRegion = regionId == SCURRIUS_REGION_ID;
-        final boolean correctEnemy = target == GIANT_RAT;
+        final boolean correctEnemy = target == NpcID.RAT_BOSS_GIANT_RAT;
         return correctWeapon && correctCoords && correctRegion && correctEnemy;
     }
 

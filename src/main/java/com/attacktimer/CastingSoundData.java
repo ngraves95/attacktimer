@@ -74,7 +74,8 @@ enum CastingSoundData
     ARCEUUS_INFERIOR_DEMONBANE(5038, Spellbook.ARCEUUS),
     ARCEUUS_SKELETAL_GRASP(5026, Spellbook.ARCEUUS),
     ARCEUUS_SUPERIOR_DEMONBANE(5027, Spellbook.ARCEUUS),
-    ARCEUUS_UNDEAD_GRASP(5030, Spellbook.ARCEUUS);
+    ARCEUUS_UNDEAD_GRASP(5030, Spellbook.ARCEUUS),
+    ;
 
     private final int id;
     private final Spellbook spellbook;

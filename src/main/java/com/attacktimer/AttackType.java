@@ -32,7 +32,8 @@ public enum AttackType
     STAB,
     RANGED,
     MAGIC,
-    NONE;
+    NONE,
+    ;
 
     public boolean IsMelee()
     {

@@ -40,6 +40,8 @@ import net.runelite.api.NPC;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.NpcDespawned;
 import net.runelite.api.events.NpcSpawned;
+import net.runelite.api.gameval.NpcID;
+import net.runelite.api.gameval.SpotanimID;
 
 /**
  * TormentedDemons is the variable speed implementation for the "punish" attack a player can do against a
@@ -125,14 +127,9 @@ public class TormentedDemons implements IVariableSpeed
         }
     }
 
-    private static final int TORMENTED_DEMON_VULN_SPOT_ANIM = 2852;
-    private static final int TORMENTED_DEMON_ID = 13600;
-
-    private static final int TORMENTED_DEMON_2_ID = 13599;
-
     private static boolean isTormentedDemon(int targetId)
     {
-        return targetId == TORMENTED_DEMON_ID || targetId == TORMENTED_DEMON_2_ID;
+        return targetId == NpcID.TORMENTED_DEMON_1 || targetId == NpcID.TORMENTED_DEMON_2;
     }
 
     private Map<NPC, DemonData> tormentedDemons = new HashMap<NPC, DemonData>();
@@ -142,7 +139,7 @@ public class TormentedDemons implements IVariableSpeed
     {
         for (final Entry<NPC, DemonData> td : tormentedDemons.entrySet())
         {
-            final boolean isVulnerable = td.getKey().hasSpotAnim(TORMENTED_DEMON_VULN_SPOT_ANIM);
+            final boolean isVulnerable = td.getKey().hasSpotAnim(SpotanimID.LUC2_UNDEAD_DEMON_EXPLOSION_FIRE_SPOT);
             td.getValue().update(tickCount.get(), isVulnerable);
         }
     }
@@ -158,7 +155,7 @@ public class TormentedDemons implements IVariableSpeed
     {
         if (isTormentedDemon(npc.getId()))
         {
-            final boolean isVulnerable = npc.hasSpotAnim(TORMENTED_DEMON_VULN_SPOT_ANIM);
+            final boolean isVulnerable = npc.hasSpotAnim(SpotanimID.LUC2_UNDEAD_DEMON_EXPLOSION_FIRE_SPOT);
             tormentedDemons.put(npc, new DemonData(tickCount.get(), isVulnerable));
         }
     }
