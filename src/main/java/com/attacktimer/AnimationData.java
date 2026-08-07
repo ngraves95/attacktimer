@@ -65,7 +65,7 @@ public enum AnimationData
     MELEE_STAFF_STAB(AnimationID.HUMAN_SPEAR_SPIKE, AttackStyle.MELEE), // tested w/ SOTD/SOL jab, vesta's spear stab, c hally
     MELEE_SPEAR_CRUSH(AnimationID.HUMAN_SPEAR_LUNGE, AttackStyle.MELEE), // tested w/ vesta's spear
     MELEE_STAFF_SLASH(AnimationID.HUMAN_SCYTHE_SWEEP, AttackStyle.MELEE), // tested w/ SOTD/SOL slash, zammy hasta slash, vesta's spear slash, c hally
-    MELEE_DLONG_SPEC(AnimationID.CLEAVE, AttackStyle.MELEE, true), // tested w/ d long spec, also thammaron's sceptre crush (AnimationID.????)...
+    MELEE_DLONG_SPEC(AnimationID.CLEAVE, AttackStyle.MELEE, true), // tested w/ d long spec, also thammaron's sceptre crush (????)...
     MELEE_DRAGON_MACE_SPEC(AnimationID.SHATTER, AttackStyle.MELEE, true),
     MELEE_DRAGON_DAGGER_SPEC(AnimationID.PUNCTURE, AttackStyle.MELEE, true),
     MELEE_DRAGON_WARHAMMER_SPEC(AnimationID.DRAGON_WARHAMMER_SA_PLAYER, AttackStyle.MELEE, true), // tested w/ dwh, statius warhammer spec
@@ -84,7 +84,7 @@ public enum AnimationData
     MELEE_BARRELCHEST_ANCHOR_CRUSH(AnimationID.BRAIN_PLAYER_ANCHOR_ATTACK, AttackStyle.MELEE),
     MELEE_BARRELCHEST_ANCHOR_CRUSH_SPEC(AnimationID.BRAIN_PLAYER_ANCHOR_SPECIAL_ATTACK, AttackStyle.MELEE, true),
     MELEE_LEAF_BLADED_BATTLEAXE_SLASH(AnimationID.GODWARS_GODSWORD_ZAMORAK_PLAYER, AttackStyle.MELEE),
-    MELEE_GODSWORD_SLASH(AnimationID.DH_SWORD_UPDATE_SLASH, AttackStyle.MELEE), // tested w/ AGS, BGS, ZGS, SGS, AGS(AnimationID.or) sara sword
+    MELEE_GODSWORD_SLASH(AnimationID.DH_SWORD_UPDATE_SLASH, AttackStyle.MELEE), // tested w/ AGS, BGS, ZGS, SGS, AGS(or) sara sword
     MELEE_GODSWORD_CRUSH(AnimationID.DH_SWORD_UPDATE_SMASH, AttackStyle.MELEE), // tested w/ AGS, BGS, ZGS, SGS, sara sword
     MELEE_GODSWORD_DEFENSIVE(AnimationID.DH_SWORD_UPDATE_BLOCK, AttackStyle.MELEE), // tested w/ BGS
     MELEE_RUNE_CLAWS_SPEC(AnimationID.IMPALE, AttackStyle.MELEE, true),
@@ -93,14 +93,14 @@ public enum AnimationData
     MELEE_ELDER_MAUL(AnimationID.HUMAN_ELDER_MAUL_ATTACK, AttackStyle.MELEE),
     MELEE_ZAMORAK_GODSWORD_SPEC(AnimationID.ZGS_SPECIAL_PLAYER, AttackStyle.MELEE, true), // tested zgs spec
     MELEE_ELDER_MAUL_SPEC(AnimationID.HUMAN_ELDER_MAUL_SPEC, AttackStyle.MELEE),
-    MELEE_ZAMORAK_GODSWORD_OR_SPEC(AnimationID.ZGS_SPECIAL_ORNATE_PLAYER, AttackStyle.MELEE, true), // verified 22/06/2024, assumed due to ags(AnimationID.or)
+    MELEE_ZAMORAK_GODSWORD_OR_SPEC(AnimationID.ZGS_SPECIAL_ORNATE_PLAYER, AttackStyle.MELEE, true), // verified 22/06/2024, assumed due to ags(or)
     MELEE_SARADOMIN_GODSWORD_SPEC(AnimationID.SGS_SPECIAL_PLAYER, AttackStyle.MELEE, true), // tested sgs spec
-    MELEE_SARADOMIN_GODSWORD_OR_SPEC(AnimationID.SGS_SPECIAL_ORNATE_PLAYER, AttackStyle.MELEE, true), // verified 22/06/2024, assumed due to ags(AnimationID.or)
+    MELEE_SARADOMIN_GODSWORD_OR_SPEC(AnimationID.SGS_SPECIAL_ORNATE_PLAYER, AttackStyle.MELEE, true), // verified 22/06/2024, assumed due to ags(or)
     MELEE_BANDOS_GODSWORD_SPEC(AnimationID.BGS_SPECIAL_PLAYER, AttackStyle.MELEE, true), // tested bgs spec
-    MELEE_BANDOS_GODSWORD_OR_SPEC(AnimationID.BGS_SPECIAL_ORNATE_PLAYER, AttackStyle.MELEE, true), // verified 22/06/2024, assumed due to ags(AnimationID.or)
+    MELEE_BANDOS_GODSWORD_OR_SPEC(AnimationID.BGS_SPECIAL_ORNATE_PLAYER, AttackStyle.MELEE, true), // verified 22/06/2024, assumed due to ags(or)
     MELEE_ARMADYL_GODSWORD_SPEC(AnimationID.AGS_SPECIAL_PLAYER, AttackStyle.MELEE, true), // tested ags spec
-    MELEE_ARMADYL_GODSWORD_OR_SPEC(AnimationID.AGS_SPECIAL_ORNATE_PLAYER, AttackStyle.MELEE, true), // tested ags(AnimationID.or) spec
-    MELEE_SCYTHE(AnimationID.SCYTHE_OF_VITUR_ATTACK, AttackStyle.MELEE), // tested w/ all scythe styles (AnimationID.so could be crush, but unlikely)
+    MELEE_ARMADYL_GODSWORD_OR_SPEC(AnimationID.AGS_SPECIAL_ORNATE_PLAYER, AttackStyle.MELEE, true), // tested ags(or) spec
+    MELEE_SCYTHE(AnimationID.SCYTHE_OF_VITUR_ATTACK, AttackStyle.MELEE), // tested w/ all scythe styles (so could be crush, but unlikely)
     MELEE_GHAZI_RAPIER_STAB(AnimationID.GHRAZI_RAPIER_ATTACK, AttackStyle.MELEE), // rapier slash is 390, basic slash animation. Also VLS stab.
     MELEE_ANCIENT_GODSWORD_SPEC(AnimationID.NGS_SPECIAL_PLAYER, AttackStyle.MELEE, true),
     MELEE_CRYSTAL_HALBERD_SPEC(AnimationID.DRAGON_HALBERD_SPECIAL_ATTACK, AttackStyle.MELEE, true),
@@ -112,7 +112,7 @@ public enum AnimationData
     MELEE_TORAG_HAMMERS(AnimationID.BARROW_TORAG_CRUSH, AttackStyle.MELEE),
     MELEE_VERACS_FLAIL(AnimationID.BARROW_GUTHAN_CRUSH, AttackStyle.MELEE),
     MELEE_BLISTERWOOD_FLAIL_CRUSH(AnimationID.IVANDIS_FLAIL_ATTACK, AttackStyle.MELEE), // blisterwood flail
-    MELEE_BONE_DAGGER_SPEC(AnimationID.DTTD_PLAYER_STAB_BONE_DAGGER, AttackStyle.MELEE, true), // tested with all poison variants (AnimationID.p, p+, p++, none)
+    MELEE_BONE_DAGGER_SPEC(AnimationID.DTTD_PLAYER_STAB_BONE_DAGGER, AttackStyle.MELEE, true), // tested with all poison variants (p, p+, p++, none)
     MELEE_DUAL_MACUAHUITL(AnimationID.PMOON_MACUAHUITL_CRUSH, AttackStyle.MELEE), // https://oldschool.runescape.wiki/w/Dual_macuahuitl set effect needs custom code
     MELEE_BLUE_MOON_SPEAR_SPEC(AnimationID.HUMAN_ZAMORAKSPEAR_LUNGE, AttackStyle.MELEE, true), // https://oldschool.runescape.wiki/w/Blue_moon_spear
     MELEE_BLUE_MOON_SPEAR(AnimationID.HUMAN_ZAMORAKSPEAR_STAB, AttackStyle.MELEE),
@@ -135,7 +135,7 @@ public enum AnimationData
     RANGED_SHORTBOW(AnimationID.HUMAN_BOW, AttackStyle.RANGED), // Confirmed same w/ 3 types of arrows, w/ maple, magic, & hunter's shortbow, craw's bow, dbow, dbow spec
     RANGED_RUNE_KNIFE_PVP(AnimationID.HUMAN_STAKE2, AttackStyle.RANGED), // 1 tick animation, has 1 tick delay between attacks. likely same for all knives. Same for morrigan's javelins, both spec & normal attack.
     RANGED_MAGIC_SHORTBOW_SPEC(AnimationID.SNAPSHOT, AttackStyle.RANGED, true),
-    RANGED_CROSSBOW_PVP(AnimationID.XBOWS_HUMAN_FIRE_AND_RELOAD, AttackStyle.RANGED), // Tested RCB & ACB w/ dragonstone bolts (AnimationID.e) & diamond bolts (AnimationID.e)
+    RANGED_CROSSBOW_PVP(AnimationID.XBOWS_HUMAN_FIRE_AND_RELOAD, AttackStyle.RANGED), // Tested RCB & ACB w/ dragonstone bolts (e) & diamond bolts (e)
     RANGED_BLOWPIPE(AnimationID.SNAKEBOSS_BLOWPIPE_ATTACK, AttackStyle.RANGED), // tested in PvP with all styles. Has 1 tick delay between animations in pvp.
     RANGED_DARTS(AnimationID.II_HUMAN_DART_THROW_PVN, AttackStyle.RANGED), // tested w/ addy darts. Seems to be constant animation but sometimes stalls and doesn't animate
     RANGED_BALLISTA(AnimationID.BALLISTA_ATTACK, AttackStyle.RANGED), // Tested w/ dragon javelins.
@@ -175,7 +175,7 @@ public enum AnimationData
     MAGIC_STANDARD_STRIKE_BOLT_BLAST(AnimationID.HUMAN_CASTSTRIKE_WALKMERGE, AttackStyle.MAGIC, Spellbook.STANDARD), // tested w/ bolt
     MAGIC_STANDARD_STRIKE_MANUAL(AnimationID.HUMAN_CASTSTRIKE, AttackStyle.MAGIC, Spellbook.STANDARD),
     MAGIC_STANDARD_STRIKE_STAFF(AnimationID.HUMAN_CASTSTRIKE_STAFF, AttackStyle.MAGIC, Spellbook.STANDARD),
-    MAGIC_STANDARD_STRIKE_BOLT_BLAST_STAFF(AnimationID.HUMAN_CASTSTRIKE_STAFF_WALKMERGE, AttackStyle.MAGIC, Spellbook.STANDARD), // strike, bolt and blast (AnimationID.tested all spells, different weapons)
+    MAGIC_STANDARD_STRIKE_BOLT_BLAST_STAFF(AnimationID.HUMAN_CASTSTRIKE_STAFF_WALKMERGE, AttackStyle.MAGIC, Spellbook.STANDARD), // strike, bolt and blast (tested all spells, different weapons)
     MAGIC_STANDARD_STUN(AnimationID.HUMAN_CASTSTUN_STAFF, AttackStyle.MAGIC, Spellbook.STANDARD),
     MAGIC_STANDARD_SURGE_STAFF(AnimationID.HUMAN_CAST_SURGE_WALKMERGE, AttackStyle.MAGIC, Spellbook.STANDARD), // tested many staves
     MAGIC_STANDARD_VULNERABILITY_CURSE(AnimationID.HUMAN_CASTCURSE_STAFF, AttackStyle.MAGIC, Spellbook.STANDARD),
@@ -183,9 +183,9 @@ public enum AnimationData
     MAGIC_STANDARD_WAVE_STAFF(AnimationID.HUMAN_CASTWAVE_STAFF_WALKMERGE, AttackStyle.MAGIC, Spellbook.STANDARD), // tested many staves
     MAGIC_STANDARD_WEAKEN(AnimationID.HUMAN_CASTWEAKEN_STAFF, AttackStyle.MAGIC, Spellbook.STANDARD),
 
-    MAGIC_ANCIENT_MULTI_TARGET(AnimationID.ZAROS_VERTICAL_CASTING_WALKMERGE, AttackStyle.MAGIC, Spellbook.ANCIENT), // Burst & Barrage animations (AnimationID.tested all 8, different weapons)
-    MAGIC_ANCIENT_MULTI_TARGET_PVP(AnimationID.ZAROS_VERTICAL_CASTING, AttackStyle.MAGIC, Spellbook.ANCIENT), // Burst & Barrage animations (AnimationID.tested all 8, different weapons)
-    MAGIC_ANCIENT_SINGLE_TARGET(AnimationID.ZAROS_CASTING_WALKMERGE, AttackStyle.MAGIC, Spellbook.ANCIENT), // Rush & Blitz animations (AnimationID.tested all 8, different weapons)
+    MAGIC_ANCIENT_MULTI_TARGET(AnimationID.ZAROS_VERTICAL_CASTING_WALKMERGE, AttackStyle.MAGIC, Spellbook.ANCIENT), // Burst & Barrage animations (tested all 8, different weapons)
+    MAGIC_ANCIENT_MULTI_TARGET_PVP(AnimationID.ZAROS_VERTICAL_CASTING, AttackStyle.MAGIC, Spellbook.ANCIENT), // Burst & Barrage animations (tested all 8, different weapons)
+    MAGIC_ANCIENT_SINGLE_TARGET(AnimationID.ZAROS_CASTING_WALKMERGE, AttackStyle.MAGIC, Spellbook.ANCIENT), // Rush & Blitz animations (tested all 8, different weapons)
     MAGIC_ANCIENT_SINGLE_TARGET_PVP(AnimationID.ZAROS_CASTING, AttackStyle.MAGIC, Spellbook.ANCIENT), // Rush & Blitz animations
 
     MAGIC_ARCEUUS_DEMONBANE(AnimationID.HUMAN_SPELLCAST_DEMONBANE, AttackStyle.MAGIC, Spellbook.ARCEUUS), // Also greater corruption, so that may accidentally trigger a manual-cast, but that's probably fine only affects Muspah
@@ -194,7 +194,7 @@ public enum AnimationData
     MAGIC_ACCURSED_SCEPTRE_SPEC(AnimationID.HUMAN_SPECIAL_ACCURSED, AttackStyle.MAGIC, true),
     MAGIC_TUMEKENS_SHADOW(AnimationID.TOA_SOT_CAST_B, AttackStyle.MAGIC, false),
     MAGIC_WARPED_SCEPTRE(AnimationID.POG_WARPED_SCEPTRE_ATTACK, AttackStyle.MAGIC, false), // https://oldschool.runescape.wiki/w/Warped_sceptre
-    MAGIC_VOLATILE_NIGHTMARE_STAFF_SPEC(AnimationID.NIGHTMARE_STAFF_SPECIAL, AttackStyle.MAGIC, true), // assume 99 mage's base damage (AnimationID.does not rise when boosted).
+    MAGIC_VOLATILE_NIGHTMARE_STAFF_SPEC(AnimationID.NIGHTMARE_STAFF_SPECIAL, AttackStyle.MAGIC, true), // assume 99 mage's base damage (does not rise when boosted).
 
     MAGIC_EYE_OF_AYAK(AnimationID.HUMAN_EYE_OF_AYAK_NORMAL, AttackStyle.MAGIC, false),
     MAGIC_EYE_OF_AYAK_SPEC(AnimationID.HUMAN_EYE_OF_AYAK_SPECIAL, AttackStyle.MAGIC, true), // https://github.com/ngraves95/attacktimer/issues/91
@@ -221,7 +221,7 @@ public enum AnimationData
     ROCKSLUG_BAG_OF_SALT(AnimationID.SLAYER_SALT_SPRINKLE, AttackStyle.NON_ATTACK), // https://oldschool.runescape.wiki/w/Rockslug
     DESSET_LIZARD_ICE_COOLER(AnimationID.HUMAN_CHINCHOMPA_ATTACK, AttackStyle.NON_ATTACK), // https://oldschool.runescape.wiki/w/Desert_Lizard
     // Tick manipulation actions are not trustworthy for attack starts, in fact for the most part they're like an eat and would stop attacks being allowed.
-    FLECTHING_KNIFE(AnimationID.HUMAN_FLETCHING, AttackStyle.NON_ATTACK), // knife & log (AnimationID.celastrus bark, etc)
+    FLECTHING_KNIFE(AnimationID.HUMAN_FLETCHING, AttackStyle.NON_ATTACK), // knife & log (celastrus bark, etc)
     FLECTHING_KEBBIT(AnimationID.HUMAN_CRAFTING_SPIKEDVAMBRACES, AttackStyle.NON_ATTACK), // kebbit & vamb
     FLECTHING_CHISEL(AnimationID.HUMAN_FLETCHING_HUNTINGBOLTS, AttackStyle.NON_ATTACK), // chisel & moonlight antler
     FLECTHING_DART_TIP_1(AnimationID.HUMAN_FLETCHING_ADD_DART_FEATHERS_BRONZE, AttackStyle.NON_ATTACK), // dart tip & feather
@@ -240,7 +240,7 @@ public enum AnimationData
     DESERT_AMMY(AnimationID.TELEPORT_NARDAH_HUMAN, AttackStyle.NON_ATTACK),
 
     EAT_FOOD_OR_POTION(AnimationID.HUMAN_EAT, AttackStyle.NON_ATTACK),
-    OVERLOAD_HIT(AnimationID.HUMAN_KILLERWATT_ELECTRICSHOCK, AttackStyle.NON_ATTACK), // https://oldschool.runescape.wiki/w/Overload_(AnimationID.Chambers_of_Xeric)#4_dose
+    OVERLOAD_HIT(AnimationID.HUMAN_KILLERWATT_ELECTRICSHOCK, AttackStyle.NON_ATTACK), // https://oldschool.runescape.wiki/w/Overload_(Chambers_of_Xeric)#4_dose
 
     TAKING_HIT_1HANDED_UNARMED(AnimationID.HUMAN_AXE_BLOCK, AttackStyle.NON_ATTACK),
     TAKING_HIT_2H_SWORD(AnimationID.HUMAN_DHSWORD_BLOCK, AttackStyle.NON_ATTACK),
