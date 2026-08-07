@@ -46,11 +46,14 @@ public enum AnimationData
     MELEE_SPEAR_STAB(AnimationID.HUMAN_DSPEAR_STAB, AttackStyle.MELEE), // tested w/ zammy hasta
     MELEE_SWORD_STAB(AnimationID.HUMAN_SWORD_STAB, AttackStyle.MELEE), // tested w/ dragon sword, obby sword, d long
     MELEE_SCIM_SLASH(AnimationID.HUMAN_SWORD_SLASH, AttackStyle.MELEE), // tested w/ rune & dragon scim, d sword, VLS, obby sword
+
     MELEE_LANCE_STAB(AnimationID.HUMAN_DHUNTER_LANCE_ATTACK, AttackStyle.MELEE),
     MELEE_LANCE_CRUSH(AnimationID.HUMAN_DHUNTER_LANCE_CRUSH, AttackStyle.MELEE),
     MELEE_LANCE_SLASH(AnimationID.HUMAN_DHUNTER_LANCE_SLASH, AttackStyle.MELEE),
+
     MELEE_FANG_STAB(AnimationID.HUMAN_OSMUMTENS_FANG, AttackStyle.MELEE), // tested w/ fang
     MELEE_FANG_SPEC(AnimationID.OLAF2_BRINE_SABRE_SPECIAL, AttackStyle.MELEE, true), // tested w/ fang spec
+
     MELEE_GENERIC_SLASH(AnimationID.HUMAN_AXE_CHOP, AttackStyle.MELEE), // tested w/ zuriel's staff, d long slash, dclaws regular slash
 
     MELEE_BATTLEAXE_SLASH(AnimationID.HUMAN_AXE_HACK, AttackStyle.MELEE), // tested w/ rune baxe
