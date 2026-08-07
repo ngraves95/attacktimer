@@ -94,7 +94,8 @@ public enum WeaponType
     PLACE_HOLDER_1(null, null, null), // 32
     PLACE_HOLDER_2(null, null, null), // 33
     PLACE_HOLDER_3(null, null, null), // 34
-    FLAIL(SLASH, SLASH, null, SLASH); // 35
+    FLAIL(SLASH, SLASH, null, SLASH), // 35
+    ;
 
     private static final Map<Integer, WeaponType> WEAPON_TYPES;
 

@@ -39,7 +39,8 @@ public enum AttackStyle
     LONGRANGE("Longrange", Skill.RANGED, Skill.DEFENCE),
     CASTING("Casting", Skill.MAGIC),
     DEFENSIVE_CASTING("Defensive Casting", Skill.MAGIC, Skill.DEFENCE),
-    OTHER("Other");
+    OTHER("Other"),
+    ;
 
     @Getter
     private final String name;

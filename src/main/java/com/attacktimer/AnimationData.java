@@ -269,7 +269,8 @@ public enum AnimationData
     TAKING_HIT_HALLOWFELL(AnimationID.HUMAN_HALLOWFELL_DEFEND, AttackStyle.NON_ATTACK),
 
     LOW_ALCH(AnimationID.HUMAN_CASTLOWLVLALCHEMY, AttackStyle.NON_ATTACK),
-    HIGH_ALCH(AnimationID.HUMAN_CASTHIGHLVLALCHEMY, AttackStyle.NON_ATTACK);
+    HIGH_ALCH(AnimationID.HUMAN_CASTHIGHLVLALCHEMY, AttackStyle.NON_ATTACK),
+    ;
 
     private static final Map<Integer, AnimationData> DATA;
     private static final Map<Spellbook, Set<AnimationData>> SPELL_BOOK_ANIMATIONS;

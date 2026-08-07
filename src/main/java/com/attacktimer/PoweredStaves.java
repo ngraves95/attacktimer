@@ -46,26 +46,24 @@ public enum PoweredStaves
     WEAPON_BLUE_C_STAFF_A(AnimationData.MAGIC_STANDARD_WAVE_STAFF, ItemID.GAUNTLET_MAGIC_T2), // https://oldschool.runescape.wiki/w/Crystal_staff_(attuned)
     WEAPON_BLUE_C_STAFF_B(AnimationData.MAGIC_STANDARD_WAVE_STAFF, ItemID.GAUNTLET_MAGIC_T1), // https://oldschool.runescape.wiki/w/Crystal_staff_(basic)
     WEAPON_BLUE_C_STAFF_P(AnimationData.MAGIC_STANDARD_WAVE_STAFF, ItemID.GAUNTLET_MAGIC_T3), // https://oldschool.runescape.wiki/w/Crystal_staff_(perfected)
-    WEAPON_BONE_STAFF(AnimationData.MELEE_GENERIC_SLASH, ItemID.RAT_BONE_STAFF), //https://oldschool.runescape.wiki/w/Bone_staff
+    WEAPON_BONE_STAFF(AnimationData.MELEE_GENERIC_SLASH, ItemID.RAT_BONE_STAFF), // https://oldschool.runescape.wiki/w/Bone_staff
     WEAPON_DAWNBRINGER(AnimationData.MAGIC_STANDARD_WAVE_STAFF, ItemID.VERZIK_SPECIAL_WEAPON), // https://oldschool.runescape.wiki/w/Dawnbringer
-    WEAPON_HARM(Set.of(
-            AnimationData.MAGIC_STANDARD_STRIKE_STAFF,
-            AnimationData.MAGIC_STANDARD_WAVE_STAFF,
-            AnimationData.MAGIC_STANDARD_STRIKE_BOLT_BLAST_STAFF,
-            AnimationData.MAGIC_STANDARD_SURGE_STAFF
-        ),
-        ItemID.NIGHTMARE_STAFF_HARMONISED), // https://oldschool.runescape.wiki/w/Harmonised_nightmare_staff
+    WEAPON_HARM(
+            Set.of(AnimationData.MAGIC_STANDARD_STRIKE_STAFF, AnimationData.MAGIC_STANDARD_WAVE_STAFF,
+                    AnimationData.MAGIC_STANDARD_STRIKE_BOLT_BLAST_STAFF, AnimationData.MAGIC_STANDARD_SURGE_STAFF),
+            ItemID.NIGHTMARE_STAFF_HARMONISED), // https://oldschool.runescape.wiki/w/Harmonised_nightmare_staff
     WEAPON_RED_C_STAFF_A(AnimationData.MAGIC_STANDARD_WAVE_STAFF, ItemID.GAUNTLET_MAGIC_T2_HM), // https://oldschool.runescape.wiki/w/Corrupted_staff_(attuned)
     WEAPON_RED_C_STAFF_B(AnimationData.MAGIC_STANDARD_WAVE_STAFF, ItemID.GAUNTLET_MAGIC_T1_HM), // https://oldschool.runescape.wiki/w/Corrupted_staff_(basic)
     WEAPON_RED_C_STAFF_P(AnimationData.MAGIC_STANDARD_WAVE_STAFF, ItemID.GAUNTLET_MAGIC_T3_HM), // https://oldschool.runescape.wiki/w/Corrupted_staff_(perfected)
     WEAPON_SANG(AnimationData.MAGIC_STANDARD_WAVE_STAFF, ItemID.SANGUINESTI_STAFF, ItemID.SANGUINESTI_STAFF_OR), // https://oldschool.runescape.wiki/w/Sanguinesti_staff#Charged
     WEAPON_STARTER_STAFF(ItemID.DEADMAN_STARTER_STAFF, ItemID.DEADMAN_APOCALYPSE_STAFF), // https://oldschool.runescape.wiki/w/Starter_staff
-    WEAPON_SWAMP(AnimationData.MAGIC_STANDARD_WAVE_STAFF,ItemID.TOXIC_TOTS_CHARGED, ItemID.TOXIC_TOTS_I_CHARGED, ItemID.TOXIC_TOTS_CHARGED_ORN, ItemID.TOXIC_TOTS_I_CHARGED_ORN), // https://oldschool.runescape.wiki/w/Trident_of_the_swamp
+    WEAPON_SWAMP(AnimationData.MAGIC_STANDARD_WAVE_STAFF, ItemID.TOXIC_TOTS_CHARGED, ItemID.TOXIC_TOTS_I_CHARGED,
+            ItemID.TOXIC_TOTS_CHARGED_ORN, ItemID.TOXIC_TOTS_I_CHARGED_ORN), // https://oldschool.runescape.wiki/w/Trident_of_the_swamp
     WEAPON_THAMMARON(AnimationData.MAGIC_STANDARD_WAVE_STAFF, ItemID.WILD_CAVE_SCEPTRE_CHARGED), // https://oldschool.runescape.wiki/w/Thammaron%27s_sceptre
-    WEAPON_TRIDENT(AnimationData.MAGIC_STANDARD_WAVE_STAFF, ItemID.TOTS, ItemID.TOTS_CHARGED, ItemID.TOTS_I_CHARGED, ItemID.TOTS_CHARGED_ORN, ItemID.TOTS_ORN, ItemID.TOTS_I_CHARGED_ORN), // https://oldschool.runescape.wiki/w/Trident_of_the_seas
+    WEAPON_TRIDENT(AnimationData.MAGIC_STANDARD_WAVE_STAFF, ItemID.TOTS, ItemID.TOTS_CHARGED, ItemID.TOTS_I_CHARGED,
+            ItemID.TOTS_CHARGED_ORN, ItemID.TOTS_ORN, ItemID.TOTS_I_CHARGED_ORN), // https://oldschool.runescape.wiki/w/Trident_of_the_seas
     WEAPON_WARPED_SCEPTRE(AnimationData.MAGIC_WARPED_SCEPTRE, ItemID.WARPED_SCEPTRE), // https://oldschool.runescape.wiki/w/Warped_sceptre
     ;
-
 
     @Getter
     private final Set<Integer> ids;
@@ -99,6 +97,7 @@ public enum PoweredStaves
         this.ids = ListToSet(id);
         this.animations = Set.of(spell);
     }
+
     // Multiple animations 4t powered staff
     PoweredStaves(Set<AnimationData> spell, int... id)
     {
@@ -156,8 +155,7 @@ public enum PoweredStaves
     public String toString()
     {
         String[] words = super.toString().toLowerCase().split("_");
-        Arrays.stream(words)
-                .map(StringUtils::capitalize).collect(Collectors.toList()).toArray(words);
+        Arrays.stream(words).map(StringUtils::capitalize).collect(Collectors.toList()).toArray(words);
 
         return String.join(" ", words);
     }

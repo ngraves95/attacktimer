@@ -32,7 +32,8 @@ public enum Spellbook
     STANDARD(0),
     ANCIENT(1),
     LUNAR(2),
-    ARCEUUS(3);
+    ARCEUUS(3),
+    ;
 
     private final int id;
 

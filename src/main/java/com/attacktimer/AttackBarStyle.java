@@ -35,7 +35,8 @@ public enum AttackBarStyle
 {
     AUTO("Auto"),
     STANDARD("Standard"),
-    HIGH_DETAIL("High Detail");
+    HIGH_DETAIL("High Detail"),
+    ;
 
     private final String name;
 
