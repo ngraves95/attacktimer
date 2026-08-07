@@ -31,6 +31,7 @@ import java.util.Map;
 import lombok.NonNull;
 import net.runelite.api.Client;
 import net.runelite.api.NPC;
+import net.runelite.api.gameval.NpcID;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.NpcSpawned;
@@ -44,10 +45,8 @@ public class Yama implements IStateTracker
 
     private static final int VOID_FLARE_HP_P1_P2 = 140 - HP_FUDGE;
     private static final int VOID_FLARE_HP_P3 = 71 - HP_FUDGE;
-    private static final int VOID_FLARE_ID = 14179;
 
     private static final int YAMA_REGION_ID = 6045;
-    private static final int YAMA_ID = 14176;
     private static final int YAMA_PHASE_TRANSITION_ANIMATION_ID = 12147;
 
     // null if yama isn't alive.
@@ -96,7 +95,7 @@ public class Yama implements IStateTracker
             return;
         }
         final NPC npc = npcSpawned.getNpc();
-        if (npc.getId() == YAMA_ID)
+        if (npc.getId() == NpcID.YAMA)
         {
             yama = new YamaData(npc);
         }
@@ -104,12 +103,12 @@ public class Yama implements IStateTracker
 
     public static NPC isEitherVoidFlare(NPC a, NPC b)
     {
-        if (a != null && a.getId() == VOID_FLARE_ID)
+        if (a != null && a.getId() == NpcID.YAMA_VOIDFLARE)
         {
             return a;
         }
 
-        if (b != null && b.getId() == VOID_FLARE_ID)
+        if (b != null && b.getId() == NpcID.YAMA_VOIDFLARE)
         {
             return b;
         }

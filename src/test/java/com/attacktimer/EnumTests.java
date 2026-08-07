@@ -25,7 +25,6 @@ package com.attacktimer;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
 import org.junit.Ignore;
@@ -58,7 +57,6 @@ public class EnumTests
         {
             System.out.print(a.toString() + ", ");
         }
-        assertFalse(PoweredStaves.LOCAL_DEBUGGING);
     }
 
     @Ignore("Only for reporting purposes")
@@ -80,11 +78,6 @@ public class EnumTests
                             .getMessage();
                 }
                 break;
-            }
-            if (staff.getProjectiles() == null)
-            {
-                fails += MessageFormatter.format("Staff | {} doesn't have a projectile associated\n", staff)
-                        .getMessage();
             }
         }
 

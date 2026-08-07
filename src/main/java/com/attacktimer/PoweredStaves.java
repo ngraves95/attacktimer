@@ -45,7 +45,7 @@ public enum PoweredStaves
     WEAPON_ACCURSED(Set.of(AnimationData.MAGIC_STANDARD_WAVE_STAFF, AnimationData.MAGIC_ACCURSED_SCEPTRE_SPEC), ItemID.WILD_CAVE_ACCURSED_CHARGED), // https://oldschool.runescape.wiki/w/Accursed_sceptre
     WEAPON_BLUE_C_STAFF_A(AnimationData.MAGIC_STANDARD_WAVE_STAFF, ItemID.GAUNTLET_MAGIC_T2), // https://oldschool.runescape.wiki/w/Crystal_staff_(attuned)
     WEAPON_BLUE_C_STAFF_B(AnimationData.MAGIC_STANDARD_WAVE_STAFF, ItemID.GAUNTLET_MAGIC_T1), // https://oldschool.runescape.wiki/w/Crystal_staff_(basic)
-    WEAPON_BLUE_C_STAFF_P(AnimationData.MAGIC_STANDARD_WAVE_STAFF, -ItemID.GAUNTLET_MAGIC_T3), // https://oldschool.runescape.wiki/w/Crystal_staff_(perfected)
+    WEAPON_BLUE_C_STAFF_P(AnimationData.MAGIC_STANDARD_WAVE_STAFF, ItemID.GAUNTLET_MAGIC_T3), // https://oldschool.runescape.wiki/w/Crystal_staff_(perfected)
     WEAPON_BONE_STAFF(AnimationData.MELEE_GENERIC_SLASH, ItemID.RAT_BONE_STAFF), //https://oldschool.runescape.wiki/w/Bone_staff
     WEAPON_DAWNBRINGER(AnimationData.MAGIC_STANDARD_WAVE_STAFF, ItemID.VERZIK_SPECIAL_WEAPON), // https://oldschool.runescape.wiki/w/Dawnbringer
     WEAPON_HARM(Set.of(
@@ -106,7 +106,6 @@ public enum PoweredStaves
         this.animations = spell;
     }
 
-    protected static final boolean LOCAL_DEBUGGING = false;
     protected static final int UNKNOWN_SPELL = 0xDEADBEEF;
     protected static final ImmutableMap<Integer, ImmutableMap<Integer, PoweredStaves>> POWERED_STAVES;
 
@@ -132,16 +131,6 @@ public enum PoweredStaves
                 }
                 builder.put(id, spellMap.build());
             }
-        }
-        if (LOCAL_DEBUGGING)
-        {
-            // Fake the kodai to be a harm for testing, because I don't own a harm.
-            ImmutableMap.Builder<Integer, PoweredStaves> spellMap = new ImmutableMap.Builder<>();
-            for (AnimationData harmAnim : WEAPON_HARM.animations)
-            {
-                spellMap.put(harmAnim.animationId, WEAPON_HARM);
-            }
-            builder.put(21006, spellMap.build());
         }
 
         POWERED_STAVES = builder.build();

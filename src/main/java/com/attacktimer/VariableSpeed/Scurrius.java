@@ -32,6 +32,7 @@ import com.attacktimer.Spellbook;
 import net.runelite.api.Client;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.gameval.ItemID;
+import net.runelite.api.gameval.NpcID;
 
 /**
  * Scurrius: https://oldschool.runescape.wiki/w/Scurrius/Strategies#Strategies
@@ -41,8 +42,6 @@ import net.runelite.api.gameval.ItemID;
  */
 public class Scurrius implements IVariableSpeed
 {
-    private static final int GIANT_RAT = 7223;
-
     private static final int SCURRIUS_REGION_ID = 13210;
 
     private static final int SCURRIUS_MIN_X = 3290;
@@ -57,7 +56,7 @@ public class Scurrius implements IVariableSpeed
         final boolean correctWeapon = equipped == ItemID.RAT_BONE_STAFF || equipped == ItemID.RAT_BONE_MACE || equipped == ItemID.RAT_BONE_BOW;
         final boolean correctCoords = x >= SCURRIUS_MIN_X && x <= SCURRIUS_MAX_X && y >= SCURRIUS_MIN_Y && y <= SCURRIUS_MAX_Y;
         final boolean correctRegion = regionId == SCURRIUS_REGION_ID;
-        final boolean correctEnemy = target == GIANT_RAT;
+        final boolean correctEnemy = target == NpcID.RAT_BOSS_GIANT_RAT;
         return correctWeapon && correctCoords && correctRegion && correctEnemy;
     }
 

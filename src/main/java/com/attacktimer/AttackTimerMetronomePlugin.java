@@ -196,8 +196,7 @@ public class AttackTimerMetronomePlugin extends Plugin
     }
 
     // onSoundEffectPlayed used to track spell casts, for when the player casts a spell on first tick coming
-    // off cooldown, in some cases (e.g. ice barrage) the player will have no animation. Also they don't have
-    // a projectile to detect instead :/
+    // off cooldown, in some cases (e.g. ice barrage) the player will have no animation.
     @Subscribe
     public void onSoundEffectPlayed(final SoundEffectPlayed event)
     {

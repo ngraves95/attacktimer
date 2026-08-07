@@ -38,6 +38,8 @@ import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.NpcDespawned;
 import net.runelite.api.events.NpcSpawned;
+import net.runelite.api.gameval.ItemID;
+import net.runelite.api.gameval.NpcID;
 
 /**
  * RoyalTitans: https://oldschool.runescape.wiki/w/Royal_Titans/Strategies
@@ -47,12 +49,7 @@ import net.runelite.api.events.NpcSpawned;
  */
 public class RoyalTitans implements IVariableSpeed
 {
-    private static final int TWINFLAME_STAFF_WEAPON_ID = 30634;
-
     private static final int ROYAL_TITANS_REGION_ID = 11669;
-
-    private static final int FIRE_ELEMENTAL_ID = 14150;
-    private static final int ICE_ELEMENTAL_ID = 14151;
 
     private static final int HP_FUDGE = 1;
     private static final int ELEMENTAL_HP = 40 - HP_FUDGE;
@@ -96,7 +93,7 @@ public class RoyalTitans implements IVariableSpeed
 
         // Note that the twinflame second spell does not give Magic or Hitpoints experience and therefore will
         // not be computed properly by the caller.
-        final boolean wieldingTwinflame = Utils.getWeaponId(client) == TWINFLAME_STAFF_WEAPON_ID;
+        final boolean wieldingTwinflame = Utils.getWeaponId(client) == ItemID.TWINFLAME_STAFF;
         final int computedDamage = wieldingTwinflame ? damageDealt + ((damageDealt * 4) / 10) : damageDealt;
 
         // Awkwardly you only got awarded the exp (and therefore computed damage) against the one of the
@@ -107,7 +104,7 @@ public class RoyalTitans implements IVariableSpeed
             return curSpeed;
         }
         // Compute the number of elementals in the a 3x3 from our target:
-        final var set = targetId == FIRE_ELEMENTAL_ID ? fireElementals : iceElementals;
+        final var set = targetId == NpcID.RT_SUMMON_ELEMENTAL_FIRE ? fireElementals : iceElementals;
         int count = 1;
         final var reference = target.getWorldLocation();
         for (final NPC elemental : set)
@@ -225,11 +222,11 @@ public class RoyalTitans implements IVariableSpeed
         }
         final NPC npc = npcSpawned.getNpc();
         final int id = npc.getId();
-        if (id == ICE_ELEMENTAL_ID)
+        if (id == NpcID.RT_SUMMON_ELEMENTAL_ICE)
         {
             iceElementals.add(npc);
         }
-        else if (id == FIRE_ELEMENTAL_ID)
+        else if (id == NpcID.RT_SUMMON_ELEMENTAL_FIRE)
         {
             fireElementals.add(npc);
         }
@@ -244,11 +241,11 @@ public class RoyalTitans implements IVariableSpeed
         }
         final NPC npc = npcDespawned.getNpc();
         final int id = npc.getId();
-        if (id == ICE_ELEMENTAL_ID)
+        if (id == NpcID.RT_SUMMON_ELEMENTAL_ICE)
         {
             iceElementals.remove(npc);
         }
-        else if (id == FIRE_ELEMENTAL_ID)
+        else if (id == NpcID.RT_SUMMON_ELEMENTAL_FIRE)
         {
             fireElementals.remove(npc);
         }
@@ -256,7 +253,7 @@ public class RoyalTitans implements IVariableSpeed
 
     private static boolean isElemental(int id)
     {
-        return id == FIRE_ELEMENTAL_ID || id == ICE_ELEMENTAL_ID;
+        return id == NpcID.RT_SUMMON_ELEMENTAL_FIRE || id == NpcID.RT_SUMMON_ELEMENTAL_ICE;
     }
 
     private static boolean notInRegion(final Client client)
