@@ -247,13 +247,10 @@ public class IntegrationTests
     private static final byte[] PREFIX = "[TEST MESSAGE] ".getBytes(StandardCharsets.UTF_8);
     private static final byte[] SUFFIX = "\n".getBytes(StandardCharsets.UTF_8);
 
-    // This needs at least one public test to keep mockito happy but having real tests in this file
-    // would
-    // result in any future test which extends this test class also having to run and make that test
-    // pass.
+    // This needs at least one public test to keep mockito happy but having real tests in this file would
+    // result in any future test which extends this test class also having to run and make that test pass.
     //
-    // This does cause test inflation in that the summary will make it look like we have more tests than
-    // we
+    // This does cause test inflation in that the summary will make it look like we have more tests than we
     // really do, but I don't have a nicer way to not repeat all the injector boiler plate.
     @Test
     public void noTest()
