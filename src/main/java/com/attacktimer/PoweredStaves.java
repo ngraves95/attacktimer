@@ -28,7 +28,6 @@ package com.attacktimer;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.Getter;
@@ -43,44 +42,37 @@ import org.apache.commons.lang3.StringUtils;
 // 5. This Enum is only to contain the staves which allow magic at 4 ticks.
 public enum PoweredStaves
 {
-    WEAPON_ACCURSED(Set.of(AnimationData.MAGIC_STANDARD_WAVE_STAFF, AnimationData.MAGIC_ACCURSED_SCEPTRE_SPEC), Projectiles(2337, 2339), ItemID.WILD_CAVE_ACCURSED_CHARGED), // https://oldschool.runescape.wiki/w/Accursed_sceptre
-    WEAPON_BLUE_C_STAFF_A(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(1720), ItemID.GAUNTLET_MAGIC_T2), // https://oldschool.runescape.wiki/w/Crystal_staff_(attuned)
-    WEAPON_BLUE_C_STAFF_B(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(1720), ItemID.GAUNTLET_MAGIC_T1), // https://oldschool.runescape.wiki/w/Crystal_staff_(basic)
-    WEAPON_BLUE_C_STAFF_P(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(1720), ItemID.GAUNTLET_MAGIC_T3), // https://oldschool.runescape.wiki/w/Crystal_staff_(perfected)
-    WEAPON_BONE_STAFF(AnimationData.MELEE_GENERIC_SLASH, Projectiles(2647), ItemID.RAT_BONE_STAFF), //https://oldschool.runescape.wiki/w/Bone_staff
-    WEAPON_DAWNBRINGER(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(1544, 1547), ItemID.VERZIK_SPECIAL_WEAPON), // https://oldschool.runescape.wiki/w/Dawnbringer
+    WEAPON_ACCURSED(Set.of(AnimationData.MAGIC_STANDARD_WAVE_STAFF, AnimationData.MAGIC_ACCURSED_SCEPTRE_SPEC), ItemID.WILD_CAVE_ACCURSED_CHARGED), // https://oldschool.runescape.wiki/w/Accursed_sceptre
+    WEAPON_BLUE_C_STAFF_A(AnimationData.MAGIC_STANDARD_WAVE_STAFF, ItemID.GAUNTLET_MAGIC_T2), // https://oldschool.runescape.wiki/w/Crystal_staff_(attuned)
+    WEAPON_BLUE_C_STAFF_B(AnimationData.MAGIC_STANDARD_WAVE_STAFF, ItemID.GAUNTLET_MAGIC_T1), // https://oldschool.runescape.wiki/w/Crystal_staff_(basic)
+    WEAPON_BLUE_C_STAFF_P(AnimationData.MAGIC_STANDARD_WAVE_STAFF, -ItemID.GAUNTLET_MAGIC_T3), // https://oldschool.runescape.wiki/w/Crystal_staff_(perfected)
+    WEAPON_BONE_STAFF(AnimationData.MELEE_GENERIC_SLASH, ItemID.RAT_BONE_STAFF), //https://oldschool.runescape.wiki/w/Bone_staff
+    WEAPON_DAWNBRINGER(AnimationData.MAGIC_STANDARD_WAVE_STAFF, ItemID.VERZIK_SPECIAL_WEAPON), // https://oldschool.runescape.wiki/w/Dawnbringer
     WEAPON_HARM(Set.of(
             AnimationData.MAGIC_STANDARD_STRIKE_STAFF,
             AnimationData.MAGIC_STANDARD_WAVE_STAFF,
             AnimationData.MAGIC_STANDARD_STRIKE_BOLT_BLAST_STAFF,
             AnimationData.MAGIC_STANDARD_SURGE_STAFF
         ),
-        Projectiles(/*in level order then air -> fire*/
-            91, 94, 97, 100, /* strikes */
-            118, 121, 124, 127, /* bolts */
-            133, 136, 139, 130, /* blasts */
-            159, 162, 165, 156, /* waves */
-            1456, 1459, 1462, 1465 /* surges */),
         ItemID.NIGHTMARE_STAFF_HARMONISED), // https://oldschool.runescape.wiki/w/Harmonised_nightmare_staff
-    WEAPON_RED_C_STAFF_A(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(1723), ItemID.GAUNTLET_MAGIC_T2_HM), // https://oldschool.runescape.wiki/w/Corrupted_staff_(attuned)
-    WEAPON_RED_C_STAFF_B(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(1723), ItemID.GAUNTLET_MAGIC_T1_HM), // https://oldschool.runescape.wiki/w/Corrupted_staff_(basic)
-    WEAPON_RED_C_STAFF_P(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(1723), ItemID.GAUNTLET_MAGIC_T3_HM), // https://oldschool.runescape.wiki/w/Corrupted_staff_(perfected)
-    WEAPON_SANG(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(1539), ItemID.SANGUINESTI_STAFF, ItemID.SANGUINESTI_STAFF_OR), // https://oldschool.runescape.wiki/w/Sanguinesti_staff#Charged
-    WEAPON_STARTER_STAFF(ItemID.DEADMAN_STARTER_STAFF, ItemID.DEADMAN_APOCALYPSE_STAFF), // https://oldschool.runescape.wiki/w/Starter_staff TODO get the animation when DMM goes live
-    WEAPON_SWAMP(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(1040), ItemID.TOXIC_TOTS_CHARGED, ItemID.TOXIC_TOTS_I_CHARGED, ItemID.TOXIC_TOTS_CHARGED_ORN, ItemID.TOXIC_TOTS_I_CHARGED_ORN), // https://oldschool.runescape.wiki/w/Trident_of_the_swamp
-    WEAPON_THAMMARON(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(2340), ItemID.WILD_CAVE_SCEPTRE_CHARGED), // https://oldschool.runescape.wiki/w/Thammaron%27s_sceptre
-    WEAPON_TRIDENT(AnimationData.MAGIC_STANDARD_WAVE_STAFF, Projectiles(1252), ItemID.TOTS, ItemID.TOTS_CHARGED, ItemID.TOTS_I_CHARGED, ItemID.TOTS_CHARGED_ORN, ItemID.TOTS_ORN, ItemID.TOTS_I_CHARGED_ORN), // https://oldschool.runescape.wiki/w/Trident_of_the_seas
-    WEAPON_WARPED_SCEPTRE(AnimationData.MAGIC_WARPED_SCEPTRE, ItemID.WARPED_SCEPTRE); // https://oldschool.runescape.wiki/w/Warped_sceptre
+    WEAPON_RED_C_STAFF_A(AnimationData.MAGIC_STANDARD_WAVE_STAFF, ItemID.GAUNTLET_MAGIC_T2_HM), // https://oldschool.runescape.wiki/w/Corrupted_staff_(attuned)
+    WEAPON_RED_C_STAFF_B(AnimationData.MAGIC_STANDARD_WAVE_STAFF, ItemID.GAUNTLET_MAGIC_T1_HM), // https://oldschool.runescape.wiki/w/Corrupted_staff_(basic)
+    WEAPON_RED_C_STAFF_P(AnimationData.MAGIC_STANDARD_WAVE_STAFF, ItemID.GAUNTLET_MAGIC_T3_HM), // https://oldschool.runescape.wiki/w/Corrupted_staff_(perfected)
+    WEAPON_SANG(AnimationData.MAGIC_STANDARD_WAVE_STAFF, ItemID.SANGUINESTI_STAFF, ItemID.SANGUINESTI_STAFF_OR), // https://oldschool.runescape.wiki/w/Sanguinesti_staff#Charged
+    WEAPON_STARTER_STAFF(ItemID.DEADMAN_STARTER_STAFF, ItemID.DEADMAN_APOCALYPSE_STAFF), // https://oldschool.runescape.wiki/w/Starter_staff
+    WEAPON_SWAMP(AnimationData.MAGIC_STANDARD_WAVE_STAFF,ItemID.TOXIC_TOTS_CHARGED, ItemID.TOXIC_TOTS_I_CHARGED, ItemID.TOXIC_TOTS_CHARGED_ORN, ItemID.TOXIC_TOTS_I_CHARGED_ORN), // https://oldschool.runescape.wiki/w/Trident_of_the_swamp
+    WEAPON_THAMMARON(AnimationData.MAGIC_STANDARD_WAVE_STAFF, ItemID.WILD_CAVE_SCEPTRE_CHARGED), // https://oldschool.runescape.wiki/w/Thammaron%27s_sceptre
+    WEAPON_TRIDENT(AnimationData.MAGIC_STANDARD_WAVE_STAFF, ItemID.TOTS, ItemID.TOTS_CHARGED, ItemID.TOTS_I_CHARGED, ItemID.TOTS_CHARGED_ORN, ItemID.TOTS_ORN, ItemID.TOTS_I_CHARGED_ORN), // https://oldschool.runescape.wiki/w/Trident_of_the_seas
+    WEAPON_WARPED_SCEPTRE(AnimationData.MAGIC_WARPED_SCEPTRE, ItemID.WARPED_SCEPTRE), // https://oldschool.runescape.wiki/w/Warped_sceptre
+    ;
 
 
     @Getter
     private final Set<Integer> ids;
     @Getter
-    private final Set<Integer> projectiles;
-    @Getter
     private final Set<AnimationData> animations;
 
-    private static Set<Integer> Projectiles(int... id)
+    private static Set<Integer> ListToSet(int... id)
     {
         ImmutableSet.Builder<Integer> builder = new ImmutableSet.Builder<>();
         if (id.length == 0)
@@ -94,34 +86,23 @@ public enum PoweredStaves
         return builder.build();
     }
 
-    // Unknown projectile and animation
+    // Unknown animation
     PoweredStaves(int... id)
     {
-        this.ids = Projectiles(id);
-        this.projectiles = null;
+        this.ids = ListToSet(id);
         this.animations = null;
     }
 
-    // Unknown projectile
+    // Single animation 4t powered staff
     PoweredStaves(AnimationData spell, int... id)
     {
-        this.ids = Projectiles(id);
-        this.projectiles = new HashSet<Integer>();
-        this.animations = Set.of(spell);
-    }
-
-    // Single animation 4t powered staff
-    PoweredStaves(AnimationData spell, Set<Integer> projectiles, int... id)
-    {
-        this.ids = Projectiles(id);
-        this.projectiles = projectiles;
+        this.ids = ListToSet(id);
         this.animations = Set.of(spell);
     }
     // Multiple animations 4t powered staff
-    PoweredStaves(Set<AnimationData> spell, Set<Integer> projectiles, int... id)
+    PoweredStaves(Set<AnimationData> spell, int... id)
     {
-        this.ids = Projectiles(id);
-        this.projectiles = projectiles;
+        this.ids = ListToSet(id);
         this.animations = spell;
     }
 
@@ -190,14 +171,5 @@ public enum PoweredStaves
                 .map(StringUtils::capitalize).collect(Collectors.toList()).toArray(words);
 
         return String.join(" ", words);
-    }
-
-    public boolean MatchesProjectile(int projectile)
-    {
-        if (this.projectiles == null)
-        {
-            return false;
-        }
-        return this.projectiles.contains(projectile);
     }
 }
