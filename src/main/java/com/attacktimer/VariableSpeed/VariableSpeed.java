@@ -128,6 +128,7 @@ public class VariableSpeed
         new RoyalTitans(),
 
         // Overriding modifiers:
+        new Amoxliatl(),
         new Scurrius(),
         new TombsOfAmascut(),
     };
