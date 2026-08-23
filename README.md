@@ -9,9 +9,10 @@ Ticks until next attack may be enabled over your player's head.
 
 ## Updates
 
-## 1.2.11
+## 1.2.11 - 1.2.12
 
 * Support for Royal Titans attack cooldown speedup when killing elementals
+* Support for Amoxliatl Unstable Ice special being 1 tick attacks
 
 ## 1.2.8 - 1.2.10
 
