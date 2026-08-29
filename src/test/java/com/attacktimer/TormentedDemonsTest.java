@@ -105,8 +105,6 @@ public class TormentedDemonsTest extends IntegrationTests
     @Override
     public Player pluginMockSetup() throws Exception
     {
-        // enable the plugin
-        when(mockedConfig.enableMetronome()).thenReturn(true);
         // Create player
         Player mockedPlayer = mock(Player.class);
         when(mockedPlayer.getAnimation()).thenReturn(-1);

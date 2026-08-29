@@ -107,8 +107,6 @@ public class IntegrationTests
 
     public Player pluginMockSetup() throws Exception
     {
-        // enable the plugin
-        when(mockedConfig.enableMetronome()).thenReturn(true);
         // Create player
         Player mockedPlayer = mock(Player.class);
         when(mockedPlayer.getAnimation()).thenReturn(NO_ANIMATION);

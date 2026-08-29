@@ -157,16 +157,12 @@ public class AttackTimerMetronomePlugin extends Plugin
     @Subscribe
     public void onSoundEffectPlayed(final SoundEffectPlayed event)
     {
-        if (!config.enableMetronome())
-            return;
         ATTACK_SPEED.onSoundEffectPlayed(client, event);
     }
 
     @Subscribe
     protected void onFakeXpDrop(final FakeXpDrop event)
     {
-        if (!config.enableMetronome())
-            return;
         if (ATTACK_SPEED.onXpDrop(event))
         {
             if (inPreAttackWindow())
@@ -181,8 +177,6 @@ public class AttackTimerMetronomePlugin extends Plugin
     @Subscribe
     protected void onStatChanged(final StatChanged event)
     {
-        if (!config.enableMetronome())
-            return;
         if (ATTACK_SPEED.onXpDrop(event))
         {
             if (inPreAttackWindow())
@@ -197,16 +191,12 @@ public class AttackTimerMetronomePlugin extends Plugin
     @Subscribe
     public void onNpcSpawned(final NpcSpawned npcSpawned)
     {
-        if (!config.enableMetronome())
-            return;
         VariableSpeed.onNpcSpawned(client, npcSpawned);
     };
 
     @Subscribe
     public void onNpcDespawned(final NpcDespawned npcDespawned)
     {
-        if (!config.enableMetronome())
-            return;
         VariableSpeed.onNpcDespawned(client, npcDespawned);
     };
 
@@ -222,8 +212,6 @@ public class AttackTimerMetronomePlugin extends Plugin
     @Subscribe
     public void onChatMessage(final ChatMessage event)
     {
-        if (!config.enableMetronome())
-            return;
         final String message = event.getMessage();
 
         if (EAT_MESSAGE.matcher(message).find())
@@ -322,8 +310,6 @@ public class AttackTimerMetronomePlugin extends Plugin
     @Subscribe
     public void onInteractingChanged(InteractingChanged interactingChanged)
     {
-        if (!config.enableMetronome())
-            return;
         Actor source = interactingChanged.getSource();
         Actor target = interactingChanged.getTarget();
 
@@ -364,8 +350,6 @@ public class AttackTimerMetronomePlugin extends Plugin
     @Subscribe
     public void onGameTick(GameTick tick)
     {
-        if (!config.enableMetronome())
-            return;
         VariableSpeed.onGameTick(client, tick);
         final boolean isAttacking = Attacking.isPlayerAttacking(client, npcManager);
         switch (attackState)

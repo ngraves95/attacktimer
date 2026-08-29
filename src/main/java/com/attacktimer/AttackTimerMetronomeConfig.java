@@ -39,11 +39,16 @@ import net.runelite.client.config.Range;
 @ConfigGroup("attacktimermetronome")
 public interface AttackTimerMetronomeConfig extends Config
 {
+    /**
+     * @deprecated
+     * @return
+     */
     @ConfigItem(
             position = 0,
             keyName = "enableMetronome",
             name = "Attack Timer Metronome",
-            description = "Enable visual metronome"
+            description = "Enable visual metronome",
+            hidden = true // deprecated
     )
     default boolean enableMetronome()
     {
@@ -266,6 +271,15 @@ public interface AttackTimerMetronomeConfig extends Config
     {
         return false;
     }
+
+    @ConfigItem(
+            position = 10000,
+            keyName = "attacktimerVersion",
+            name = "Plugin version:            v1.2.13",
+            description = ""
+    )
+    default void version()
+    {}
 
     @Getter
     @AllArgsConstructor
