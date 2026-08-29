@@ -27,6 +27,7 @@ package com.attacktimer;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.attacktimer.Attacking.Attacking;
 import com.attacktimer.ClientUtils.Utils;
 import com.attacktimer.VariableSpeed.State.TickCount;
 import com.attacktimer.VariableSpeed.VariableSpeed;
@@ -39,8 +40,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -385,57 +384,6 @@ public class AttackTimerMetronomePlugin extends Plugin
         return VariableSpeed.compute(client, curAnimation, AttackProcedure.MELEE_OR_RANGE, spellbook, dmgDealt, specDelta, aspeed);
     }
 
-    // Combat Dummy + Nightmare Pillars
-    private static final List<Integer> SPECIAL_NPCS = Arrays.asList(10507, 9435, 9438, 9441, 9444);
-
-    private boolean isPlayerAttacking()
-    {
-        final Player localPlayer = client.getLocalPlayer();
-        final int animationId = localPlayer.getAnimation();
-        if (AnimationData.isBlockListAnimation(animationId))
-        {
-            return false;
-        }
-
-        // Not walking is either ANY player animation or the edge cases which don't trigger an animation, e.g Salamander.
-        final boolean notWalking = animationId != -1 || getSalamanderAttack();
-
-        // Testing if we are attacking by checking the target is more future proof to new weapons which don't
-        // need custom code and the weapon stats are enough.
-        final Actor target = localPlayer.getInteracting();
-        if (target != null && (target instanceof NPC))
-        {
-            final NPC npc = (NPC) target;
-            final boolean containsAttackOption = Arrays.stream(npc.getComposition().getActions())
-                    .anyMatch("Attack"::equals);
-            final Integer health = npcManager.getHealth(npc.getId());
-            final boolean hasHealthAndLevel = health != null && health > 0 && target.getCombatLevel() > 0;
-            final boolean attackingNPC = hasHealthAndLevel || SPECIAL_NPCS.contains(npc.getId())
-                    || containsAttackOption;
-            // just having a target is not enough the player may be out of range, we must wait for any
-            // animation which isn't running/walking/etc
-            return attackingNPC && notWalking;
-        }
-        if (target != null && (target instanceof Player))
-        {
-            return notWalking;
-        }
-        if (target == null)
-        {
-            // Not attacking anything
-            return false;
-        }
-
-        // Do not use any animations from this set
-        final AnimationData fromId = AnimationData.fromId(animationId);
-        if (UNRELIABLE_ANIMATIONS.contains(fromId))
-        {
-            return false;
-        }
-        // fall back to animations.
-        return fromId != null;
-    }
-
     private boolean isManualCasting(AnimationData curId)
     {
         // If you use a weapon like a blow pipe which has an animation longer than it's cool down then cast an
@@ -525,7 +473,7 @@ public class AttackTimerMetronomePlugin extends Plugin
                 isUsingMagic = false;
                 // If not previously attacking, this action can result in a queued attack or
                 // an instant attack. If its queued, don't trigger the cooldown yet.
-                if (isPlayerAttacking())
+                if (Attacking.isPlayerAttacking(client, npcManager))
                 {
                     logStateTrace("onInteractingChanged");
                     performAttack();
@@ -555,7 +503,7 @@ public class AttackTimerMetronomePlugin extends Plugin
         if (!config.enableMetronome())
             return;
         VariableSpeed.onGameTick(client, tick);
-        boolean isAttacking = isPlayerAttacking();
+        final boolean isAttacking = Attacking.isPlayerAttacking(client, npcManager);
         switch (attackState)
         {
         case NOT_ATTACKING:
