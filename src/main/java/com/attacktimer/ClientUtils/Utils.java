@@ -32,6 +32,7 @@ import com.attacktimer.WeaponType;
 import com.google.common.collect.ImmutableMap;
 import java.util.ArrayDeque;
 import java.util.Map;
+import java.util.Set;
 import net.runelite.api.Actor;
 import net.runelite.api.Client;
 import net.runelite.api.EquipmentInventorySlot;
@@ -145,19 +146,40 @@ public class Utils
     // returns true if the client is in the region specified by the id
     public static boolean isInRegionId(final Client client, final int id)
     {
-        final WorldView wv = client.getTopLevelWorldView();
-        if (wv == null)
-        {
-            return false;
-        }
-
-        final int[] regions = wv.getMapRegions();
+        final int[] regions = regions(client);
         if (regions == null || regions.length == 0)
         {
             return false;
         }
 
         return ArrayUtils.contains(regions, id);
+    }
+    // returns true if the client is in the region specified by the id
+    public static boolean isInRegionId(final Client client, final Set<Integer> ids)
+    {
+        final int[] regions = regions(client);
+        if (regions == null || regions.length == 0)
+        {
+            return false;
+        }
+
+        for (final int id : regions)
+        {
+            if (ids.contains(id))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    private static int[] regions(final Client client)
+    {
+        final WorldView wv = client.getTopLevelWorldView();
+        if (wv == null)
+        {
+            return null;
+        }
+        return wv.getMapRegions();
     }
 
     // getLastDelta gets the last two elements and returns the delta between the two items. It does not modify

@@ -26,23 +26,31 @@ package com.attacktimer.VariableSpeed;
  */
 
 import com.attacktimer.AnimationData;
+import com.attacktimer.AttackProcedure;
 import com.attacktimer.AttackSpeed;
 import com.attacktimer.Attacking.Attacking;
 import com.attacktimer.ClientUtils.Utils;
 import com.attacktimer.Spellbook;
+import com.attacktimer.VariableSpeed.State.TickCount;
 import com.google.common.collect.ImmutableSet;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.NPC;
+import net.runelite.api.gameval.AnimationID;
 import net.runelite.api.gameval.ItemID;
 import net.runelite.api.gameval.NpcID;
 import net.runelite.client.game.ItemManager;
 
 @Slf4j
-public class DoomOfMokhaiotl
+public class DoomOfMokhaiotl implements IVariableSpeed
 {
-    private static final int DOOM_REGION_ID = -1;
+    // As you delve deeper you change region
+    private static final Set<Integer> DOOM_REGION_IDS = new ImmutableSet.Builder<Integer>()
+            .add(5269)
+            .add(13668)
+            .add(14180)
+            .build();
     private static final Set<Integer> DEMONIC_LARVAE_IDS = new ImmutableSet.Builder<Integer>()
             .add(NpcID.DOM_DEMONIC_ENERGY)
             .add(NpcID.DOM_DEMONIC_ENERGY_GIANT_MAGE)
@@ -63,11 +71,15 @@ public class DoomOfMokhaiotl
             .add(ItemID.EYE_OF_AYAK)
             .build();
 
-
+    private final TickCount tickCount;
     private final AttackSpeed attackSpeed;
+    private int larvaeConsumed = -1;
+    private int shieldConsumed = -1;
+    private boolean inRegionId;
 
-    DoomOfMokhaiotl(final AttackSpeed attackSpeed)
+    DoomOfMokhaiotl(final TickCount tc, final AttackSpeed attackSpeed)
     {
+        this.tickCount = tc;
         this.attackSpeed = attackSpeed;
     }
 
@@ -75,9 +87,13 @@ public class DoomOfMokhaiotl
     //
     // They may be attacked on attack cooldown: Non-demonbane attacks incur the weapon's attack delay
     // afterwards, whereas demonbane attacks and the Eye of Ayak will not incur any attack delay.
+    //
+    // Doom can also be attacked whilst on cooldown when he is charging his shield (melee punish only)
+    //
+    // The https://oldschool.runescape.wiki/w/Volatile_earth can also be attacked with no attack delay.
     public int onRender(final Client client, final ItemManager itemManager, final int attackDelayHoldoffTicks, final Spellbook spellbook, final boolean debugLogs)
     {
-        if (!Utils.isInRegionId(client, DOOM_REGION_ID))
+        if (!Utils.isInRegionId(client, DOOM_REGION_IDS))
         {
             return attackDelayHoldoffTicks;
         }
@@ -90,22 +106,83 @@ public class DoomOfMokhaiotl
         }
 
         final NPC npc = (NPC) atk.getTarget();
-        if (!DEMONIC_LARVAE_IDS.contains(npc.getId()))
+        final int npcId = npc.getId();
+        if (DEMONIC_LARVAE_IDS.contains(npcId))
+        {
+            if (tickCount.isWithinNTicks(larvaeConsumed, 1))
+            {
+                return attackDelayHoldoffTicks;
+            }
+            final int weaponId = Utils.getWeaponId(client);
+            final boolean isDemonbaneSpell = spellbook == Spellbook.ARCEUUS && AnimationData.isManualCasting(anim) && anim == AnimationData.MAGIC_ARCEUUS_DEMONBANE;
+            if (NO_COOLDOWN_WEAPON.contains(weaponId) || isDemonbaneSpell)
+            {
+                return attackDelayHoldoffTicks;
+            }
+
+            if (debugLogs)
+            {
+                log.debug("DoomOfMokhaiotl success, attacking larvae with normal weapon");
+            }
+            larvaeConsumed = tickCount.get();
+            return attackSpeed.compute(client, anim, spellbook, itemManager);
+        }
+        else if (npcId == NpcID.DOM_BOSS)
+        {
+            if (tickCount.isWithinNTicks(shieldConsumed, 30))
+            {
+                return attackDelayHoldoffTicks;
+            }
+            final var animId = npc.getAnimation();
+            // undocumented in the wiki but from my testing these can be hit while on cooldown but unlike the
+            // grubs do add up the delay
+            if (animId == AnimationID.DOM_BEAM_CHARGE_LOOP || animId == AnimationID.DOM_BEAM_CHARGE)
+            {
+                if (Utils.getAttackType(client).IsMelee())
+                {
+                    if (debugLogs)
+                    {
+                        log.debug("DoomOfMokhaiotl success, on cooldown melee swing");
+                    }
+                    shieldConsumed = tickCount.get();
+                    return attackSpeed.compute(client, anim, spellbook, itemManager) + attackDelayHoldoffTicks;
+                }
+            }
+            return attackDelayHoldoffTicks;
+        }
+        else if (npcId == NpcID.DOM_SHOCKWAVE_PATH_NODE)
+        {
+            // these never incur attack delay
+            return attackDelayHoldoffTicks;
+        }
+        else
         {
             return attackDelayHoldoffTicks;
         }
-        final int weaponId = Utils.getWeaponId(client);
-        final boolean isDemonbaneSpell = spellbook == Spellbook.ARCEUUS && AnimationData.isManualCasting(anim) && anim == AnimationData.MAGIC_ARCEUUS_DEMONBANE;
-        if (NO_COOLDOWN_WEAPON.contains(weaponId) || isDemonbaneSpell)
-        {
-            return attackDelayHoldoffTicks;
-        }
+    }
 
-        if (debugLogs)
+    // Take care here to ensure no infinite loop or affect on the speed as the onRender does call this via variable speed
+    public int apply(final Client client, final AnimationData curAnimation, final AttackProcedure atkType,
+            final Spellbook spellbook, final int damageDealt, final int lastSpecDelta, final int baseSpeed,
+            final int curSpeed)
+    {
+        final int targetId = Utils.getTargetId(client);
+        final boolean inDoom = Utils.isInRegionId(client, DOOM_REGION_IDS);
+        if (inDoom && targetId == NpcID.DOM_SHOCKWAVE_PATH_NODE)
         {
-            log.debug("DoomOfMokhaiotl success, attacking larvae with normal weapon");
+            log.debug("DoomOfMokhaiotl success, zero delay volatile earth");
+            return 1;
         }
-
-        return attackSpeed.compute(client, anim, spellbook, itemManager);
+        if (inDoom && DEMONIC_LARVAE_IDS.contains(targetId))
+        {
+            final int weaponId = Utils.getWeaponId(client);
+            final boolean isDemonbaneSpell = spellbook == Spellbook.ARCEUUS && AnimationData.isManualCasting(curAnimation) && curAnimation == AnimationData.MAGIC_ARCEUUS_DEMONBANE;
+            if (NO_COOLDOWN_WEAPON.contains(weaponId) || isDemonbaneSpell)
+            {
+                log.debug("DoomOfMokhaiotl success, zero delay grub");
+                return 1;
+            }
+        }
+        return curSpeed;
     }
 }
