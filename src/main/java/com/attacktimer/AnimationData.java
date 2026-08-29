@@ -159,8 +159,8 @@ public enum AnimationData
     RANGED_BLAZING_BLOWPIPE(AnimationID.SNAKEBOSS_BLOWPIPE_ATTACK_ORNAMENT, AttackStyle.RANGED),
     RANGED_VENATOR_BOW(AnimationID.HUMAN_WEAPON_BOW_VENATOR01_SHOOT, AttackStyle.RANGED, MetaData.STANDARD_BOW_ATTACK.d),
     RANGED_KARIL_CROSSBOW(AnimationID.BARROWS_REPEATING_CROSSBOW_FIRE, AttackStyle.RANGED),
-    RANGED_ATLATL(AnimationID.HUMAN_ATLATL_ATTACK_RANGED_01, AttackStyle.RANGED), // https://oldschool.runescape.wiki/w/Eclipse_atlatl
-    RANGED_ATLATL_SPEC(AnimationID.HUMAN_SPECIAL_ATLATL_01, AttackStyle.RANGED, MetaData.SPECIAL_ATTACK.d),
+    RANGED_ATLATL(AnimationID.HUMAN_ATLATL_ATTACK_RANGED_01, AttackStyle.RANGED, MetaData.STANDARD_BOW_ATTACK.d), // https://oldschool.runescape.wiki/w/Eclipse_atlatl
+    RANGED_ATLATL_SPEC(AnimationID.HUMAN_SPECIAL_ATLATL_01, AttackStyle.RANGED, MetaData.STANDARD_BOW_ATTACK.d|MetaData.SPECIAL_ATTACK.d),
     RANGED_TONALZTICS(AnimationID.HUMAN_GLAIVE_RALOS01_CHARGED_THROW, AttackStyle.RANGED), // https://oldschool.runescape.wiki/w/Tonalztics_of_ralos#Charged
     RANGED_TONALZTICS_SPEC(AnimationID.HUMAN_GLAIVE_RALOS01_CHARGED_SPECIAL, AttackStyle.RANGED, MetaData.SPECIAL_ATTACK.d),
     RANGED_WEBWEAVER_SPEC(AnimationID.HUMAN_SPECIAL01_WEBWEAVER, AttackStyle.RANGED, MetaData.STANDARD_BOW_ATTACK.d|MetaData.SPECIAL_ATTACK.d), // https://oldschool.runescape.wiki/w/Webweaver_bow#Charged
@@ -456,7 +456,7 @@ public enum AnimationData
         }
     }
 
-
+    // isStandardBowAttack returns true if the animation is performed by a bow https://oldschool.runescape.wiki/w/Standard_ranged_weapons
     public boolean isStandardBowAttack()
     {
         return STANDARD_BOW_ATTACKS.contains(Integer.valueOf(this.animationId));

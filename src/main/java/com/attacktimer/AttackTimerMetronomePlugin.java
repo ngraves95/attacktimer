@@ -63,7 +63,6 @@ import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.game.ItemManager;
-import net.runelite.client.game.ItemStats;
 import net.runelite.client.game.NPCManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
@@ -325,14 +324,8 @@ public class AttackTimerMetronomePlugin extends Plugin
         }
 
         isUsingMagic = false;
-        final ItemStats weaponStats = Utils.getWeaponStats(client, itemManager, weaponId);
-        if (weaponStats == null)
-        {
-            // Assume barehanded == 4t
-            return VariableSpeed.compute(client, curAnimation, AttackProcedure.MELEE_OR_RANGE, spellbook, dmgDealt, specDelta, 4);
-        }
+        final int aspeed = Utils.getWeaponSpeed(client, itemManager);
         // Deadline for next available attack.
-        final int aspeed = weaponStats.getEquipment().getAspeed();
         return VariableSpeed.compute(client, curAnimation, AttackProcedure.MELEE_OR_RANGE, spellbook, dmgDealt, specDelta, aspeed);
     }
 
@@ -572,6 +565,7 @@ public class AttackTimerMetronomePlugin extends Plugin
                 attackState = AttackState.NOT_ATTACKING;
             }
         }
+        attackDelayHoldoffTicks = VariableSpeed.MAGGOT_KING.onRender(client, itemManager, attackDelayHoldoffTicks, config.debugLogs());
         checkForLateWeaponSwaps();
     }
 

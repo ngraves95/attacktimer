@@ -29,20 +29,26 @@ import com.attacktimer.AnimationData;
 import com.attacktimer.AttackProcedure;
 import com.attacktimer.Attacking.Attacking;
 import com.attacktimer.ClientUtils.Utils;
+import com.attacktimer.VariableSpeed.State.TickCount;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.NPC;
 import net.runelite.api.gameval.NpcID;
 import net.runelite.client.game.ItemManager;
-import net.runelite.client.game.ItemStats;
 
 @Slf4j
 public class MaggotKing
 {
     private static final int MAGGOT_KING_REGION_ID = 11645;
 
-    MaggotKing()
-    {}
+    private TickCount tickCount;
+    // the tick count if a larvae was hit, this is purely to debounce
+    private int consumed = -1;
+
+    MaggotKing(TickCount tc)
+    {
+        this.tickCount = tc;
+    }
 
     // https://oldschool.runescape.wiki/w/Maggot_King/Strategies#Ur-maggot_larvae
     //
@@ -55,7 +61,7 @@ public class MaggotKing
     public int onRender(final Client client, final ItemManager itemManager, final int attackDelayHoldoffTicks,
             final boolean debugLogs)
     {
-        if (!Utils.isInRegionId(client, MAGGOT_KING_REGION_ID))
+        if (!Utils.isInRegionId(client, MAGGOT_KING_REGION_ID) || tickCount.isWithinNTicks(consumed, 1))
         {
             return attackDelayHoldoffTicks;
         }
@@ -81,12 +87,12 @@ public class MaggotKing
         {
             log.debug("MaggotKing success, attacking maggot with bow");
         }
+        consumed = tickCount.get();
 
-        final ItemStats weaponStats = Utils.getWeaponStats(client, itemManager, Utils.getWeaponId(client));
-        final int aspeed = weaponStats.getEquipment().getAspeed();
+        final int aspeed = Utils.getWeaponSpeed(client, itemManager);
         // We don't want a full variable speed here, we know apriori that none of them will apply (leagues
         // will but that's hard to test and changes every time it comes around)
-        return VariableSpeed.RAPID_ATTACK_STYLE.apply(client, anim, AttackProcedure.MELEE_OR_RANGE, null, -1, -1,
-                aspeed, aspeed);
+        return VariableSpeed.RAPID_ATTACK_STYLE
+            .apply(client, anim, AttackProcedure.MELEE_OR_RANGE, null, -1, -1, aspeed, aspeed);
     }
 }

@@ -211,4 +211,15 @@ public class Utils
         }
         return itemManager.getItemStats(weaponId);
     }
+
+    public static int getWeaponSpeed(final Client client, final ItemManager itemManager, final int weaponId)
+    {
+        final ItemStats weaponStats = getWeaponStats(client, itemManager, weaponId);
+        if (weaponStats == null)
+        {
+            // Assume bare-handed
+            return 4;
+        }
+        return weaponStats.getEquipment().getAspeed();
+    }
 }
