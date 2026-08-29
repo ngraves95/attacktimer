@@ -39,7 +39,7 @@ import net.runelite.client.game.ItemStats;
 @Slf4j
 public class MaggotKing
 {
-    private static final int MAGGOT_KING_REGION_ID = -1;
+    private static final int MAGGOT_KING_REGION_ID = 11645;
 
     MaggotKing()
     {}
