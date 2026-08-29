@@ -107,6 +107,14 @@ public class Attacking
         return fromId != null;
     }
 
+    public static Attack PlayerAttack(final Client client)
+    {
+        final Player localPlayer = client.getLocalPlayer();
+        final int animationId = localPlayer.getAnimation();
+        final Actor target = localPlayer.getInteracting();
+        return new Attack(animationId, getSalamanderAttack(client), target);
+    }
+
     private static boolean getSalamanderAttack(final Client client)
     {
         return client.getLocalPlayer().hasSpotAnim(SpotanimID.FIREBREATH);

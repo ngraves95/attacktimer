@@ -105,6 +105,7 @@ public class VariableSpeed
 
     private static final Yama YAMA = new Yama();
     private static final MarkOfDarkness MARK_OF_DARKNESS = new MarkOfDarkness();
+    public static final RapidAttackStyle RAPID_ATTACK_STYLE = new RapidAttackStyle();
 
     private static final IStateTracker[] TO_TRACK = {
         // State tracking, these do not contribute themselves to any variable speed weapon/mechanic but
@@ -120,7 +121,7 @@ public class VariableSpeed
 
         // Incremental:
         new BloodMoonSet(),
-        new RapidAttackStyle(),
+        RAPID_ATTACK_STYLE,
         new RedKerisSpec(),
         new PurgingStaffSpec(YAMA),
         new EyeOfAyak(),
@@ -136,5 +137,4 @@ public class VariableSpeed
     // Variable speed that doesn't neatly fit in to the IVariable speed pattern (it's not weapon related
     // but boss related).
     public static final ShadowCrash SHADOW_CRASH = new ShadowCrash(YAMA, MARK_OF_DARKNESS, AttackTimerMetronomePlugin.TC);
-
 }

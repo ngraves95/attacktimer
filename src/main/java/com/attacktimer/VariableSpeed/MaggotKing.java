@@ -25,20 +25,68 @@ package com.attacktimer.VariableSpeed;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import net.runelite.api.Client;
+import com.attacktimer.AnimationData;
+import com.attacktimer.AttackProcedure;
+import com.attacktimer.Attacking.Attacking;
 import com.attacktimer.ClientUtils.Utils;
+import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.Client;
+import net.runelite.api.NPC;
+import net.runelite.api.gameval.NpcID;
+import net.runelite.client.game.ItemManager;
+import net.runelite.client.game.ItemStats;
 
+@Slf4j
 public class MaggotKing
 {
     private static final int MAGGOT_KING_REGION_ID = -1;
 
-    MaggotKing() {}
+    MaggotKing()
+    {}
 
-    public int onRender(final Client client, final int attackDelayHoldoffTicks, final boolean isUsingMagic, final boolean debugLogs)
+    // https://oldschool.runescape.wiki/w/Maggot_King/Strategies#Ur-maggot_larvae
+    //
+    // If the player attacks a maggot with a "standard bow" it doesn't matter what current cooldown is the
+    // player is immediately set to the cooldown of the bow they used.
+    //
+    // Therefore this method returns `attackDelayHoldoffTicks` in all cases where this condition isn't met.
+    // But if the condition is met this method returns a brand new number which is the attack speed of the bow
+    // used. This number can be the same as the current delay and that's ok.
+    public int onRender(final Client client, final ItemManager itemManager, final int attackDelayHoldoffTicks,
+            final boolean debugLogs)
     {
         if (!Utils.isInRegionId(client, MAGGOT_KING_REGION_ID))
         {
-            return 0;
+            return attackDelayHoldoffTicks;
         }
+
+        final var atk = Attacking.PlayerAttack(client);
+        final AnimationData anim = AnimationData.fromId(atk.getAnimationId());
+        if (anim == null || atk.getTarget() == null || !(atk.getTarget() instanceof NPC))
+        {
+            return attackDelayHoldoffTicks;
+        }
+
+        final NPC npc = (NPC) atk.getTarget();
+        if (npc.getId() != NpcID.UR_MAGGOT_LARVAE)
+        {
+            return attackDelayHoldoffTicks;
+        }
+
+        if (!anim.isStandardBowAttack())
+        {
+            return attackDelayHoldoffTicks;
+        }
+        if (debugLogs)
+        {
+            log.debug("MaggotKing success, attacking maggot with bow");
+        }
+
+        final ItemStats weaponStats = Utils.getWeaponStats(client, itemManager, Utils.getWeaponId(client));
+        final int aspeed = weaponStats.getEquipment().getAspeed();
+        // We don't want a full variable speed here, we know apriori that none of them will apply (leagues
+        // will but that's hard to test and changes every time it comes around)
+        return VariableSpeed.RAPID_ATTACK_STYLE.apply(client, anim, AttackProcedure.MELEE_OR_RANGE, null, -1, -1,
+                aspeed, aspeed);
     }
 }

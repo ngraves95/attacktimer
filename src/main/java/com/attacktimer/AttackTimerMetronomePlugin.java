@@ -144,31 +144,8 @@ public class AttackTimerMetronomePlugin extends Plugin
     private static final int ATTACK_DELAY_NONE = 0;
     public static final int DEFAULT_SIZE_UNIT_PX = 25;
 
-    // Add other weapons here if in the Runelite dev shell this prints a different value to it's actual speed:
-    //
-    //  var itemManager = inject(ItemManager.class);
-    //  log.info("Speed {}", itemManager.getItemStats(<id_to_test>).getEquipment().getAspeed());
-    private static final Map<Integer, Integer> NON_STANDARD_ATTACK_SPEEDS = new ImmutableMap.Builder<Integer, Integer>()
-            .put(ItemID.HALLOWFELL, 6)
-            .build();
-
-    // These animations are the ones which exceed the duration of their attack cooldown
-    // so in this case DO NOT fall back the animation as it is un-reliable.
-    private static final Set<AnimationData> UNRELIABLE_ANIMATIONS = new ImmutableSet.Builder<AnimationData>()
-            .add(AnimationData.RANGED_BLOWPIPE)
-            .add(AnimationData.RANGED_BLAZING_BLOWPIPE)
-            .add(AnimationData.MAGIC_EYE_OF_AYAK)
-            .add(AnimationData.MAGIC_EYE_OF_AYAK_SPEC)
-            .build();
-
     private static final Map<Integer, Integer> NON_STANDARD_MAGIC_WEAPON_SPEEDS = new ImmutableMap.Builder<Integer, Integer>()
             .put(ItemID.TWINFLAME_STAFF, 6)
-            .build();
-
-    // Map of problematic itemIds to equivalent working ones.
-    // The Echo Venator Bow's ItemStats are returning null, so use the regular bow instead.
-    private static final Map<Integer, Integer> WEAPON_ID_MAPPING_WORKAROUNDS = new ImmutableMap.Builder<Integer, Integer>()
-            .put(ItemID.VENATOR_BOW_ORNAMENT, ItemID.VENATOR_BOW)
             .build();
 
     // https://oldschool.runescape.wiki/w/Food/Fast_foods#Food_Delays
@@ -300,30 +277,9 @@ public class AttackTimerMetronomePlugin extends Plugin
         return configManager.getConfig(AttackTimerMetronomeConfig.class);
     }
 
-    private int getWeaponId()
-    {
-        final int weaponId = Utils.getWeaponId(client);
-        return WEAPON_ID_MAPPING_WORKAROUNDS.getOrDefault(weaponId, weaponId);
-    }
-
-    private ItemStats getWeaponStats(int weaponId)
-    {
-        if (NON_STANDARD_ATTACK_SPEEDS.containsKey(weaponId))
-        {
-            return new ItemStats(true, -1, -1,
-                    ItemEquipmentStats.builder().aspeed(NON_STANDARD_ATTACK_SPEEDS.get(weaponId)).build());
-        }
-        return itemManager.getItemStats(weaponId);
-    }
-
-    private boolean getSalamanderAttack()
-    {
-        return client.getLocalPlayer().hasSpotAnim(SpotanimID.FIREBREATH);
-    }
-
     private void setAttackDelay()
     {
-        int weaponId = getWeaponId();
+        int weaponId = Utils.getWeaponId(client);
         AnimationData curAnimation = AnimationData.fromId(client.getLocalPlayer().getAnimation());
         PoweredStaves stave = PoweredStaves.getPoweredStaves(weaponId, curAnimation);
         boolean matchesSpellbook = matchesSpellbook(curAnimation);
@@ -373,7 +329,7 @@ public class AttackTimerMetronomePlugin extends Plugin
         }
 
         isUsingMagic = false;
-        final ItemStats weaponStats = getWeaponStats(weaponId);
+        final ItemStats weaponStats = Utils.getWeaponStats(client, itemManager, weaponId);
         if (weaponStats == null)
         {
             // Assume barehanded == 4t
@@ -625,7 +581,7 @@ public class AttackTimerMetronomePlugin extends Plugin
 
     public void checkForLateWeaponSwaps()
     {
-        final boolean weaponMisMatch = getWeaponId() != lastUsedWeaponId;
+        final boolean weaponMisMatch = Utils.getWeaponId(client) != lastUsedWeaponId;
 
         // This windowing safe guards of from late swaps inside a tick, if we have already rendered the tick
         // then we shouldn't perform another attack. We don't need to check for a valid target

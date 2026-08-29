@@ -418,4 +418,10 @@ public enum AnimationData
             return StringUtils.capitalize(super.toString().toLowerCase());
         }
     }
+
+
+    public boolean isStandardBowAttack()
+    {
+        throw new UnsupportedOperationException("Unimplemented method 'isStandardBowAttack'");
+    }
 }

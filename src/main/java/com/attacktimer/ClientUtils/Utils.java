@@ -29,7 +29,9 @@ package com.attacktimer.ClientUtils;
 import com.attacktimer.AttackStyle;
 import com.attacktimer.AttackType;
 import com.attacktimer.WeaponType;
+import com.google.common.collect.ImmutableMap;
 import java.util.ArrayDeque;
+import java.util.Map;
 import net.runelite.api.Actor;
 import net.runelite.api.Client;
 import net.runelite.api.EquipmentInventorySlot;
@@ -40,13 +42,17 @@ import net.runelite.api.WorldView;
 import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.gameval.InventoryID;
+import net.runelite.api.gameval.ItemID;
 import net.runelite.api.gameval.VarPlayerID;
 import net.runelite.api.gameval.VarbitID;
+import net.runelite.client.game.ItemEquipmentStats;
+import net.runelite.client.game.ItemManager;
+import net.runelite.client.game.ItemStats;
 import org.apache.commons.lang3.ArrayUtils;
 
 public class Utils
 {
-    public static int getItemIdFromContainer(ItemContainer container, int slotID)
+    public static int getItemIdFromContainer(final ItemContainer container, final int slotID)
     {
         if (container == null)
         {
@@ -56,7 +62,7 @@ public class Utils
         return (item != null) ? item.getId() : -1;
     }
 
-    public static int getWeaponId(Client client)
+    public static int getWeaponIdRaw(final Client client)
     {
         return getItemIdFromContainer(client.getItemContainer(InventoryID.WORN),
                 EquipmentInventorySlot.WEAPON.getSlotIdx());
@@ -66,14 +72,14 @@ public class Utils
     //
     // For computing tile based distances you probably don't want this and instead should use
     // client.getLocalPlayer().getWorldLocation().
-    public static WorldPoint getLocalLocation(Client client)
+    public static WorldPoint getLocalLocation(final Client client)
     {
         final LocalPoint localPoint = client.getLocalPlayer().getLocalLocation();
         return WorldPoint.fromLocalInstance(client, localPoint);
     }
 
     // returns ACCURATE for unknown weapons/styles
-    public static AttackStyle getAttackStyle(Client client)
+    public static AttackStyle getAttackStyle(final Client client)
     {
         final AttackStyle[] attackStyles = getWeaponType(client).getAttackStyles(client);
         int currentAttackStyleVarbit = client.getVarpValue(VarPlayerID.COM_MODE);
@@ -94,14 +100,14 @@ public class Utils
     }
 
     // returns null for unknown weapons
-    public static WeaponType getWeaponType(Client client)
+    public static WeaponType getWeaponType(final Client client)
     {
         final int currentEquippedWeaponTypeVarbit = client.getVarbitValue(VarbitID.COMBAT_WEAPON_CATEGORY);
         return WeaponType.getWeaponType(currentEquippedWeaponTypeVarbit);
     }
 
     // returns null for unknown weapons
-    public static AttackType getAttackType(Client client)
+    public static AttackType getAttackType(final Client client)
     {
         final WeaponType weaponType = getWeaponType(client);
         final int currentAttackStyleVarbit = client.getVarpValue(VarPlayerID.COM_MODE);
@@ -113,7 +119,7 @@ public class Utils
     }
 
     // returns zero for no target
-    public static int getTargetId(Client client)
+    public static int getTargetId(final Client client)
     {
         final NPC target = getTargetNPC(client);
         int targetId = 0;
@@ -125,7 +131,7 @@ public class Utils
     }
 
     // returns null for no target
-    public static NPC getTargetNPC(Client client)
+    public static NPC getTargetNPC(final Client client)
     {
         final Actor target = client.getLocalPlayer().getInteracting();
         if (target != null && (target instanceof NPC))
@@ -137,7 +143,7 @@ public class Utils
     }
 
     // returns true if the client is in the region specified by the id
-    public static boolean isInRegionId(Client client, int id)
+    public static boolean isInRegionId(final Client client, final int id)
     {
         final WorldView wv = client.getTopLevelWorldView();
         if (wv == null)
@@ -157,7 +163,7 @@ public class Utils
     // getLastDelta gets the last two elements and returns the delta between the two items. It does not modify
     // the queue. Returns 0 if theres no items in the queue, returns <element> + 1 if there's only 1 item in
     // the queue.
-    public static int getLastDelta(ArrayDeque<Integer> events)
+    public static int getLastDelta(final ArrayDeque<Integer> events)
     {
         int i = 0, last = -1, secondLast = -1;
         final var it = events.descendingIterator();
@@ -173,5 +179,36 @@ public class Utils
         }
         var delta = last - secondLast;
         return delta;
+    }
+
+    // Map of problematic itemIds to equivalent working ones.
+    // The Echo Venator Bow's ItemStats are returning null, so use the regular bow instead.
+    private static final Map<Integer, Integer> WEAPON_ID_MAPPING_WORKAROUNDS = new ImmutableMap.Builder<Integer, Integer>()
+            .put(ItemID.VENATOR_BOW_ORNAMENT, ItemID.VENATOR_BOW)
+            .build();
+
+    // Add other weapons here if in the Runelite dev shell this prints a different value to it's actual
+    // speed:
+    //
+    // var itemManager = inject(ItemManager.class);
+    // log.info("Speed {}", itemManager.getItemStats(<id_to_test>).getEquipment().getAspeed());
+    private static final Map<Integer, Integer> NON_STANDARD_ATTACK_SPEEDS = new ImmutableMap.Builder<Integer, Integer>()
+            .put(ItemID.HALLOWFELL, 6)
+            .build();
+
+    public static int getWeaponId(final Client client)
+    {
+        final int weaponId = Utils.getWeaponIdRaw(client);
+        return WEAPON_ID_MAPPING_WORKAROUNDS.getOrDefault(weaponId, weaponId);
+    }
+
+    public static ItemStats getWeaponStats(final Client client, final ItemManager itemManager, final int weaponId)
+    {
+        if (NON_STANDARD_ATTACK_SPEEDS.containsKey(weaponId))
+        {
+            return new ItemStats(true, -1, -1,
+                    ItemEquipmentStats.builder().aspeed(NON_STANDARD_ATTACK_SPEEDS.get(weaponId)).build());
+        }
+        return itemManager.getItemStats(weaponId);
     }
 }
