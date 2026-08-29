@@ -34,6 +34,7 @@ import com.attacktimer.VariableSpeed.State.TickCount;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.NPC;
+import net.runelite.api.gameval.AnimationID;
 import net.runelite.api.gameval.NpcID;
 import net.runelite.client.game.ItemManager;
 
@@ -76,13 +77,13 @@ public class MaggotKing
         }
 
         final NPC npc = (NPC) atk.getTarget();
-        if (npc.getId() != NpcID.UR_MAGGOT_LARVAE || !anim.isStandardBowAttack())
+        if (npc.getId() != NpcID.UR_MAGGOT_LARVAE || !anim.isStandardBowAttack() || npc.getAnimation() != AnimationID.UR_MAGGOT_LARVAE_FLY)
         {
             return attackDelayHoldoffTicks;
         }
         if (debugLogs)
         {
-            log.debug("MaggotKing success, attacking maggot with bow");
+            log.debug("MaggotKing success, attacking flying maggot with bow");
         }
         consumed = tickCount.get();
         return attackSpeed.compute(client, anim, spellbook, itemManager);
