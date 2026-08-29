@@ -137,5 +137,6 @@ public class VariableSpeed
     // Variable speed that doesn't neatly fit in to the IVariable speed pattern (it's not weapon related
     // but boss related).
     public static final ShadowCrash SHADOW_CRASH = new ShadowCrash(YAMA, MARK_OF_DARKNESS, AttackTimerMetronomePlugin.TC);
-    public static final MaggotKing MAGGOT_KING = new MaggotKing(AttackTimerMetronomePlugin.TC);
+    public static final MaggotKing MAGGOT_KING = new MaggotKing(AttackTimerMetronomePlugin.TC, AttackTimerMetronomePlugin.ATTACK_SPEED);
+    public static final DoomOfMokhaiotl DOOM_OF_MOKHAIOTL = new DoomOfMokhaiotl(AttackTimerMetronomePlugin.ATTACK_SPEED);
 }

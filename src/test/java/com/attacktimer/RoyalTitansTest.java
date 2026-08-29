@@ -284,6 +284,9 @@ public class RoyalTitansTest extends IntegrationTests
         when(mockedClient.getWorldView(0)).thenReturn(mockedWorldView);
         when(mockedWorldView.getPlane()).thenReturn(mockedPlane);
 
+        // reset stale static state from any other tests - the plugin basically has a singleton design
+        AttackTimerMetronomePlugin.reset();
+
         // Finally turn the plugin "on"
         underTest.startUp();
 

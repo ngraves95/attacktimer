@@ -27,6 +27,7 @@ package com.attacktimer;
 
 import com.attacktimer.ClientUtils.Utils;
 import com.attacktimer.VariableSpeed.State.TickCount;
+import com.google.common.annotations.VisibleForTesting;
 import java.util.ArrayDeque;
 import net.runelite.api.Skill;
 import net.runelite.api.events.FakeXpDrop;
@@ -97,7 +98,7 @@ public class Damage
         return (int) Math.round(xp * (3.0d / 4.0d) * MODIFIER * GLOBAL_MODIFIER);
     }
 
-    public void cleanup()
+    public void onTick()
     {
         while (hpExpEarnedTickCount.size() > 5)
         {
@@ -107,5 +108,12 @@ public class Damage
         {
             hpExpEarned.removeFirst();
         }
+    }
+
+    @VisibleForTesting
+    public void reset()
+    {
+        hpExpEarned.clear();
+        hpExpEarnedTickCount.clear();
     }
 }

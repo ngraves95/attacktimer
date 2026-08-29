@@ -146,6 +146,9 @@ public class IntegrationTests
         when(mockedClient.getEnum(EnumID.WEAPON_STYLES)).thenReturn(mockedWeaponEnum);
         when(mockedWeaponEnum.getIntValue(0)).thenReturn(-1); // blue-moon-spear mock
 
+        // reset stale static state from any other tests - the plugin basically has a singleton design
+        AttackTimerMetronomePlugin.reset();
+
         // Finally turn the plugin "on"
         underTest.startUp();
         return mockedPlayer;

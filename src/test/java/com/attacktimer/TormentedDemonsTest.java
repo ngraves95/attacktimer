@@ -132,6 +132,9 @@ public class TormentedDemonsTest extends IntegrationTests
         when(mockedWorldView.getPlane()).thenReturn(mockedPlane);
         // -- NPCs
 
+        // reset stale static state from any other tests - the plugin basically has a singleton design
+        AttackTimerMetronomePlugin.reset();
+
         // Finally turn the plugin "on"
         underTest.startUp();
 

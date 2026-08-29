@@ -30,40 +30,54 @@ import com.attacktimer.AttackSpeed;
 import com.attacktimer.Attacking.Attacking;
 import com.attacktimer.ClientUtils.Utils;
 import com.attacktimer.Spellbook;
-import com.attacktimer.VariableSpeed.State.TickCount;
+import com.google.common.collect.ImmutableSet;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.NPC;
+import net.runelite.api.gameval.ItemID;
 import net.runelite.api.gameval.NpcID;
 import net.runelite.client.game.ItemManager;
 
 @Slf4j
-public class MaggotKing
+public class DoomOfMokhaiotl
 {
-    private static final int MAGGOT_KING_REGION_ID = 11645;
+    private static final int DOOM_REGION_ID = -1;
+    private static final Set<Integer> DEMONIC_LARVAE_IDS = new ImmutableSet.Builder<Integer>()
+            .add(NpcID.DOM_DEMONIC_ENERGY)
+            .add(NpcID.DOM_DEMONIC_ENERGY_GIANT_MAGE)
+            .add(NpcID.DOM_DEMONIC_ENERGY_GIANT_RANGE)
+            .add(NpcID.DOM_DEMONIC_ENERGY_MAGE)
+            .add(NpcID.DOM_DEMONIC_ENERGY_RANGE)
+            .add(NpcID.DOM_DEMONIC_ENERGY_MELEE)
+            .build();
 
-    private final TickCount tickCount;
+    private static final Set<Integer> NO_COOLDOWN_WEAPON = new ImmutableSet.Builder<Integer>()
+            .add(ItemID.SILVERLIGHT)
+            .add(ItemID.DARKLIGHT)
+            .add(ItemID.ARCLIGHT)
+            .add(ItemID.EMBERLIGHT)
+            .add(ItemID.BONE_CLAWS)
+            .add(ItemID.SCORCHING_BOW)
+            .add(ItemID.HOLY_WATER)
+            .add(ItemID.EYE_OF_AYAK)
+            .build();
+
+
     private final AttackSpeed attackSpeed;
-    // the tick count if a larvae was hit, this is purely to debounce
-    private int consumed = -1;
 
-    MaggotKing(final TickCount tc, final AttackSpeed attackSpeed)
+    DoomOfMokhaiotl(final AttackSpeed attackSpeed)
     {
-        this.tickCount = tc;
         this.attackSpeed = attackSpeed;
     }
 
-    // https://oldschool.runescape.wiki/w/Maggot_King/Strategies#Ur-maggot_larvae
+    // https://oldschool.runescape.wiki/w/Doom_of_Mokhaiotl/Strategies#Demonic_larvae
     //
-    // If the player attacks a maggot with a "standard bow" it doesn't matter what current cooldown is the
-    // player is immediately set to the cooldown of the bow they used.
-    //
-    // Therefore this method returns `attackDelayHoldoffTicks` in all cases where this condition isn't met.
-    // But if the condition is met this method returns a brand new number which is the attack speed of the bow
-    // used. This number can be the same as the current delay and that's ok.
+    // They may be attacked on attack cooldown: Non-demonbane attacks incur the weapon's attack delay
+    // afterwards, whereas demonbane attacks and the Eye of Ayak will not incur any attack delay.
     public int onRender(final Client client, final ItemManager itemManager, final int attackDelayHoldoffTicks, final Spellbook spellbook, final boolean debugLogs)
     {
-        if (!Utils.isInRegionId(client, MAGGOT_KING_REGION_ID) || tickCount.isWithinNTicks(consumed, 1))
+        if (!Utils.isInRegionId(client, DOOM_REGION_ID))
         {
             return attackDelayHoldoffTicks;
         }
@@ -76,15 +90,22 @@ public class MaggotKing
         }
 
         final NPC npc = (NPC) atk.getTarget();
-        if (npc.getId() != NpcID.UR_MAGGOT_LARVAE || !anim.isStandardBowAttack())
+        if (!DEMONIC_LARVAE_IDS.contains(npc.getId()))
         {
             return attackDelayHoldoffTicks;
         }
+        final int weaponId = Utils.getWeaponId(client);
+        final boolean isDemonbaneSpell = spellbook == Spellbook.ARCEUUS && AnimationData.isManualCasting(anim) && anim == AnimationData.MAGIC_ARCEUUS_DEMONBANE;
+        if (NO_COOLDOWN_WEAPON.contains(weaponId) || isDemonbaneSpell)
+        {
+            return attackDelayHoldoffTicks;
+        }
+
         if (debugLogs)
         {
-            log.debug("MaggotKing success, attacking maggot with bow");
+            log.debug("DoomOfMokhaiotl success, attacking larvae with normal weapon");
         }
-        consumed = tickCount.get();
+
         return attackSpeed.compute(client, anim, spellbook, itemManager);
     }
 }

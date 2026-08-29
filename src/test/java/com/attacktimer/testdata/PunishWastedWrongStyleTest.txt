@@ -2,5 +2,5 @@ tickPeriod: 0, uiHideDebounceTickCount: 0, attackDelayHoldoffTicks: 0, dmgDealt:
 pendingEatDelayTicks: 0, currentSpellBook: STANDARD, soundEffectTick: -1, soundEffectId: -1
 tickPeriod: 0, uiHideDebounceTickCount: -1, attackDelayHoldoffTicks: -1, dmgDealt: -1, attackState: NOT_ATTACKING, renderedState: NOT_ATTACKING, lastTarget: null
 pendingEatDelayTicks: 0, currentSpellBook: STANDARD, soundEffectTick: -1, soundEffectId: -1
-tickPeriod: 8, uiHideDebounceTickCount: 1, attackDelayHoldoffTicks: 7, dmgDealt: 0, attackState: DELAYED_FIRST_TICK, renderedState: NOT_ATTACKING, lastTarget: null
+tickPeriod: 8, uiHideDebounceTickCount: 1, attackDelayHoldoffTicks: 7, dmgDealt: -1, attackState: DELAYED_FIRST_TICK, renderedState: NOT_ATTACKING, lastTarget: null
 pendingEatDelayTicks: 0, currentSpellBook: STANDARD, soundEffectTick: -1, soundEffectId: -1
