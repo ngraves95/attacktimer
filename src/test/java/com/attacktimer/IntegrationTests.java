@@ -107,8 +107,6 @@ public class IntegrationTests
 
     public Player pluginMockSetup() throws Exception
     {
-        // enable the plugin
-        when(mockedConfig.enableMetronome()).thenReturn(true);
         // Create player
         Player mockedPlayer = mock(Player.class);
         when(mockedPlayer.getAnimation()).thenReturn(NO_ANIMATION);
@@ -145,6 +143,9 @@ public class IntegrationTests
         EnumComposition mockedWeaponEnum = mock(EnumComposition.class);
         when(mockedClient.getEnum(EnumID.WEAPON_STYLES)).thenReturn(mockedWeaponEnum);
         when(mockedWeaponEnum.getIntValue(0)).thenReturn(-1); // blue-moon-spear mock
+
+        // reset stale static state from any other tests - the plugin basically has a singleton design
+        AttackTimerMetronomePlugin.reset();
 
         // Finally turn the plugin "on"
         underTest.startUp();

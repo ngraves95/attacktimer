@@ -163,11 +163,6 @@ class AttackTimerBarOverlay extends Overlay
     {
         shouldShowBar = true;
 
-        if (!config.enableMetronome())
-        {
-            shouldShowBar = false;
-        }
-
         if (!config.showBar())
         {
             shouldShowBar = false;

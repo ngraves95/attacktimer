@@ -1,4 +1,4 @@
-package com.attacktimer.VariableSpeed.State;
+package com.attacktimer.Attacking;
 
 /*
  * Copyright (c) 2026, Lexer747 <https://github.com/Lexer747>
@@ -25,44 +25,22 @@ package com.attacktimer.VariableSpeed.State;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.google.common.annotations.VisibleForTesting;
-import net.runelite.api.Client;
-import net.runelite.api.events.GameTick;
+import lombok.Getter;
+import net.runelite.api.Actor;
 
-/**
- * TickCount increments on each game tick. Due to 6 hour logs this cannot overflow or wrap around.
- */
-public class TickCount implements IStateTracker
+public final class Attack
 {
-    private int tickCount = 0;
+    @Getter
+    private final int animationId;
+    @Getter
+    private final boolean salamander;
+    @Getter
+    private final Actor target;
 
-    public int get()
+    public Attack(final int animationId, final boolean salamander, final Actor target)
     {
-        return tickCount;
-    }
-
-    @Override
-    public void onGameTick(Client client, GameTick tick)
-    {
-        tickCount++;
-    }
-
-    /**
-     * isWithinNTicks returns true if the current game tick count is within N ticks of the argument
-     * `toCheckAgainst`
-     *
-     * @param toCheckAgainst some fixed point that occurred in the past (in game ticks)
-     * @param N              the number of ticks of generosity
-     * @return true if the current counter is N or less ticks away from `toCheckAgainst`
-     */
-    public boolean isWithinNTicks(int toCheckAgainst, int N)
-    {
-        return this.tickCount <= toCheckAgainst + N && this.tickCount >= toCheckAgainst;
-    }
-
-    @VisibleForTesting
-    public void reset()
-    {
-        tickCount = 0;
+        this.animationId = animationId;
+        this.salamander = salamander;
+        this.target = target;
     }
 }

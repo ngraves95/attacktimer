@@ -106,6 +106,12 @@ public class VariableSpeed
     private static final Yama YAMA = new Yama();
     private static final MarkOfDarkness MARK_OF_DARKNESS = new MarkOfDarkness();
 
+    // Variable speed that doesn't neatly fit in to the IVariable speed pattern (it's not weapon related
+    // but boss related).
+    public static final ShadowCrash SHADOW_CRASH = new ShadowCrash(YAMA, MARK_OF_DARKNESS, AttackTimerMetronomePlugin.TC);
+    public static final MaggotKing MAGGOT_KING = new MaggotKing(AttackTimerMetronomePlugin.TC, AttackTimerMetronomePlugin.ATTACK_SPEED);
+    public static final DoomOfMokhaiotl DOOM_OF_MOKHAIOTL = new DoomOfMokhaiotl(AttackTimerMetronomePlugin.TC, AttackTimerMetronomePlugin.ATTACK_SPEED);
+
     private static final IStateTracker[] TO_TRACK = {
         // State tracking, these do not contribute themselves to any variable speed weapon/mechanic but
         // provide state tracking which is shared across more than one variable speed weapon/mechanic.
@@ -131,10 +137,7 @@ public class VariableSpeed
         new Amoxliatl(),
         new Scurrius(),
         new TombsOfAmascut(),
+        DOOM_OF_MOKHAIOTL,
     };
-
-    // Variable speed that doesn't neatly fit in to the IVariable speed pattern (it's not weapon related
-    // but boss related).
-    public static final ShadowCrash SHADOW_CRASH = new ShadowCrash(YAMA, MARK_OF_DARKNESS, AttackTimerMetronomePlugin.TC);
 
 }

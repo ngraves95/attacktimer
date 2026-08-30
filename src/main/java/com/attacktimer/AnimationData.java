@@ -28,6 +28,7 @@ package com.attacktimer;
  */
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import java.security.InvalidParameterException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -52,7 +53,7 @@ public enum AnimationData
     MELEE_LANCE_SLASH(AnimationID.HUMAN_DHUNTER_LANCE_SLASH, AttackStyle.MELEE),
 
     MELEE_FANG_STAB(AnimationID.HUMAN_OSMUMTENS_FANG, AttackStyle.MELEE), // tested w/ fang
-    MELEE_FANG_SPEC(AnimationID.OLAF2_BRINE_SABRE_SPECIAL, AttackStyle.MELEE, true), // tested w/ fang spec
+    MELEE_FANG_SPEC(AnimationID.OLAF2_BRINE_SABRE_SPECIAL, AttackStyle.MELEE, MetaData.SPECIAL_ATTACK.d), // tested w/ fang spec
 
     MELEE_GENERIC_SLASH(AnimationID.HUMAN_AXE_CHOP, AttackStyle.MELEE), // tested w/ zuriel's staff, d long slash, dclaws regular slash
 
@@ -68,65 +69,65 @@ public enum AnimationData
     MELEE_STAFF_STAB(AnimationID.HUMAN_SPEAR_SPIKE, AttackStyle.MELEE), // tested w/ SOTD/SOL jab, vesta's spear stab, c hally
     MELEE_SPEAR_CRUSH(AnimationID.HUMAN_SPEAR_LUNGE, AttackStyle.MELEE), // tested w/ vesta's spear
     MELEE_STAFF_SLASH(AnimationID.HUMAN_SCYTHE_SWEEP, AttackStyle.MELEE), // tested w/ SOTD/SOL slash, zammy hasta slash, vesta's spear slash, c hally
-    MELEE_DLONG_SPEC(AnimationID.CLEAVE, AttackStyle.MELEE, true), // tested w/ d long spec, also thammaron's sceptre crush (????)...
-    MELEE_DRAGON_MACE_SPEC(AnimationID.SHATTER, AttackStyle.MELEE, true),
-    MELEE_DRAGON_DAGGER_SPEC(AnimationID.PUNCTURE, AttackStyle.MELEE, true),
-    MELEE_DRAGON_WARHAMMER_SPEC(AnimationID.DRAGON_WARHAMMER_SA_PLAYER, AttackStyle.MELEE, true), // tested w/ dwh, statius warhammer spec
+    MELEE_DLONG_SPEC(AnimationID.CLEAVE, AttackStyle.MELEE, MetaData.SPECIAL_ATTACK.d), // tested w/ d long spec, also thammaron's sceptre crush (????)...
+    MELEE_DRAGON_MACE_SPEC(AnimationID.SHATTER, AttackStyle.MELEE, MetaData.SPECIAL_ATTACK.d),
+    MELEE_DRAGON_DAGGER_SPEC(AnimationID.PUNCTURE, AttackStyle.MELEE, MetaData.SPECIAL_ATTACK.d),
+    MELEE_DRAGON_WARHAMMER_SPEC(AnimationID.DRAGON_WARHAMMER_SA_PLAYER, AttackStyle.MELEE, MetaData.SPECIAL_ATTACK.d), // tested w/ dwh, statius warhammer spec
     MELEE_ABYSSAL_WHIP(AnimationID.SLAYER_ABYSSAL_WHIP_ATTACK, AttackStyle.MELEE), // tested w/ whip, tent whip
     MELEE_GRANITE_MAUL(AnimationID.SLAYER_GRANITE_MAUL_ATTACK, AttackStyle.MELEE), // tested w/ normal gmaul, ornate maul
-    MELEE_GRANITE_MAUL_SPEC(AnimationID.SLAYER_GRANITE_MAUL_SPECIAL_ATTACK, AttackStyle.MELEE, true), // tested w/ normal gmaul, ornate maul
+    MELEE_GRANITE_MAUL_SPEC(AnimationID.SLAYER_GRANITE_MAUL_SPECIAL_ATTACK, AttackStyle.MELEE, MetaData.SPECIAL_ATTACK.d), // tested w/ normal gmaul, ornate maul
     MELEE_DHAROKS_GREATAXE_CRUSH(AnimationID.BARROW_DHAROK_SLASH, AttackStyle.MELEE),
     MELEE_DHAROKS_GREATAXE_SLASH(AnimationID.BARROW_DHAROK_CRUSH, AttackStyle.MELEE),
     MELEE_AHRIMS_STAFF_CRUSH(AnimationID.BARROWS_QUARTERSTAFF_ATTACK, AttackStyle.MELEE),
     MELEE_OBBY_MAUL_CRUSH(AnimationID.DRAGON_PICKAXE_ANIM, AttackStyle.MELEE),
     MELEE_ABYSSAL_DAGGER_STAB(AnimationID.ABYSSAL_DAGGER_LUNGE, AttackStyle.MELEE), // spec un-tested
     MELEE_ABYSSAL_BLUDGEON_CRUSH(AnimationID.ABYSSAL_BLUDGEON_CRUSH, AttackStyle.MELEE),
-    MELEE_ABYSSAL_BLUDGEON_SPEC(AnimationID.ABYSSAL_BLUDGEON_SPECIAL_ATTACK, AttackStyle.MELEE, true),
+    MELEE_ABYSSAL_BLUDGEON_SPEC(AnimationID.ABYSSAL_BLUDGEON_SPECIAL_ATTACK, AttackStyle.MELEE, MetaData.SPECIAL_ATTACK.d),
     MELEE_LEAF_BLADED_BATTLEAXE_CRUSH(AnimationID.BATTLEAXE_CRUSH, AttackStyle.MELEE),
     MELEE_INQUISITORS_MACE(AnimationID.HUMAN_INQUISITORS_MACE_CRUSH, AttackStyle.MELEE),
     MELEE_BARRELCHEST_ANCHOR_CRUSH(AnimationID.BRAIN_PLAYER_ANCHOR_ATTACK, AttackStyle.MELEE),
-    MELEE_BARRELCHEST_ANCHOR_CRUSH_SPEC(AnimationID.BRAIN_PLAYER_ANCHOR_SPECIAL_ATTACK, AttackStyle.MELEE, true),
+    MELEE_BARRELCHEST_ANCHOR_CRUSH_SPEC(AnimationID.BRAIN_PLAYER_ANCHOR_SPECIAL_ATTACK, AttackStyle.MELEE, MetaData.SPECIAL_ATTACK.d),
     MELEE_LEAF_BLADED_BATTLEAXE_SLASH(AnimationID.GODWARS_GODSWORD_ZAMORAK_PLAYER, AttackStyle.MELEE),
     MELEE_GODSWORD_SLASH(AnimationID.DH_SWORD_UPDATE_SLASH, AttackStyle.MELEE), // tested w/ AGS, BGS, ZGS, SGS, AGS(or) sara sword
     MELEE_GODSWORD_CRUSH(AnimationID.DH_SWORD_UPDATE_SMASH, AttackStyle.MELEE), // tested w/ AGS, BGS, ZGS, SGS, sara sword
     MELEE_GODSWORD_DEFENSIVE(AnimationID.DH_SWORD_UPDATE_BLOCK, AttackStyle.MELEE), // tested w/ BGS
-    MELEE_RUNE_CLAWS_SPEC(AnimationID.IMPALE, AttackStyle.MELEE, true),
-    MELEE_DRAGON_CLAWS_SPEC(AnimationID.HUMAN_DRAGON_CLAWS_SPEC, AttackStyle.MELEE, true),
-    MELEE_VLS_SPEC(AnimationID.HUMAN_DRAGON_SWORD_SPEC, AttackStyle.MELEE, true), // both VLS and dragon sword spec
+    MELEE_RUNE_CLAWS_SPEC(AnimationID.IMPALE, AttackStyle.MELEE, MetaData.SPECIAL_ATTACK.d),
+    MELEE_DRAGON_CLAWS_SPEC(AnimationID.HUMAN_DRAGON_CLAWS_SPEC, AttackStyle.MELEE, MetaData.SPECIAL_ATTACK.d),
+    MELEE_VLS_SPEC(AnimationID.HUMAN_DRAGON_SWORD_SPEC, AttackStyle.MELEE, MetaData.SPECIAL_ATTACK.d), // both VLS and dragon sword spec
     MELEE_ELDER_MAUL(AnimationID.HUMAN_ELDER_MAUL_ATTACK, AttackStyle.MELEE),
-    MELEE_ZAMORAK_GODSWORD_SPEC(AnimationID.ZGS_SPECIAL_PLAYER, AttackStyle.MELEE, true), // tested zgs spec
+    MELEE_ZAMORAK_GODSWORD_SPEC(AnimationID.ZGS_SPECIAL_PLAYER, AttackStyle.MELEE, MetaData.SPECIAL_ATTACK.d), // tested zgs spec
     MELEE_ELDER_MAUL_SPEC(AnimationID.HUMAN_ELDER_MAUL_SPEC, AttackStyle.MELEE),
-    MELEE_ZAMORAK_GODSWORD_OR_SPEC(AnimationID.ZGS_SPECIAL_ORNATE_PLAYER, AttackStyle.MELEE, true), // verified 22/06/2024, assumed due to ags(or)
-    MELEE_SARADOMIN_GODSWORD_SPEC(AnimationID.SGS_SPECIAL_PLAYER, AttackStyle.MELEE, true), // tested sgs spec
-    MELEE_SARADOMIN_GODSWORD_OR_SPEC(AnimationID.SGS_SPECIAL_ORNATE_PLAYER, AttackStyle.MELEE, true), // verified 22/06/2024, assumed due to ags(or)
-    MELEE_BANDOS_GODSWORD_SPEC(AnimationID.BGS_SPECIAL_PLAYER, AttackStyle.MELEE, true), // tested bgs spec
-    MELEE_BANDOS_GODSWORD_OR_SPEC(AnimationID.BGS_SPECIAL_ORNATE_PLAYER, AttackStyle.MELEE, true), // verified 22/06/2024, assumed due to ags(or)
-    MELEE_ARMADYL_GODSWORD_SPEC(AnimationID.AGS_SPECIAL_PLAYER, AttackStyle.MELEE, true), // tested ags spec
-    MELEE_ARMADYL_GODSWORD_OR_SPEC(AnimationID.AGS_SPECIAL_ORNATE_PLAYER, AttackStyle.MELEE, true), // tested ags(or) spec
+    MELEE_ZAMORAK_GODSWORD_OR_SPEC(AnimationID.ZGS_SPECIAL_ORNATE_PLAYER, AttackStyle.MELEE, MetaData.SPECIAL_ATTACK.d), // verified 22/06/2024, assumed due to ags(or)
+    MELEE_SARADOMIN_GODSWORD_SPEC(AnimationID.SGS_SPECIAL_PLAYER, AttackStyle.MELEE, MetaData.SPECIAL_ATTACK.d), // tested sgs spec
+    MELEE_SARADOMIN_GODSWORD_OR_SPEC(AnimationID.SGS_SPECIAL_ORNATE_PLAYER, AttackStyle.MELEE, MetaData.SPECIAL_ATTACK.d), // verified 22/06/2024, assumed due to ags(or)
+    MELEE_BANDOS_GODSWORD_SPEC(AnimationID.BGS_SPECIAL_PLAYER, AttackStyle.MELEE, MetaData.SPECIAL_ATTACK.d), // tested bgs spec
+    MELEE_BANDOS_GODSWORD_OR_SPEC(AnimationID.BGS_SPECIAL_ORNATE_PLAYER, AttackStyle.MELEE, MetaData.SPECIAL_ATTACK.d), // verified 22/06/2024, assumed due to ags(or)
+    MELEE_ARMADYL_GODSWORD_SPEC(AnimationID.AGS_SPECIAL_PLAYER, AttackStyle.MELEE, MetaData.SPECIAL_ATTACK.d), // tested ags spec
+    MELEE_ARMADYL_GODSWORD_OR_SPEC(AnimationID.AGS_SPECIAL_ORNATE_PLAYER, AttackStyle.MELEE, MetaData.SPECIAL_ATTACK.d), // tested ags(or) spec
     MELEE_SCYTHE(AnimationID.SCYTHE_OF_VITUR_ATTACK, AttackStyle.MELEE), // tested w/ all scythe styles (so could be crush, but unlikely)
     MELEE_GHAZI_RAPIER_STAB(AnimationID.GHRAZI_RAPIER_ATTACK, AttackStyle.MELEE), // rapier slash is 390, basic slash animation. Also VLS stab.
-    MELEE_ANCIENT_GODSWORD_SPEC(AnimationID.NGS_SPECIAL_PLAYER, AttackStyle.MELEE, true),
-    MELEE_CRYSTAL_HALBERD_SPEC(AnimationID.DRAGON_HALBERD_SPECIAL_ATTACK, AttackStyle.MELEE, true),
-    MELEE_SOULREAPER_AXE(AnimationID.ANCIENT_AXE_CRUSH, AttackStyle.MELEE, true),
-    MELEE_SOULREAPER_AXE_SPEC(AnimationID.ANCIENT_AXE_SPECIAL, AttackStyle.MELEE, true),
+    MELEE_ANCIENT_GODSWORD_SPEC(AnimationID.NGS_SPECIAL_PLAYER, AttackStyle.MELEE, MetaData.SPECIAL_ATTACK.d),
+    MELEE_CRYSTAL_HALBERD_SPEC(AnimationID.DRAGON_HALBERD_SPECIAL_ATTACK, AttackStyle.MELEE, MetaData.SPECIAL_ATTACK.d),
+    MELEE_SOULREAPER_AXE(AnimationID.ANCIENT_AXE_CRUSH, AttackStyle.MELEE, MetaData.SPECIAL_ATTACK.d),
+    MELEE_SOULREAPER_AXE_SPEC(AnimationID.ANCIENT_AXE_SPECIAL, AttackStyle.MELEE, MetaData.SPECIAL_ATTACK.d),
     MELEE_GUTHANS_LUNGE(AnimationID.BARROWS_WAR_SPEAR_STAB, AttackStyle.MELEE),
     MELEE_GUTHANS_SWIPE(AnimationID.BARROWS_WAR_SPEAR_SLASH, AttackStyle.MELEE),
     MELEE_GUTHANS_POUNDMA(AnimationID.BARROWS_WAR_SPEAR_CRUSH, AttackStyle.MELEE),
     MELEE_TORAG_HAMMERS(AnimationID.BARROW_TORAG_CRUSH, AttackStyle.MELEE),
     MELEE_VERACS_FLAIL(AnimationID.BARROW_GUTHAN_CRUSH, AttackStyle.MELEE),
     MELEE_BLISTERWOOD_FLAIL_CRUSH(AnimationID.IVANDIS_FLAIL_ATTACK, AttackStyle.MELEE), // blisterwood flail
-    MELEE_BONE_DAGGER_SPEC(AnimationID.DTTD_PLAYER_STAB_BONE_DAGGER, AttackStyle.MELEE, true), // tested with all poison variants (p, p+, p++, none)
+    MELEE_BONE_DAGGER_SPEC(AnimationID.DTTD_PLAYER_STAB_BONE_DAGGER, AttackStyle.MELEE, MetaData.SPECIAL_ATTACK.d), // tested with all poison variants (p, p+, p++, none)
     MELEE_DUAL_MACUAHUITL(AnimationID.PMOON_MACUAHUITL_CRUSH, AttackStyle.MELEE), // https://oldschool.runescape.wiki/w/Dual_macuahuitl set effect needs custom code
-    MELEE_BLUE_MOON_SPEAR_SPEC(AnimationID.HUMAN_ZAMORAKSPEAR_LUNGE, AttackStyle.MELEE, true), // https://oldschool.runescape.wiki/w/Blue_moon_spear
+    MELEE_BLUE_MOON_SPEAR_SPEC(AnimationID.HUMAN_ZAMORAKSPEAR_LUNGE, AttackStyle.MELEE, MetaData.SPECIAL_ATTACK.d), // https://oldschool.runescape.wiki/w/Blue_moon_spear
     MELEE_BLUE_MOON_SPEAR(AnimationID.HUMAN_ZAMORAKSPEAR_STAB, AttackStyle.MELEE),
     MELEE_DHINS(AnimationID.HUMAN_DINHS_BULWARK_BASH, AttackStyle.MELEE), // https://oldschool.runescape.wiki/w/Dinh%27s_bulwark
-    MELEE_URSINE_CHAINMACE_SPEC(AnimationID.HUMAN_SPECIAL02_URSINE, AttackStyle.MELEE, true), // https://oldschool.runescape.wiki/w/Ursine_chainmace#Charged
-    MELEE_ANCIENT_MACE_SPEC(AnimationID.SLICE_PLAYER_MACE_SPECIAL_ATTACK, AttackStyle.MELEE, true), // https://oldschool.runescape.wiki/w/Ancient_mace
-    MELEE_DSCIM_SPEC(AnimationID.SP_ATTACK_DRAGON_SCIMITAR, AttackStyle.MELEE, true), // https://oldschool.runescape.wiki/w/Dragon_scimitar
-    MELEE_D2H_SPEC(AnimationID.DRAGON_TWO_HANDED_SWORD, AttackStyle.MELEE, true), // https://oldschool.runescape.wiki/w/Dragon_2h_sword
-    MELEE_ARCLIGHT_SPEC(AnimationID.DARK_SPEC_PLAYER, AttackStyle.MELEE, true), // https://oldschool.runescape.wiki/w/Arclight
-    MELEE_SARA_SWORD_SPEC(AnimationID.SARADOMIN_SWORD_SPECIAL_PLAYER, AttackStyle.MELEE, true), // https://oldschool.runescape.wiki/w/Saradomin_sword assumed to be the same for the blessed version
-    MELEE_RED_KERIS_SPEC(AnimationID.TOA_KERIS_PARTISAN_SPECIAL01, AttackStyle.MELEE, true), // https://oldschool.runescape.wiki/w/Keris_partisan_of_corruption
+    MELEE_URSINE_CHAINMACE_SPEC(AnimationID.HUMAN_SPECIAL02_URSINE, AttackStyle.MELEE, MetaData.SPECIAL_ATTACK.d), // https://oldschool.runescape.wiki/w/Ursine_chainmace#Charged
+    MELEE_ANCIENT_MACE_SPEC(AnimationID.SLICE_PLAYER_MACE_SPECIAL_ATTACK, AttackStyle.MELEE, MetaData.SPECIAL_ATTACK.d), // https://oldschool.runescape.wiki/w/Ancient_mace
+    MELEE_DSCIM_SPEC(AnimationID.SP_ATTACK_DRAGON_SCIMITAR, AttackStyle.MELEE, MetaData.SPECIAL_ATTACK.d), // https://oldschool.runescape.wiki/w/Dragon_scimitar
+    MELEE_D2H_SPEC(AnimationID.DRAGON_TWO_HANDED_SWORD, AttackStyle.MELEE, MetaData.SPECIAL_ATTACK.d), // https://oldschool.runescape.wiki/w/Dragon_2h_sword
+    MELEE_ARCLIGHT_SPEC(AnimationID.DARK_SPEC_PLAYER, AttackStyle.MELEE, MetaData.SPECIAL_ATTACK.d), // https://oldschool.runescape.wiki/w/Arclight
+    MELEE_SARA_SWORD_SPEC(AnimationID.SARADOMIN_SWORD_SPECIAL_PLAYER, AttackStyle.MELEE, MetaData.SPECIAL_ATTACK.d), // https://oldschool.runescape.wiki/w/Saradomin_sword assumed to be the same for the blessed version
+    MELEE_RED_KERIS_SPEC(AnimationID.TOA_KERIS_PARTISAN_SPECIAL01, AttackStyle.MELEE, MetaData.SPECIAL_ATTACK.d), // https://oldschool.runescape.wiki/w/Keris_partisan_of_corruption
     MELEE_SALAMANDER(AnimationID.HUMAN_ATTACK_SALAMANDER, AttackStyle.MELEE), // https://oldschool.runescape.wiki/w/Salamander
     MELEE_INFERNAL_TECPATL(AnimationID.TECPATL_STAB, AttackStyle.MELEE), // https://oldschool.runescape.wiki/w/Infernal_tecpatl
     MELEE_HALLOWED_FLAIL(AnimationID.HUMAN_WEAPONS_HALLOWED_FLAIL01_ATTACK01, AttackStyle.MELEE), // https://oldschool.runescape.wiki/w/Hallowed_flail
@@ -135,72 +136,73 @@ public enum AnimationData
 
     // RANGED
     RANGED_CHINCHOMPA(AnimationID.HUMAN_CHINCHOMPA_ATTACK_PVN, AttackStyle.RANGED),
-    RANGED_SHORTBOW(AnimationID.HUMAN_BOW, AttackStyle.RANGED), // Confirmed same w/ 3 types of arrows, w/ maple, magic, & hunter's shortbow, craw's bow, dbow, dbow spec
+    RANGED_SHORTBOW(AnimationID.HUMAN_BOW, AttackStyle.RANGED, MetaData.STANDARD_BOW_ATTACK.d), // Confirmed same w/ 3 types of arrows, w/ maple, magic, & hunter's shortbow, craw's bow, dbow, dbow spec
     RANGED_RUNE_KNIFE_PVP(AnimationID.HUMAN_STAKE2, AttackStyle.RANGED), // 1 tick animation, has 1 tick delay between attacks. likely same for all knives. Same for morrigan's javelins, both spec & normal attack.
-    RANGED_MAGIC_SHORTBOW_SPEC(AnimationID.SNAPSHOT, AttackStyle.RANGED, true),
+    RANGED_MAGIC_SHORTBOW_SPEC(AnimationID.SNAPSHOT, AttackStyle.RANGED, MetaData.STANDARD_BOW_ATTACK.d|MetaData.SPECIAL_ATTACK.d),
     RANGED_CROSSBOW_PVP(AnimationID.XBOWS_HUMAN_FIRE_AND_RELOAD, AttackStyle.RANGED), // Tested RCB & ACB w/ dragonstone bolts (e) & diamond bolts (e)
     RANGED_BLOWPIPE(AnimationID.SNAKEBOSS_BLOWPIPE_ATTACK, AttackStyle.RANGED), // tested in PvP with all styles. Has 1 tick delay between animations in pvp.
     RANGED_DARTS(AnimationID.II_HUMAN_DART_THROW_PVN, AttackStyle.RANGED), // tested w/ addy darts. Seems to be constant animation but sometimes stalls and doesn't animate
     RANGED_BALLISTA(AnimationID.BALLISTA_ATTACK, AttackStyle.RANGED), // Tested w/ dragon javelins.
-    RANGED_BALLISTA_SPEC(AnimationID.BALLISTA_SPECIAL_ATTACK_PVN, AttackStyle.RANGED, true),
-    RANGED_RUNE_THROWNAXE_SPEC(AnimationID.CHAINHIT, AttackStyle.RANGED, true), // https://oldschool.runescape.wiki/w/Rune_thrownaxe
-    RANGED_DRAGON_THROWNAXE_SPEC(AnimationID.HUMAN_DRAGON_TAXE_SPEC, AttackStyle.RANGED, true),
+    RANGED_BALLISTA_SPEC(AnimationID.BALLISTA_SPECIAL_ATTACK_PVN, AttackStyle.RANGED, MetaData.SPECIAL_ATTACK.d),
+    RANGED_RUNE_THROWNAXE_SPEC(AnimationID.CHAINHIT, AttackStyle.RANGED, MetaData.SPECIAL_ATTACK.d), // https://oldschool.runescape.wiki/w/Rune_thrownaxe
+    RANGED_DRAGON_THROWNAXE_SPEC(AnimationID.HUMAN_DRAGON_TAXE_SPEC, AttackStyle.RANGED, MetaData.SPECIAL_ATTACK.d),
     RANGED_RUNE_CROSSBOW(AnimationID.XBOWS_HUMAN_FIRE_AND_RELOAD_PVN, AttackStyle.RANGED),
     RANGED_RUNE_CROSSBOW_OR(AnimationID.HUMAN_XBOWS_LEAGUE03_ATTACK_PVN, AttackStyle.RANGED),
     RANGED_BALLISTA_2(AnimationID.BALLISTA_ATTACK_PVN, AttackStyle.RANGED), // tested w/ light & heavy ballista, dragon & iron javelins.
     RANGED_RUNE_KNIFE(AnimationID.HUMAN_STAKE2_PVN, AttackStyle.RANGED), // 1 tick animation, has 1 tick delay between attacks. Also d thrownaxe
     RANGED_DRAGON_KNIFE(AnimationID.HUMAN_DRAGON_KNIFE, AttackStyle.RANGED),
-    RANGED_DRAGON_KNIFE_SPEC(AnimationID.HUMAN_DRAGON_TKNIVES_SPEC, AttackStyle.RANGED, true),
+    RANGED_DRAGON_KNIFE_SPEC(AnimationID.HUMAN_DRAGON_TKNIVES_SPEC, AttackStyle.RANGED, MetaData.SPECIAL_ATTACK.d),
     RANGED_DRAGON_KNIFE_POISONED(AnimationID.HUMAN_DRAGON_KNIFE_P, AttackStyle.RANGED), // tested w/ d knife p++
-    RANGED_DRAGON_KNIFE_POISONED_SPEC(AnimationID.HUMAN_DRAGON_TKNIVES_SPEC_POISON, AttackStyle.RANGED, true),
+    RANGED_DRAGON_KNIFE_POISONED_SPEC(AnimationID.HUMAN_DRAGON_TKNIVES_SPEC_POISON, AttackStyle.RANGED, MetaData.SPECIAL_ATTACK.d),
     RANGED_ZARYTE_CROSSBOW(AnimationID.ZCB_ATTACK_PVN, AttackStyle.RANGED),
     RANGED_ZARYTE_CROSSBOW_PVP(AnimationID.ZCB_ATTACK, AttackStyle.RANGED),
     RANGED_BLAZING_BLOWPIPE(AnimationID.SNAKEBOSS_BLOWPIPE_ATTACK_ORNAMENT, AttackStyle.RANGED),
-    RANGED_VENATOR_BOW(AnimationID.HUMAN_WEAPON_BOW_VENATOR01_SHOOT, AttackStyle.RANGED),
+    RANGED_VENATOR_BOW(AnimationID.HUMAN_WEAPON_BOW_VENATOR01_SHOOT, AttackStyle.RANGED, MetaData.STANDARD_BOW_ATTACK.d),
     RANGED_KARIL_CROSSBOW(AnimationID.BARROWS_REPEATING_CROSSBOW_FIRE, AttackStyle.RANGED),
-    RANGED_ATLATL(AnimationID.HUMAN_ATLATL_ATTACK_RANGED_01, AttackStyle.RANGED), // https://oldschool.runescape.wiki/w/Eclipse_atlatl
-    RANGED_ATLATL_SPEC(AnimationID.HUMAN_SPECIAL_ATLATL_01, AttackStyle.RANGED, true),
+    RANGED_ATLATL(AnimationID.HUMAN_ATLATL_ATTACK_RANGED_01, AttackStyle.RANGED, MetaData.STANDARD_BOW_ATTACK.d), // https://oldschool.runescape.wiki/w/Eclipse_atlatl
+    RANGED_ATLATL_SPEC(AnimationID.HUMAN_SPECIAL_ATLATL_01, AttackStyle.RANGED, MetaData.STANDARD_BOW_ATTACK.d|MetaData.SPECIAL_ATTACK.d),
     RANGED_TONALZTICS(AnimationID.HUMAN_GLAIVE_RALOS01_CHARGED_THROW, AttackStyle.RANGED), // https://oldschool.runescape.wiki/w/Tonalztics_of_ralos#Charged
-    RANGED_TONALZTICS_SPEC(AnimationID.HUMAN_GLAIVE_RALOS01_CHARGED_SPECIAL, AttackStyle.RANGED, true),
-    RANGED_WEBWEAVER_SPEC(AnimationID.HUMAN_SPECIAL01_WEBWEAVER, AttackStyle.RANGED, true), // https://oldschool.runescape.wiki/w/Webweaver_bow#Charged
-    RANGED_BONE_CROSSBOW_SPEC(AnimationID.DTTD_PLAYER_FIRE_BONE_CROSSBOW_PVN, AttackStyle.RANGED, true), // https://oldschool.runescape.wiki/w/Dorgeshuun_crossbow
+    RANGED_TONALZTICS_SPEC(AnimationID.HUMAN_GLAIVE_RALOS01_CHARGED_SPECIAL, AttackStyle.RANGED, MetaData.SPECIAL_ATTACK.d),
+    RANGED_WEBWEAVER_SPEC(AnimationID.HUMAN_SPECIAL01_WEBWEAVER, AttackStyle.RANGED, MetaData.STANDARD_BOW_ATTACK.d|MetaData.SPECIAL_ATTACK.d), // https://oldschool.runescape.wiki/w/Webweaver_bow#Charged
+    RANGED_BONE_CROSSBOW_SPEC(AnimationID.DTTD_PLAYER_FIRE_BONE_CROSSBOW_PVN, AttackStyle.RANGED, MetaData.SPECIAL_ATTACK.d), // https://oldschool.runescape.wiki/w/Dorgeshuun_crossbow
+    RANGED_SCORCHING_BOW_SPEC(AnimationID.HUMAN_WEAPON_BOW_SCORCHED_01_SPEC, AttackStyle.RANGED, MetaData.STANDARD_BOW_ATTACK.d|MetaData.SPECIAL_ATTACK.d), // https://oldschool.runescape.wiki/w/Scorching_bow
 
     // MAGIC - Keep in spellbook order (staves last) then alphabetical order and oneline
-    MAGIC_GOD_SPELL(AnimationID.HUMAN_CASTING, AttackStyle.MAGIC, Spellbook.STANDARD), // https://oldschool.runescape.wiki/w/God_spells
-    MAGIC_IBAN_BLAST(AnimationID.HUMAN_CASTIBANBLAST, AttackStyle.MAGIC, Spellbook.STANDARD),
-    MAGIC_SLAYER_DART(AnimationID.SLAYER_MAGICDART_CAST, AttackStyle.MAGIC, Spellbook.STANDARD), // https://oldschool.runescape.wiki/w/Magic_Dart
-    MAGIC_STANDARD_BIND(AnimationID.HUMAN_CASTENTANGLE, AttackStyle.MAGIC, Spellbook.STANDARD), // tested w/ bind, snare, entangle
-    MAGIC_STANDARD_BIND_STAFF(AnimationID.HUMAN_CASTENTANGLE_STAFF, AttackStyle.MAGIC, Spellbook.STANDARD), // tested w/ bind, snare, entangle, various staves
-    MAGIC_STANDARD_CONFUSE(AnimationID.HUMAN_CASTCONFUSE_STAFF, AttackStyle.MAGIC, Spellbook.STANDARD),
-    MAGIC_STANDARD_CRUMBLE_UNDEAD(AnimationID.HUMAN_CASTCRUMBLEUNDEAD, AttackStyle.MAGIC, Spellbook.STANDARD),
-    MAGIC_STANDARD_CRUMBLE_UNDEAD_HOLDING_STAFF(AnimationID.HUMAN_CASTCRUMBLEUNDEAD_STAFF, AttackStyle.MAGIC, Spellbook.STANDARD),
-    MAGIC_STANDARD_ENFEEBLE(AnimationID.HUMAN_CASTENFEEBLE_STAFF, AttackStyle.MAGIC, Spellbook.STANDARD),
-    MAGIC_STANDARD_STRIKE_BOLT_BLAST(AnimationID.HUMAN_CASTSTRIKE_WALKMERGE, AttackStyle.MAGIC, Spellbook.STANDARD), // tested w/ bolt
-    MAGIC_STANDARD_STRIKE_MANUAL(AnimationID.HUMAN_CASTSTRIKE, AttackStyle.MAGIC, Spellbook.STANDARD),
-    MAGIC_STANDARD_STRIKE_STAFF(AnimationID.HUMAN_CASTSTRIKE_STAFF, AttackStyle.MAGIC, Spellbook.STANDARD),
-    MAGIC_STANDARD_STRIKE_BOLT_BLAST_STAFF(AnimationID.HUMAN_CASTSTRIKE_STAFF_WALKMERGE, AttackStyle.MAGIC, Spellbook.STANDARD), // strike, bolt and blast (tested all spells, different weapons)
-    MAGIC_STANDARD_STUN(AnimationID.HUMAN_CASTSTUN_STAFF, AttackStyle.MAGIC, Spellbook.STANDARD),
-    MAGIC_STANDARD_SURGE_STAFF(AnimationID.HUMAN_CAST_SURGE_WALKMERGE, AttackStyle.MAGIC, Spellbook.STANDARD), // tested many staves
-    MAGIC_STANDARD_VULNERABILITY_CURSE(AnimationID.HUMAN_CASTCURSE_STAFF, AttackStyle.MAGIC, Spellbook.STANDARD),
-    MAGIC_STANDARD_WAVE(AnimationID.HUMAN_CASTWAVE_WALKMERGE, AttackStyle.MAGIC, Spellbook.STANDARD), // tested w/ wave spells
-    MAGIC_STANDARD_WAVE_STAFF(AnimationID.HUMAN_CASTWAVE_STAFF_WALKMERGE, AttackStyle.MAGIC, Spellbook.STANDARD), // tested many staves
-    MAGIC_STANDARD_WEAKEN(AnimationID.HUMAN_CASTWEAKEN_STAFF, AttackStyle.MAGIC, Spellbook.STANDARD),
+    MAGIC_GOD_SPELL(AnimationID.HUMAN_CASTING, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d), // https://oldschool.runescape.wiki/w/God_spells
+    MAGIC_IBAN_BLAST(AnimationID.HUMAN_CASTIBANBLAST, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d),
+    MAGIC_SLAYER_DART(AnimationID.SLAYER_MAGICDART_CAST, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d), // https://oldschool.runescape.wiki/w/Magic_Dart
+    MAGIC_STANDARD_BIND(AnimationID.HUMAN_CASTENTANGLE, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d), // tested w/ bind, snare, entangle
+    MAGIC_STANDARD_BIND_STAFF(AnimationID.HUMAN_CASTENTANGLE_STAFF, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d), // tested w/ bind, snare, entangle, various staves
+    MAGIC_STANDARD_CONFUSE(AnimationID.HUMAN_CASTCONFUSE_STAFF, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d),
+    MAGIC_STANDARD_CRUMBLE_UNDEAD(AnimationID.HUMAN_CASTCRUMBLEUNDEAD, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d),
+    MAGIC_STANDARD_CRUMBLE_UNDEAD_HOLDING_STAFF(AnimationID.HUMAN_CASTCRUMBLEUNDEAD_STAFF, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d),
+    MAGIC_STANDARD_ENFEEBLE(AnimationID.HUMAN_CASTENFEEBLE_STAFF, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d),
+    MAGIC_STANDARD_STRIKE_BOLT_BLAST(AnimationID.HUMAN_CASTSTRIKE_WALKMERGE, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d), // tested w/ bolt
+    MAGIC_STANDARD_STRIKE_MANUAL(AnimationID.HUMAN_CASTSTRIKE, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d),
+    MAGIC_STANDARD_STRIKE_STAFF(AnimationID.HUMAN_CASTSTRIKE_STAFF, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d),
+    MAGIC_STANDARD_STRIKE_BOLT_BLAST_STAFF(AnimationID.HUMAN_CASTSTRIKE_STAFF_WALKMERGE, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d), // strike, bolt and blast (tested all spells, different weapons)
+    MAGIC_STANDARD_STUN(AnimationID.HUMAN_CASTSTUN_STAFF, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d),
+    MAGIC_STANDARD_SURGE_STAFF(AnimationID.HUMAN_CAST_SURGE_WALKMERGE, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d), // tested many staves
+    MAGIC_STANDARD_VULNERABILITY_CURSE(AnimationID.HUMAN_CASTCURSE_STAFF, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d),
+    MAGIC_STANDARD_WAVE(AnimationID.HUMAN_CASTWAVE_WALKMERGE, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d), // tested w/ wave spells
+    MAGIC_STANDARD_WAVE_STAFF(AnimationID.HUMAN_CASTWAVE_STAFF_WALKMERGE, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d), // tested many staves
+    MAGIC_STANDARD_WEAKEN(AnimationID.HUMAN_CASTWEAKEN_STAFF, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d),
 
-    MAGIC_ANCIENT_MULTI_TARGET(AnimationID.ZAROS_VERTICAL_CASTING_WALKMERGE, AttackStyle.MAGIC, Spellbook.ANCIENT), // Burst & Barrage animations (tested all 8, different weapons)
-    MAGIC_ANCIENT_MULTI_TARGET_PVP(AnimationID.ZAROS_VERTICAL_CASTING, AttackStyle.MAGIC, Spellbook.ANCIENT), // Burst & Barrage animations (tested all 8, different weapons)
-    MAGIC_ANCIENT_SINGLE_TARGET(AnimationID.ZAROS_CASTING_WALKMERGE, AttackStyle.MAGIC, Spellbook.ANCIENT), // Rush & Blitz animations (tested all 8, different weapons)
-    MAGIC_ANCIENT_SINGLE_TARGET_PVP(AnimationID.ZAROS_CASTING, AttackStyle.MAGIC, Spellbook.ANCIENT), // Rush & Blitz animations
+    MAGIC_ANCIENT_MULTI_TARGET(AnimationID.ZAROS_VERTICAL_CASTING_WALKMERGE, AttackStyle.MAGIC, Spellbook.ANCIENT, MetaData.NO_DATA.d), // Burst & Barrage animations (tested all 8, different weapons)
+    MAGIC_ANCIENT_MULTI_TARGET_PVP(AnimationID.ZAROS_VERTICAL_CASTING, AttackStyle.MAGIC, Spellbook.ANCIENT, MetaData.NO_DATA.d), // Burst & Barrage animations (tested all 8, different weapons)
+    MAGIC_ANCIENT_SINGLE_TARGET(AnimationID.ZAROS_CASTING_WALKMERGE, AttackStyle.MAGIC, Spellbook.ANCIENT, MetaData.NO_DATA.d), // Rush & Blitz animations (tested all 8, different weapons)
+    MAGIC_ANCIENT_SINGLE_TARGET_PVP(AnimationID.ZAROS_CASTING, AttackStyle.MAGIC, Spellbook.ANCIENT, MetaData.NO_DATA.d), // Rush & Blitz animations
 
-    MAGIC_ARCEUUS_DEMONBANE(AnimationID.HUMAN_SPELLCAST_DEMONBANE, AttackStyle.MAGIC, Spellbook.ARCEUUS), // Also greater corruption, so that may accidentally trigger a manual-cast, but that's probably fine only affects Muspah
-    MAGIC_ARCEUUS_GRASP(AnimationID.HUMAN_SPELLCAST_GRASP, AttackStyle.MAGIC, Spellbook.ARCEUUS),
+    MAGIC_ARCEUUS_DEMONBANE(AnimationID.HUMAN_SPELLCAST_DEMONBANE, AttackStyle.MAGIC, Spellbook.ARCEUUS, MetaData.NO_DATA.d), // Also greater corruption, so that may accidentally trigger a manual-cast, but that's probably fine only affects Muspah
+    MAGIC_ARCEUUS_GRASP(AnimationID.HUMAN_SPELLCAST_GRASP, AttackStyle.MAGIC, Spellbook.ARCEUUS, MetaData.NO_DATA.d),
 
-    MAGIC_ACCURSED_SCEPTRE_SPEC(AnimationID.HUMAN_SPECIAL_ACCURSED, AttackStyle.MAGIC, true),
-    MAGIC_TUMEKENS_SHADOW(AnimationID.TOA_SOT_CAST_B, AttackStyle.MAGIC, false),
-    MAGIC_WARPED_SCEPTRE(AnimationID.POG_WARPED_SCEPTRE_ATTACK, AttackStyle.MAGIC, false), // https://oldschool.runescape.wiki/w/Warped_sceptre
-    MAGIC_VOLATILE_NIGHTMARE_STAFF_SPEC(AnimationID.NIGHTMARE_STAFF_SPECIAL, AttackStyle.MAGIC, true), // assume 99 mage's base damage (does not rise when boosted).
+    MAGIC_ACCURSED_SCEPTRE_SPEC(AnimationID.HUMAN_SPECIAL_ACCURSED, AttackStyle.MAGIC, MetaData.SPECIAL_ATTACK.d),
+    MAGIC_TUMEKENS_SHADOW(AnimationID.TOA_SOT_CAST_B, AttackStyle.MAGIC, MetaData.NO_DATA.d),
+    MAGIC_WARPED_SCEPTRE(AnimationID.POG_WARPED_SCEPTRE_ATTACK, AttackStyle.MAGIC, MetaData.NO_DATA.d), // https://oldschool.runescape.wiki/w/Warped_sceptre
+    MAGIC_VOLATILE_NIGHTMARE_STAFF_SPEC(AnimationID.NIGHTMARE_STAFF_SPECIAL, AttackStyle.MAGIC, MetaData.SPECIAL_ATTACK.d), // assume 99 mage's base damage (does not rise when boosted).
 
-    MAGIC_EYE_OF_AYAK(AnimationID.HUMAN_EYE_OF_AYAK_NORMAL, AttackStyle.MAGIC, false),
-    MAGIC_EYE_OF_AYAK_SPEC(AnimationID.HUMAN_EYE_OF_AYAK_SPECIAL, AttackStyle.MAGIC, true), // https://github.com/ngraves95/attacktimer/issues/91
+    MAGIC_EYE_OF_AYAK(AnimationID.HUMAN_EYE_OF_AYAK_NORMAL, AttackStyle.MAGIC, MetaData.NO_DATA.d),
+    MAGIC_EYE_OF_AYAK_SPEC(AnimationID.HUMAN_EYE_OF_AYAK_SPECIAL, AttackStyle.MAGIC, MetaData.SPECIAL_ATTACK.d), // https://github.com/ngraves95/attacktimer/issues/91
 
     // Misc
     MAGIC_IMBUE(AnimationID.HUMAN_CASTBONESTOBANANAS, AttackStyle.NON_ATTACK),
@@ -278,13 +280,14 @@ public enum AnimationData
     private static final Map<Integer, AnimationData> DATA;
     private static final Map<Spellbook, Set<AnimationData>> SPELL_BOOK_ANIMATIONS;
     private static final Map<Integer, AnimationData> NOT_ATTACKS;
+    private static final Set<Integer> STANDARD_BOW_ATTACKS;
 
     public final int animationId;
-    public final boolean isSpecial;
+    public final long metaData;
     public final AttackStyle attackStyle;
     private final Spellbook spellbook;
 
-    // Simple animation data constructor for all melee and range attacks
+    // Simple animation data constructor for all melee, range and non attacks
     AnimationData(int animationId, AttackStyle attackStyle)
     {
         if (attackStyle == null)
@@ -293,12 +296,12 @@ public enum AnimationData
         }
         this.animationId = animationId;
         this.attackStyle = attackStyle;
-        this.isSpecial = false;
+        this.metaData = MetaData.NO_DATA.d;
         this.spellbook = null;
     }
 
-    // Simple animation data constructor for all melee and range attacks w/ special
-    AnimationData(int animationId, AttackStyle attackStyle, boolean isSpecial)
+    // Simple animation data constructor for all melee, range, magic attacks with extra data
+    AnimationData(int animationId, AttackStyle attackStyle, long data)
     {
         if (attackStyle == null)
         {
@@ -306,12 +309,12 @@ public enum AnimationData
         }
         this.animationId = animationId;
         this.attackStyle = attackStyle;
-        this.isSpecial = isSpecial;
+        this.metaData = data;
         this.spellbook = null;
     }
 
-    // Simple animation data constructor for all magic attacks
-    AnimationData(int animationId, AttackStyle attackStyle, Spellbook book)
+    // constructor for all magic attacks
+    AnimationData(int animationId, AttackStyle attackStyle, Spellbook book, long data)
     {
         if (attackStyle == null)
         {
@@ -319,7 +322,7 @@ public enum AnimationData
         }
         this.animationId = animationId;
         this.attackStyle = attackStyle;
-        this.isSpecial = false;
+        this.metaData = data;
         this.spellbook = book;
     }
 
@@ -328,6 +331,7 @@ public enum AnimationData
         ImmutableMap.Builder<Integer, AnimationData> builder = new ImmutableMap.Builder<>();
         ImmutableMap.Builder<Integer, AnimationData> notAttacksBuilder = new ImmutableMap.Builder<>();
         Map<Spellbook, Set<AnimationData>> spellBookBuilder = new HashMap<>();
+        ImmutableSet.Builder<Integer> standardBowBuilder = new ImmutableSet.Builder<Integer>();
 
         for (Spellbook s : Spellbook.values())
         {
@@ -350,11 +354,18 @@ public enum AnimationData
             {
                 notAttacksBuilder.put(data.animationId, data);
             }
+
+            if (MetaData.hasFlagSet(data.metaData, MetaData.STANDARD_BOW_ATTACK))
+            {
+                standardBowBuilder.add(data.animationId);
+            }
+            // Could also build a special attack map, but currently no use case.
         }
 
         DATA = builder.build();
         NOT_ATTACKS = notAttacksBuilder.build();
         SPELL_BOOK_ANIMATIONS = spellBookBuilder;
+        STANDARD_BOW_ATTACKS = standardBowBuilder.build();
     }
 
     public static AnimationData fromId(int animationId)
@@ -403,6 +414,17 @@ public enum AnimationData
         return false;
     }
 
+    // isStandardBowAttack returns true if the animation is performed by a bow https://oldschool.runescape.wiki/w/Standard_ranged_weapons
+    public boolean isStandardBowAttack()
+    {
+        return STANDARD_BOW_ATTACKS.contains(this.animationId);
+    }
+
+    public boolean isBlockListAnimation()
+    {
+        return NOT_ATTACKS.containsKey(this.animationId);
+    }
+
 
     // An enum of combat styles (including stab, slash, crush).
     public enum AttackStyle
@@ -411,6 +433,36 @@ public enum AnimationData
         RANGED,
         MAGIC,
         NON_ATTACK;
+
+        @Override
+        public String toString()
+        {
+            return StringUtils.capitalize(super.toString().toLowerCase());
+        }
+    }
+
+    public enum MetaData
+    {
+        NO_DATA(),
+        SPECIAL_ATTACK(1),
+        STANDARD_BOW_ATTACK(2),
+        ;
+
+        MetaData(int bitshift)
+        {
+            this.d = 1 << bitshift;
+        }
+        MetaData()
+        {
+            this.d = 0;
+        }
+
+        public static boolean hasFlagSet(long input, MetaData data)
+        {
+            return (input & data.d) == data.d;
+        }
+
+        private final long d;
 
         @Override
         public String toString()

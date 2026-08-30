@@ -105,8 +105,6 @@ public class TormentedDemonsTest extends IntegrationTests
     @Override
     public Player pluginMockSetup() throws Exception
     {
-        // enable the plugin
-        when(mockedConfig.enableMetronome()).thenReturn(true);
         // Create player
         Player mockedPlayer = mock(Player.class);
         when(mockedPlayer.getAnimation()).thenReturn(-1);
@@ -131,6 +129,9 @@ public class TormentedDemonsTest extends IntegrationTests
         when(mockedClient.getWorldView(0)).thenReturn(mockedWorldView);
         when(mockedWorldView.getPlane()).thenReturn(mockedPlane);
         // -- NPCs
+
+        // reset stale static state from any other tests - the plugin basically has a singleton design
+        AttackTimerMetronomePlugin.reset();
 
         // Finally turn the plugin "on"
         underTest.startUp();

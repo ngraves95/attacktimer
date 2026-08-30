@@ -9,6 +9,14 @@ Ticks until next attack may be enabled over your player's head.
 
 ## Updates
 
+## 1.3.0
+
+* Support for Maggot King Larvae (overwrite attack cooldown if attacked with a bow whilst flying)
+* Support for Doom of Mokhaiotl
+  * Larvae (overwrite attack cooldown if non-demonbane)
+  * Volatile Earth (overwrite attack cooldown if non-demonbane)
+  * Melee Punish (overwrite attack cooldown)
+
 ## 1.2.11 - 1.2.12
 
 * Support for Royal Titans attack cooldown speedup when killing elementals

@@ -27,22 +27,16 @@ package com.attacktimer;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.attacktimer.Attacking.Attacking;
 import com.attacktimer.ClientUtils.Utils;
 import com.attacktimer.VariableSpeed.State.TickCount;
 import com.attacktimer.VariableSpeed.VariableSpeed;
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.inject.Provides;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -59,16 +53,12 @@ import net.runelite.api.events.NpcSpawned;
 import net.runelite.api.events.SoundEffectPlayed;
 import net.runelite.api.events.StatChanged;
 import net.runelite.api.events.VarbitChanged;
-import net.runelite.api.gameval.ItemID;
-import net.runelite.api.gameval.SpotanimID;
 import net.runelite.api.gameval.VarPlayerID;
 import net.runelite.api.gameval.VarbitID;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
-import net.runelite.client.game.ItemEquipmentStats;
 import net.runelite.client.game.ItemManager;
-import net.runelite.client.game.ItemStats;
 import net.runelite.client.game.NPCManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
@@ -129,48 +119,15 @@ public class AttackTimerMetronomePlugin extends Plugin
     private Spellbook currentSpellBook = Spellbook.STANDARD;
     private int lastUsedWeaponId = -1;
     private Actor lastTarget = null;
-    private int soundEffectTick = -1;
-    private int soundEffectId = -1;
     private boolean isUsingMagic = false;
 
     public int pendingEatDelayTicks = 0;
-
-    private ArrayDeque<Integer> specialPercentageEvents = new ArrayDeque<Integer>();
-    private static final Damage DAMAGE = new Damage();
-    private int dmgDealt = -1;
-
     public static final TickCount TC = new TickCount();
+    public static final AttackSpeed ATTACK_SPEED = new AttackSpeed(TC);
 
     private static final int UI_HIDE_DEBOUNCE_TICKS_MAX = 1;
     private static final int ATTACK_DELAY_NONE = 0;
     public static final int DEFAULT_SIZE_UNIT_PX = 25;
-
-    // Add other weapons here if in the Runelite dev shell this prints a different value to it's actual speed:
-    //
-    //  var itemManager = inject(ItemManager.class);
-    //  log.info("Speed {}", itemManager.getItemStats(<id_to_test>).getEquipment().getAspeed());
-    private static final Map<Integer, Integer> NON_STANDARD_ATTACK_SPEEDS = new ImmutableMap.Builder<Integer, Integer>()
-            .put(ItemID.HALLOWFELL, 6)
-            .build();
-
-    // These animations are the ones which exceed the duration of their attack cooldown
-    // so in this case DO NOT fall back the animation as it is un-reliable.
-    private static final Set<AnimationData> UNRELIABLE_ANIMATIONS = new ImmutableSet.Builder<AnimationData>()
-            .add(AnimationData.RANGED_BLOWPIPE)
-            .add(AnimationData.RANGED_BLAZING_BLOWPIPE)
-            .add(AnimationData.MAGIC_EYE_OF_AYAK)
-            .add(AnimationData.MAGIC_EYE_OF_AYAK_SPEC)
-            .build();
-
-    private static final Map<Integer, Integer> NON_STANDARD_MAGIC_WEAPON_SPEEDS = new ImmutableMap.Builder<Integer, Integer>()
-            .put(ItemID.TWINFLAME_STAFF, 6)
-            .build();
-
-    // Map of problematic itemIds to equivalent working ones.
-    // The Echo Venator Bow's ItemStats are returning null, so use the regular bow instead.
-    private static final Map<Integer, Integer> WEAPON_ID_MAPPING_WORKAROUNDS = new ImmutableMap.Builder<Integer, Integer>()
-            .put(ItemID.VENATOR_BOW_ORNAMENT, ItemID.VENATOR_BOW)
-            .build();
 
     // https://oldschool.runescape.wiki/w/Food/Fast_foods#Food_Delays
     // These constants are not to be confused with eat delay.
@@ -191,7 +148,7 @@ public class AttackTimerMetronomePlugin extends Plugin
         }
         if (varbitChanged.getVarpId() == VarPlayerID.SA_ENERGY)
         {
-            specialPercentageEvents.addLast(varbitChanged.getValue());
+            ATTACK_SPEED.varbitSpecialAttackChanged(varbitChanged.getValue());
         }
     }
 
@@ -200,19 +157,13 @@ public class AttackTimerMetronomePlugin extends Plugin
     @Subscribe
     public void onSoundEffectPlayed(final SoundEffectPlayed event)
     {
-        if (!config.enableMetronome())
-            return;
-        // event.getSource() will be null if the player cast a spell, it's only for area sounds.
-        soundEffectTick = client.getTickCount();
-        soundEffectId = event.getSoundId();
+        ATTACK_SPEED.onSoundEffectPlayed(client, event);
     }
 
     @Subscribe
     protected void onFakeXpDrop(final FakeXpDrop event)
     {
-        if (!config.enableMetronome())
-            return;
-        if (DAMAGE.onXpDrop(event, TC))
+        if (ATTACK_SPEED.onXpDrop(event))
         {
             if (inPreAttackWindow())
             {
@@ -226,9 +177,7 @@ public class AttackTimerMetronomePlugin extends Plugin
     @Subscribe
     protected void onStatChanged(final StatChanged event)
     {
-        if (!config.enableMetronome())
-            return;
-        if (DAMAGE.onXpDrop(event, TC))
+        if (ATTACK_SPEED.onXpDrop(event))
         {
             if (inPreAttackWindow())
             {
@@ -242,16 +191,12 @@ public class AttackTimerMetronomePlugin extends Plugin
     @Subscribe
     public void onNpcSpawned(final NpcSpawned npcSpawned)
     {
-        if (!config.enableMetronome())
-            return;
         VariableSpeed.onNpcSpawned(client, npcSpawned);
     };
 
     @Subscribe
     public void onNpcDespawned(final NpcDespawned npcDespawned)
     {
-        if (!config.enableMetronome())
-            return;
         VariableSpeed.onNpcDespawned(client, npcDespawned);
     };
 
@@ -267,8 +212,6 @@ public class AttackTimerMetronomePlugin extends Plugin
     @Subscribe
     public void onChatMessage(final ChatMessage event)
     {
-        if (!config.enableMetronome())
-            return;
         final String message = event.getMessage();
 
         if (EAT_MESSAGE.matcher(message).find())
@@ -301,154 +244,11 @@ public class AttackTimerMetronomePlugin extends Plugin
         return configManager.getConfig(AttackTimerMetronomeConfig.class);
     }
 
-    private int getWeaponId()
-    {
-        final int weaponId = Utils.getWeaponId(client);
-        return WEAPON_ID_MAPPING_WORKAROUNDS.getOrDefault(weaponId, weaponId);
-    }
-
-    private ItemStats getWeaponStats(int weaponId)
-    {
-        if (NON_STANDARD_ATTACK_SPEEDS.containsKey(weaponId))
-        {
-            return new ItemStats(true, -1, -1,
-                    ItemEquipmentStats.builder().aspeed(NON_STANDARD_ATTACK_SPEEDS.get(weaponId)).build());
-        }
-        return itemManager.getItemStats(weaponId);
-    }
-
-    private boolean getSalamanderAttack()
-    {
-        return client.getLocalPlayer().hasSpotAnim(SpotanimID.FIREBREATH);
-    }
-
     private void setAttackDelay()
     {
-        int weaponId = getWeaponId();
-        AnimationData curAnimation = AnimationData.fromId(client.getLocalPlayer().getAnimation());
-        PoweredStaves stave = PoweredStaves.getPoweredStaves(weaponId, curAnimation);
-        boolean matchesSpellbook = matchesSpellbook(curAnimation);
-        attackDelayHoldoffTicks = getWeaponSpeed(weaponId, stave, curAnimation, currentSpellBook, matchesSpellbook);
-        lastUsedWeaponId = weaponId;
-    }
-
-    // matchesSpellbook tries two methods, matching the animation the spell book based on the enum of
-    // pre-coded matches, and then the second set of matches against the known sound id of the spell (which
-    // unfortunately doesn't work if the player has them disabled).
-    private boolean matchesSpellbook(AnimationData curAnimation)
-    {
-        if (curAnimation != null && curAnimation.matchesSpellbook(currentSpellBook))
-        {
-            return true;
-        }
-        if (client.getTickCount() == soundEffectTick)
-        {
-            return CastingSoundData.getSpellBookFromId(soundEffectId) == currentSpellBook;
-        }
-        return false;
-    }
-
-    private int getMagicBaseSpeed(int weaponId)
-    {
-        return NON_STANDARD_MAGIC_WEAPON_SPEEDS.getOrDefault(weaponId, 5);
-    }
-
-    private int getWeaponSpeed(int weaponId, PoweredStaves stave, AnimationData curAnimation, Spellbook spellbook, boolean matchesSpellbook)
-    {
-        final var specDelta = Utils.getLastDelta(specialPercentageEvents);
-        dmgDealt = DAMAGE.compute(TC);
-        if (stave != null && stave.getAnimations().contains(curAnimation))
-        {
-            isUsingMagic = true;
-            // We are currently dealing with a staves in which case we can make decisions based on the
-            // spellbook flag. We can only improve this by using a deprecated API to check the projectile
-            // matches the stave rather than a manual spell, but this is good enough for now.
-            return VariableSpeed.compute(client, curAnimation, AttackProcedure.POWERED_STAVE, spellbook, dmgDealt, specDelta, 4);
-        }
-
-        if (matchesSpellbook && isManualCasting(curAnimation))
-        {
-            isUsingMagic = true;
-            // You can cast with anything equipped in which case we shouldn't look to invent for speed.
-            return VariableSpeed.compute(client, curAnimation, AttackProcedure.MANUAL_AUTO_CAST, spellbook, dmgDealt, specDelta, getMagicBaseSpeed(weaponId));
-        }
-
-        isUsingMagic = false;
-        final ItemStats weaponStats = getWeaponStats(weaponId);
-        if (weaponStats == null)
-        {
-            // Assume barehanded == 4t
-            return VariableSpeed.compute(client, curAnimation, AttackProcedure.MELEE_OR_RANGE, spellbook, dmgDealt, specDelta, 4);
-        }
-        // Deadline for next available attack.
-        final int aspeed = weaponStats.getEquipment().getAspeed();
-        return VariableSpeed.compute(client, curAnimation, AttackProcedure.MELEE_OR_RANGE, spellbook, dmgDealt, specDelta, aspeed);
-    }
-
-    // Combat Dummy + Nightmare Pillars
-    private static final List<Integer> SPECIAL_NPCS = Arrays.asList(10507, 9435, 9438, 9441, 9444);
-
-    private boolean isPlayerAttacking()
-    {
-        final Player localPlayer = client.getLocalPlayer();
-        final int animationId = localPlayer.getAnimation();
-        if (AnimationData.isBlockListAnimation(animationId))
-        {
-            return false;
-        }
-
-        // Not walking is either ANY player animation or the edge cases which don't trigger an animation, e.g Salamander.
-        final boolean notWalking = animationId != -1 || getSalamanderAttack();
-
-        // Testing if we are attacking by checking the target is more future proof to new weapons which don't
-        // need custom code and the weapon stats are enough.
-        final Actor target = localPlayer.getInteracting();
-        if (target != null && (target instanceof NPC))
-        {
-            final NPC npc = (NPC) target;
-            final boolean containsAttackOption = Arrays.stream(npc.getComposition().getActions())
-                    .anyMatch("Attack"::equals);
-            final Integer health = npcManager.getHealth(npc.getId());
-            final boolean hasHealthAndLevel = health != null && health > 0 && target.getCombatLevel() > 0;
-            final boolean attackingNPC = hasHealthAndLevel || SPECIAL_NPCS.contains(npc.getId())
-                    || containsAttackOption;
-            // just having a target is not enough the player may be out of range, we must wait for any
-            // animation which isn't running/walking/etc
-            return attackingNPC && notWalking;
-        }
-        if (target != null && (target instanceof Player))
-        {
-            return notWalking;
-        }
-        if (target == null)
-        {
-            // Not attacking anything
-            return false;
-        }
-
-        // Do not use any animations from this set
-        final AnimationData fromId = AnimationData.fromId(animationId);
-        if (UNRELIABLE_ANIMATIONS.contains(fromId))
-        {
-            return false;
-        }
-        // fall back to animations.
-        return fromId != null;
-    }
-
-    private boolean isManualCasting(AnimationData curId)
-    {
-        // If you use a weapon like a blow pipe which has an animation longer than it's cool down then cast an
-        // ancient attack it wont have an animation at all. We can therefore need to detect this with a list
-        // of sounds instead. This obviously doesn't work if the player is muted. ATM I can't think of a way
-        // to detect this type of attack as a cast, only sound is an indication that the player is on
-        // cooldown, melee attacks, etc will trigger an animation overwriting the last frame of the blowpipe's
-        // idle animation.
-        final boolean castingFromSound = client.getTickCount() == soundEffectTick
-                ? CastingSoundData.isCastingSound(soundEffectId)
-                : false;
-        final boolean castingFromAnimation = AnimationData.isManualCasting(curId);
-        return castingFromSound || castingFromAnimation;
+        final AnimationData curAnimation = AnimationData.fromId(client.getLocalPlayer().getAnimation());
+        attackDelayHoldoffTicks = ATTACK_SPEED.compute(client, curAnimation, currentSpellBook, itemManager);
+        lastUsedWeaponId = Utils.getWeaponId(client);
     }
 
     private void performAttack()
@@ -510,8 +310,6 @@ public class AttackTimerMetronomePlugin extends Plugin
     @Subscribe
     public void onInteractingChanged(InteractingChanged interactingChanged)
     {
-        if (!config.enableMetronome())
-            return;
         Actor source = interactingChanged.getSource();
         Actor target = interactingChanged.getTarget();
 
@@ -525,7 +323,7 @@ public class AttackTimerMetronomePlugin extends Plugin
                 isUsingMagic = false;
                 // If not previously attacking, this action can result in a queued attack or
                 // an instant attack. If its queued, don't trigger the cooldown yet.
-                if (isPlayerAttacking())
+                if (Attacking.isPlayerAttacking(client, npcManager))
                 {
                     logStateTrace("onInteractingChanged");
                     performAttack();
@@ -552,10 +350,8 @@ public class AttackTimerMetronomePlugin extends Plugin
     @Subscribe
     public void onGameTick(GameTick tick)
     {
-        if (!config.enableMetronome())
-            return;
         VariableSpeed.onGameTick(client, tick);
-        boolean isAttacking = isPlayerAttacking();
+        final boolean isAttacking = Attacking.isPlayerAttacking(client, npcManager);
         switch (attackState)
         {
         case NOT_ATTACKING:
@@ -592,15 +388,10 @@ public class AttackTimerMetronomePlugin extends Plugin
 
         // This needs to come after performAttack as it's an additive affect
         applyAndClearEats();
-
         // clamp the attackDelayHoldoffTicks at -20, this is so we correctly account for eats even when not
         // attacking, but don't count down forever.
         attackDelayHoldoffTicks = Math.max(-20, attackDelayHoldoffTicks - 1);
-        while (specialPercentageEvents.size() > 5)
-        {
-            specialPercentageEvents.removeFirst();
-        }
-        DAMAGE.cleanup();
+        ATTACK_SPEED.onTick();
     }
 
     @Override
@@ -644,14 +435,14 @@ public class AttackTimerMetronomePlugin extends Plugin
         sb.append("tickPeriod: "); sb.append(this.tickPeriod);sb.append(SEPARATOR);
         sb.append("uiHideDebounceTickCount: "); sb.append(this.uiHideDebounceTickCount);sb.append(SEPARATOR);
         sb.append("attackDelayHoldoffTicks: "); sb.append(this.attackDelayHoldoffTicks);sb.append(SEPARATOR);
-        sb.append("dmgDealt: "); sb.append(this.dmgDealt);sb.append(SEPARATOR);
+        sb.append("dmgDealt: "); sb.append(ATTACK_SPEED.getDmgDealt());sb.append(SEPARATOR);
         sb.append("attackState: "); sb.append(this.attackState);sb.append(SEPARATOR);
         sb.append("renderedState: "); sb.append(this.renderedState);sb.append(SEPARATOR);
         sb.append("lastTarget: "); sb.append(this.lastTarget == null ? "null" : this.lastTarget.getName());sb.append("\n");
         sb.append("pendingEatDelayTicks: "); sb.append(this.pendingEatDelayTicks);sb.append(SEPARATOR);
         sb.append("currentSpellBook: "); sb.append(this.currentSpellBook);sb.append(SEPARATOR);
-        sb.append("soundEffectTick: "); sb.append(this.soundEffectTick);sb.append(SEPARATOR);
-        sb.append("soundEffectId: "); sb.append(this.soundEffectId);sb.append("\n");
+        sb.append("soundEffectTick: "); sb.append(ATTACK_SPEED.getSoundEffectTick());sb.append(SEPARATOR);
+        sb.append("soundEffectId: "); sb.append(ATTACK_SPEED.getSoundEffectId());sb.append("\n");
         // @formatter:on
         return sb;
     }
@@ -672,12 +463,14 @@ public class AttackTimerMetronomePlugin extends Plugin
                 attackState = AttackState.NOT_ATTACKING;
             }
         }
+        attackDelayHoldoffTicks = VariableSpeed.MAGGOT_KING.onRender(client, itemManager, attackDelayHoldoffTicks, currentSpellBook, config.debugLogs());
+        attackDelayHoldoffTicks = VariableSpeed.DOOM_OF_MOKHAIOTL.onRender(client, itemManager, attackDelayHoldoffTicks, currentSpellBook, config.debugLogs());
         checkForLateWeaponSwaps();
     }
 
     public void checkForLateWeaponSwaps()
     {
-        final boolean weaponMisMatch = getWeaponId() != lastUsedWeaponId;
+        final boolean weaponMisMatch = Utils.getWeaponId(client) != lastUsedWeaponId;
 
         // This windowing safe guards of from late swaps inside a tick, if we have already rendered the tick
         // then we shouldn't perform another attack. We don't need to check for a valid target
@@ -703,6 +496,13 @@ public class AttackTimerMetronomePlugin extends Plugin
     private boolean inPreAttackWindow()
     {
         return attackState == AttackState.DELAYED_FIRST_TICK && renderedState != attackState;
+    }
+
+    @VisibleForTesting
+    public static void reset()
+    {
+        TC.reset();
+        ATTACK_SPEED.reset();
     }
 
 }
