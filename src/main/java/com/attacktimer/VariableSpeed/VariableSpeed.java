@@ -105,7 +105,6 @@ public class VariableSpeed
 
     private static final Yama YAMA = new Yama();
     private static final MarkOfDarkness MARK_OF_DARKNESS = new MarkOfDarkness();
-    public static final RapidAttackStyle RAPID_ATTACK_STYLE = new RapidAttackStyle();
 
     // Variable speed that doesn't neatly fit in to the IVariable speed pattern (it's not weapon related
     // but boss related).
@@ -127,7 +126,7 @@ public class VariableSpeed
 
         // Incremental:
         new BloodMoonSet(),
-        RAPID_ATTACK_STYLE,
+        new RapidAttackStyle(),
         new RedKerisSpec(),
         new PurgingStaffSpec(YAMA),
         new EyeOfAyak(),

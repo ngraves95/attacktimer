@@ -65,6 +65,7 @@ public class DoomOfMokhaiotl implements IVariableSpeed
             .add(NpcID.DOM_SHOCKWAVE_PATH_NODE)
             .build();
 
+    // There's no actual demonbane stat anywhere in the runelite API so this list has to be hardcoded
     private static final Set<Integer> NO_COOLDOWN_WEAPON = new ImmutableSet.Builder<Integer>()
             .add(ItemID.SILVERLIGHT)
             .add(ItemID.DARKLIGHT)
@@ -94,7 +95,8 @@ public class DoomOfMokhaiotl implements IVariableSpeed
     //
     // Doom can also be attacked whilst on cooldown when he is charging his shield (melee punish only)
     //
-    // The https://oldschool.runescape.wiki/w/Volatile_earth can also be attacked with no attack delay.
+    // The https://oldschool.runescape.wiki/w/Volatile_earth also has the same larvae mechanics and allow list
+    // of items.
     public int onRender(final Client client, final ItemManager itemManager, final int attackDelayHoldoffTicks, final Spellbook spellbook, final boolean debugLogs)
     {
         if (!Utils.isInRegionId(client, DOOM_REGION_IDS))
