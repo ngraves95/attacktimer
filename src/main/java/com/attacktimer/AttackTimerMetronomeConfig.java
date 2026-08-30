@@ -41,7 +41,6 @@ public interface AttackTimerMetronomeConfig extends Config
 {
     /**
      * @deprecated
-     * @return
      */
     @ConfigItem(
             position = 0,
@@ -50,6 +49,7 @@ public interface AttackTimerMetronomeConfig extends Config
             description = "Enable visual metronome",
             hidden = true // deprecated
     )
+    @Deprecated
     default boolean enableMetronome()
     {
         return true;
