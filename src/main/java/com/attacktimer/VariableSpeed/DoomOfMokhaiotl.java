@@ -47,17 +47,22 @@ public class DoomOfMokhaiotl implements IVariableSpeed
 {
     // As you delve deeper you change region
     private static final Set<Integer> DOOM_REGION_IDS = new ImmutableSet.Builder<Integer>()
-            .add(5269)
-            .add(13668)
-            .add(14180)
+            .add(5269) // Delve 1
+            .add(13668) // Delve 2 - 5
+            .add(14180) // Delve 5+
             .build();
-    private static final Set<Integer> DEMONIC_LARVAE_IDS = new ImmutableSet.Builder<Integer>()
+    // All larvae and the volatile earth work the same:
+    // - if you attack them with demon bane you get no CD.
+    // - else non demonbane overwrites you're current CD
+    // - you can attack them whilst on CD.
+    private static final Set<Integer> COOLDOWN_OVERWRITES_IDS = new ImmutableSet.Builder<Integer>()
             .add(NpcID.DOM_DEMONIC_ENERGY)
             .add(NpcID.DOM_DEMONIC_ENERGY_GIANT_MAGE)
             .add(NpcID.DOM_DEMONIC_ENERGY_GIANT_RANGE)
             .add(NpcID.DOM_DEMONIC_ENERGY_MAGE)
             .add(NpcID.DOM_DEMONIC_ENERGY_RANGE)
             .add(NpcID.DOM_DEMONIC_ENERGY_MELEE)
+            .add(NpcID.DOM_SHOCKWAVE_PATH_NODE)
             .build();
 
     private static final Set<Integer> NO_COOLDOWN_WEAPON = new ImmutableSet.Builder<Integer>()
@@ -75,7 +80,6 @@ public class DoomOfMokhaiotl implements IVariableSpeed
     private final AttackSpeed attackSpeed;
     private int larvaeConsumed = -1;
     private int shieldConsumed = -1;
-    private boolean inRegionId;
 
     DoomOfMokhaiotl(final TickCount tc, final AttackSpeed attackSpeed)
     {
@@ -107,7 +111,7 @@ public class DoomOfMokhaiotl implements IVariableSpeed
 
         final NPC npc = (NPC) atk.getTarget();
         final int npcId = npc.getId();
-        if (DEMONIC_LARVAE_IDS.contains(npcId))
+        if (COOLDOWN_OVERWRITES_IDS.contains(npcId))
         {
             if (tickCount.isWithinNTicks(larvaeConsumed, 1))
             {
@@ -134,8 +138,17 @@ public class DoomOfMokhaiotl implements IVariableSpeed
                 return attackDelayHoldoffTicks;
             }
             final var animId = npc.getAnimation();
-            // undocumented in the wiki but from my testing these can be hit while on cooldown but unlike the
-            // grubs do add up the delay
+            // Undocumented in the wiki but from my testing these can be hit while on cooldown but unlike the
+            // grubs do add up the delay. This is original research:
+            //
+            // Atk (5) 1923 -> Chally (7) 1926      -> If plain off CD 1935 (actual: 1933 = 2 tick reduction) (3 tick gap between punish)
+            // Atk (5) 1945 -> Swift blade (3) 1946 -> If plain off CD 1953 (actual: 1949 = 4 tick reduction) (1 tick gap between punish)
+            // Atk (5) 1964 -> Rapier (4) 1966      -> If plain off CD 1973 (actual: 1970 = 3 tick reduction) (2 tick gap between punish)
+            // Atk (5) 2046 -> Battle axe (6) 2048  -> If plain off CD 2057 (actual: 2054 = 3 tick reduction) (2 tick gap between punish)
+            // Atk (5) 4317 -> Rapier (4) 4318      -> If plain off CD 4326 (actual: 4322 = 4 tick reduction) (1 tick gap between punish)
+            //
+            // Therefore my conclusion based off these samples is that resulting delay is just the attack
+            // delay of the weapon used, overwriting the current delay not addition.
             if (animId == AnimationID.DOM_BEAM_CHARGE_LOOP || animId == AnimationID.DOM_BEAM_CHARGE)
             {
                 if (Utils.getAttackType(client).IsMelee())
@@ -145,14 +158,9 @@ public class DoomOfMokhaiotl implements IVariableSpeed
                         log.debug("DoomOfMokhaiotl success, on cooldown melee swing");
                     }
                     shieldConsumed = tickCount.get();
-                    return attackSpeed.compute(client, anim, spellbook, itemManager) + attackDelayHoldoffTicks;
+                    return attackSpeed.compute(client, anim, spellbook, itemManager);
                 }
             }
-            return attackDelayHoldoffTicks;
-        }
-        else if (npcId == NpcID.DOM_SHOCKWAVE_PATH_NODE)
-        {
-            // these never incur attack delay
             return attackDelayHoldoffTicks;
         }
         else
@@ -168,12 +176,7 @@ public class DoomOfMokhaiotl implements IVariableSpeed
     {
         final int targetId = Utils.getTargetId(client);
         final boolean inDoom = Utils.isInRegionId(client, DOOM_REGION_IDS);
-        if (inDoom && targetId == NpcID.DOM_SHOCKWAVE_PATH_NODE)
-        {
-            log.debug("DoomOfMokhaiotl success, zero delay volatile earth");
-            return 1;
-        }
-        if (inDoom && DEMONIC_LARVAE_IDS.contains(targetId))
+        if (inDoom && COOLDOWN_OVERWRITES_IDS.contains(targetId))
         {
             final int weaponId = Utils.getWeaponId(client);
             final boolean isDemonbaneSpell = spellbook == Spellbook.ARCEUUS && AnimationData.isManualCasting(curAnimation) && curAnimation == AnimationData.MAGIC_ARCEUUS_DEMONBANE;
