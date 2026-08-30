@@ -432,14 +432,18 @@ public enum AnimationData
 
     public enum MetaData
     {
-        NO_DATA(0),
+        NO_DATA(),
         SPECIAL_ATTACK(1),
         STANDARD_BOW_ATTACK(2),
         ;
 
-        MetaData(int id)
+        MetaData(int bitshift)
         {
-            this.d = 1 << id;
+            this.d = 1 << bitshift;
+        }
+        MetaData()
+        {
+            this.d = 0;
         }
 
         public static boolean hasFlagSet(long input, MetaData data)
@@ -459,6 +463,6 @@ public enum AnimationData
     // isStandardBowAttack returns true if the animation is performed by a bow https://oldschool.runescape.wiki/w/Standard_ranged_weapons
     public boolean isStandardBowAttack()
     {
-        return STANDARD_BOW_ATTACKS.contains(Integer.valueOf(this.animationId));
+        return STANDARD_BOW_ATTACKS.contains(this.animationId);
     }
 }

@@ -170,7 +170,7 @@ public class AttackSpeed
     {
         dmgDealt = -1;
         soundEffectId = -1;
-        soundEffectId = -1;
+        soundEffectTick = -1;
         isUsingMagic = false;
         specialPercentageEvents.clear();
         damage.reset();
