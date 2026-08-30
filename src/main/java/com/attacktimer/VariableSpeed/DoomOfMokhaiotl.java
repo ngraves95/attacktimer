@@ -104,7 +104,7 @@ public class DoomOfMokhaiotl implements IVariableSpeed
 
         final var atk = Attacking.PlayerAttack(client);
         final AnimationData anim = AnimationData.fromId(atk.getAnimationId());
-        if (anim == null || atk.getTarget() == null || !(atk.getTarget() instanceof NPC))
+        if (anim == null || atk.getTarget() == null || !(atk.getTarget() instanceof NPC) || anim.isBlockListAnimation())
         {
             return attackDelayHoldoffTicks;
         }

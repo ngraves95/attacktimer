@@ -414,6 +414,17 @@ public enum AnimationData
         return false;
     }
 
+    // isStandardBowAttack returns true if the animation is performed by a bow https://oldschool.runescape.wiki/w/Standard_ranged_weapons
+    public boolean isStandardBowAttack()
+    {
+        return STANDARD_BOW_ATTACKS.contains(this.animationId);
+    }
+
+    public boolean isBlockListAnimation()
+    {
+        return NOT_ATTACKS.containsKey(this.animationId);
+    }
+
 
     // An enum of combat styles (including stab, slash, crush).
     public enum AttackStyle
@@ -458,11 +469,5 @@ public enum AnimationData
         {
             return StringUtils.capitalize(super.toString().toLowerCase());
         }
-    }
-
-    // isStandardBowAttack returns true if the animation is performed by a bow https://oldschool.runescape.wiki/w/Standard_ranged_weapons
-    public boolean isStandardBowAttack()
-    {
-        return STANDARD_BOW_ATTACKS.contains(this.animationId);
     }
 }
