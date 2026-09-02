@@ -88,4 +88,15 @@ public class MaggotKing
         consumed = tickCount.get();
         return attackSpeed.compute(client, anim, spellbook, itemManager);
     }
+
+    public int onChatMessage(final Client client, final String message, final int attackDelayHoldoffTicks)
+    {
+        // https://oldschool.runescape.wiki/w/Maggot_King/Strategies#Fight_overview
+        // Standing on the sticky bile will ... delay the player's next attack by one tick.
+        if (message.equals("The sticky acid hampers your ability to attack!"))
+        {
+            return attackDelayHoldoffTicks+1;
+        }
+        return attackDelayHoldoffTicks;
+    }
 }

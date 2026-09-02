@@ -234,6 +234,7 @@ public class AttackTimerMetronomePlugin extends Plugin
             pendingEatDelayTicks += attackDelay;
         }
         VariableSpeed.onChatMessage(client, event);
+        attackDelayHoldoffTicks = VariableSpeed.MAGGOT_KING.onChatMessage(client, message, attackDelayHoldoffTicks);
     }
 
     // endregion
