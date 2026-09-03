@@ -27,7 +27,6 @@ package com.attacktimer.VariableSpeed;
 
 import com.attacktimer.AnimationData;
 import com.attacktimer.AttackProcedure;
-import com.attacktimer.AttackSpeed;
 import com.attacktimer.Attacking.Attacking;
 import com.attacktimer.ClientUtils.Utils;
 import com.attacktimer.Spellbook;
@@ -78,14 +77,12 @@ public class DoomOfMokhaiotl implements IVariableSpeed
             .build();
 
     private final TickCount tickCount;
-    private final AttackSpeed attackSpeed;
     private int larvaeConsumed = -1;
     private int shieldConsumed = -1;
 
-    DoomOfMokhaiotl(final TickCount tc, final AttackSpeed attackSpeed)
+    DoomOfMokhaiotl(final TickCount tc)
     {
         this.tickCount = tc;
-        this.attackSpeed = attackSpeed;
     }
 
     // https://oldschool.runescape.wiki/w/Doom_of_Mokhaiotl/Strategies#Demonic_larvae
@@ -97,18 +94,18 @@ public class DoomOfMokhaiotl implements IVariableSpeed
     //
     // The https://oldschool.runescape.wiki/w/Volatile_earth also has the same larvae mechanics and allow list
     // of items.
-    public int onRender(final Client client, final ItemManager itemManager, final int attackDelayHoldoffTicks, final Spellbook spellbook, final boolean debugLogs)
+    public boolean onRender(final Client client, final ItemManager itemManager, final Spellbook spellbook, final boolean debugLogs)
     {
         if (!Utils.isInRegionId(client, DOOM_REGION_IDS))
         {
-            return attackDelayHoldoffTicks;
+            return false;
         }
 
         final var atk = Attacking.PlayerAttack(client);
         final AnimationData anim = AnimationData.fromId(atk.getAnimationId());
         if (anim == null || atk.getTarget() == null || !(atk.getTarget() instanceof NPC) || anim.isBlockListAnimation())
         {
-            return attackDelayHoldoffTicks;
+            return false;
         }
 
         final NPC npc = (NPC) atk.getTarget();
@@ -117,13 +114,13 @@ public class DoomOfMokhaiotl implements IVariableSpeed
         {
             if (tickCount.isWithinNTicks(larvaeConsumed, 1))
             {
-                return attackDelayHoldoffTicks;
+                return false;
             }
             final int weaponId = Utils.getWeaponId(client);
             final boolean isDemonbaneSpell = spellbook == Spellbook.ARCEUUS && AnimationData.isManualCasting(anim) && anim == AnimationData.MAGIC_ARCEUUS_DEMONBANE;
             if (NO_COOLDOWN_WEAPON.contains(weaponId) || isDemonbaneSpell)
             {
-                return attackDelayHoldoffTicks;
+                return false;
             }
 
             if (debugLogs)
@@ -131,13 +128,13 @@ public class DoomOfMokhaiotl implements IVariableSpeed
                 log.debug("DoomOfMokhaiotl success, attacking larvae with normal weapon");
             }
             larvaeConsumed = tickCount.get();
-            return attackSpeed.compute(client, anim, spellbook, itemManager);
+            return true;
         }
         else if (npcId == NpcID.DOM_BOSS)
         {
             if (tickCount.isWithinNTicks(shieldConsumed, 30))
             {
-                return attackDelayHoldoffTicks;
+                return false;
             }
             final var animId = npc.getAnimation();
             // Undocumented in the wiki but from my testing these can be hit while on cooldown but unlike the
@@ -160,14 +157,14 @@ public class DoomOfMokhaiotl implements IVariableSpeed
                         log.debug("DoomOfMokhaiotl success, on cooldown melee swing");
                     }
                     shieldConsumed = tickCount.get();
-                    return attackSpeed.compute(client, anim, spellbook, itemManager);
+                    return true;
                 }
             }
-            return attackDelayHoldoffTicks;
+            return false;
         }
         else
         {
-            return attackDelayHoldoffTicks;
+            return false;
         }
     }
 

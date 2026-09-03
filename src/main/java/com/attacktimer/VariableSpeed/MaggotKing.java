@@ -26,10 +26,8 @@ package com.attacktimer.VariableSpeed;
  */
 
 import com.attacktimer.AnimationData;
-import com.attacktimer.AttackSpeed;
 import com.attacktimer.Attacking.Attacking;
 import com.attacktimer.ClientUtils.Utils;
-import com.attacktimer.Spellbook;
 import com.attacktimer.VariableSpeed.State.TickCount;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
@@ -44,59 +42,69 @@ public class MaggotKing
     private static final int MAGGOT_KING_REGION_ID = 11645;
 
     private final TickCount tickCount;
-    private final AttackSpeed attackSpeed;
     // the tick count if a larvae was hit, this is purely to debounce
     private int consumed = -1;
 
-    MaggotKing(final TickCount tc, final AttackSpeed attackSpeed)
+    MaggotKing(final TickCount tc)
     {
         this.tickCount = tc;
-        this.attackSpeed = attackSpeed;
     }
 
     // https://oldschool.runescape.wiki/w/Maggot_King/Strategies#Ur-maggot_larvae
     //
-    // If the player attacks a maggot with a "standard bow" it doesn't matter what current cooldown is the
+    // If the player attacks a maggot with a "standard bow" it doesn't matter what current cooldown is
+    // the
     // player is immediately set to the cooldown of the bow they used.
     //
-    // Therefore this method returns `attackDelayHoldoffTicks` in all cases where this condition isn't met.
-    // But if the condition is met this method returns a brand new number which is the attack speed of the bow
+    // Therefore this method returns `attackDelayHoldoffTicks` in all cases where this condition isn't
+    // met.
+    // But if the condition is met this method returns a brand new number which is the attack speed of
+    // the bow
     // used. This number can be the same as the current delay and that's ok.
-    public int onRender(final Client client, final ItemManager itemManager, final int attackDelayHoldoffTicks, final Spellbook spellbook, final boolean debugLogs)
+    public boolean onRender(final Client client, final ItemManager itemManager, final boolean debugLogs)
     {
         if (!Utils.isInRegionId(client, MAGGOT_KING_REGION_ID) || tickCount.isWithinNTicks(consumed, 1))
         {
-            return attackDelayHoldoffTicks;
+            return false;
         }
 
         final var atk = Attacking.PlayerAttack(client);
         final AnimationData anim = AnimationData.fromId(atk.getAnimationId());
         if (anim == null || atk.getTarget() == null || !(atk.getTarget() instanceof NPC))
         {
-            return attackDelayHoldoffTicks;
+            return false;
         }
 
         final NPC npc = (NPC) atk.getTarget();
-        if (npc.getId() != NpcID.UR_MAGGOT_LARVAE || !anim.isStandardBowAttack() || npc.getAnimation() != AnimationID.UR_MAGGOT_LARVAE_FLY)
+        if (npc.getId() != NpcID.UR_MAGGOT_LARVAE || !anim.isStandardBowAttack()
+                || npc.getAnimation() != AnimationID.UR_MAGGOT_LARVAE_FLY)
         {
-            return attackDelayHoldoffTicks;
+            return false;
         }
+        consumed = tickCount.get();
         if (debugLogs)
         {
             log.debug("MaggotKing success, attacking flying maggot with bow");
         }
-        consumed = tickCount.get();
-        return attackSpeed.compute(client, anim, spellbook, itemManager);
+        return true;
     }
 
-    public int onChatMessage(final Client client, final String message, final int attackDelayHoldoffTicks)
+    public int onChatMessage(final Client client, final String message)
     {
         // https://oldschool.runescape.wiki/w/Maggot_King/Strategies#Fight_overview
         // Standing on the sticky bile will ... delay the player's next attack by one tick.
         if (message.equals("The sticky acid hampers your ability to attack!"))
         {
-            return attackDelayHoldoffTicks+1;
+            log.debug("MaggotKing sticky acid");
+            return 1;
         }
-        return attackDelayHoldoffTicks;
+        // this isn't in the wiki but being screeched at also slows down attack speed, more significantly than
+        // the bile. Each screech instance causes the effect for a total of 9 extra ticks if all goes wrong.
+        else if (message.equals("The Maggot King's screech disrupts your concentration!"))
+        {
+            log.debug("MaggotKing screech");
+            return 3;
+        }
+        return 0;
     }
 }
