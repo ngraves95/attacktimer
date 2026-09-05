@@ -62,9 +62,15 @@ public class RoyalTitans implements IVariableSpeed
     private static final Set<AnimationData> ONE_SHOT_SPELLS = new ImmutableSet.Builder<AnimationData>()
             .add(AnimationData.MAGIC_STANDARD_STRIKE_BOLT_BLAST)
             .add(AnimationData.MAGIC_STANDARD_STRIKE_BOLT_BLAST_STAFF)
+            .add(AnimationData.MAGIC_STANDARD_STRIKE_BOLT_BLAST_STAFF_WALK)
+            .add(AnimationData.MAGIC_STANDARD_STRIKE_BOLT_BLAST_WALK)
+            .add(AnimationData.MAGIC_STANDARD_SURGE)
             .add(AnimationData.MAGIC_STANDARD_SURGE_STAFF)
+            .add(AnimationData.MAGIC_STANDARD_SURGE_STAFF_WALK)
             .add(AnimationData.MAGIC_STANDARD_WAVE)
             .add(AnimationData.MAGIC_STANDARD_WAVE_STAFF)
+            .add(AnimationData.MAGIC_STANDARD_WAVE_STAFF_WALK)
+            .add(AnimationData.MAGIC_STANDARD_WAVE_WALK)
             .build();
 
     @Override

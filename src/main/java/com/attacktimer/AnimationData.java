@@ -36,6 +36,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.Getter;
 import net.runelite.api.gameval.AnimationID;
 import org.apache.commons.lang3.StringUtils;
 
@@ -173,20 +174,33 @@ public enum AnimationData
     MAGIC_SLAYER_DART(AnimationID.SLAYER_MAGICDART_CAST, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d), // https://oldschool.runescape.wiki/w/Magic_Dart
     MAGIC_STANDARD_BIND(AnimationID.HUMAN_CASTENTANGLE, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d), // tested w/ bind, snare, entangle
     MAGIC_STANDARD_BIND_STAFF(AnimationID.HUMAN_CASTENTANGLE_STAFF, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d), // tested w/ bind, snare, entangle, various staves
-    MAGIC_STANDARD_CONFUSE(AnimationID.HUMAN_CASTCONFUSE_STAFF, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d),
+    MAGIC_STANDARD_CONFUSE(AnimationID.HUMAN_CASTCONFUSE, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d),
+    MAGIC_STANDARD_CONFUSE_STAFF(AnimationID.HUMAN_CASTCONFUSE_STAFF, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d),
+    MAGIC_STANDARD_CONFUSE_STAFF_WALK(AnimationID.HUMAN_CASTCONFUSE_STAFF_WALKMERGE, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d),
+    MAGIC_STANDARD_CONFUSE_WALK(AnimationID.HUMAN_CASTCONFUSE_WALKMERGE, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d),
     MAGIC_STANDARD_CRUMBLE_UNDEAD(AnimationID.HUMAN_CASTCRUMBLEUNDEAD, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d),
     MAGIC_STANDARD_CRUMBLE_UNDEAD_HOLDING_STAFF(AnimationID.HUMAN_CASTCRUMBLEUNDEAD_STAFF, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d),
     MAGIC_STANDARD_ENFEEBLE(AnimationID.HUMAN_CASTENFEEBLE_STAFF, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d),
-    MAGIC_STANDARD_STRIKE_BOLT_BLAST(AnimationID.HUMAN_CASTSTRIKE_WALKMERGE, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d), // tested w/ bolt
-    MAGIC_STANDARD_STRIKE_MANUAL(AnimationID.HUMAN_CASTSTRIKE, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d),
-    MAGIC_STANDARD_STRIKE_STAFF(AnimationID.HUMAN_CASTSTRIKE_STAFF, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d),
-    MAGIC_STANDARD_STRIKE_BOLT_BLAST_STAFF(AnimationID.HUMAN_CASTSTRIKE_STAFF_WALKMERGE, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d), // strike, bolt and blast (tested all spells, different weapons)
+    MAGIC_STANDARD_STRIKE_BOLT_BLAST(AnimationID.HUMAN_CASTSTRIKE, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d),
+    MAGIC_STANDARD_STRIKE_BOLT_BLAST_STAFF(AnimationID.HUMAN_CASTSTRIKE_STAFF, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d),
+    MAGIC_STANDARD_STRIKE_BOLT_BLAST_STAFF_WALK(AnimationID.HUMAN_CASTSTRIKE_STAFF_WALKMERGE, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d), // strike, bolt and blast (tested all spells, different weapons)
+    MAGIC_STANDARD_STRIKE_BOLT_BLAST_WALK(AnimationID.HUMAN_CASTSTRIKE_WALKMERGE, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d), // tested w/ bolt
     MAGIC_STANDARD_STUN(AnimationID.HUMAN_CASTSTUN_STAFF, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d),
-    MAGIC_STANDARD_SURGE_STAFF(AnimationID.HUMAN_CAST_SURGE_WALKMERGE, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d), // tested many staves
-    MAGIC_STANDARD_VULNERABILITY_CURSE(AnimationID.HUMAN_CASTCURSE_STAFF, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d),
-    MAGIC_STANDARD_WAVE(AnimationID.HUMAN_CASTWAVE_WALKMERGE, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d), // tested w/ wave spells
-    MAGIC_STANDARD_WAVE_STAFF(AnimationID.HUMAN_CASTWAVE_STAFF_WALKMERGE, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d), // tested many staves
-    MAGIC_STANDARD_WEAKEN(AnimationID.HUMAN_CASTWEAKEN_STAFF, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d),
+    MAGIC_STANDARD_SURGE(AnimationID.HUMAN_CAST_SURGE, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d), // tested many staves
+    MAGIC_STANDARD_SURGE_STAFF(AnimationID.HUMAN_CAST_SURGE_FAST, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d), // tested many staves
+    MAGIC_STANDARD_SURGE_STAFF_WALK(AnimationID.HUMAN_CAST_SURGE_WALKMERGE, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d), // tested many staves
+    MAGIC_STANDARD_VULNERABILITY_CURSE(AnimationID.HUMAN_CASTCURSE, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d),
+    MAGIC_STANDARD_VULNERABILITY_CURSE_STAFF(AnimationID.HUMAN_CASTCURSE_STAFF, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d),
+    MAGIC_STANDARD_VULNERABILITY_CURSE_STAFF_WALK(AnimationID.HUMAN_CASTCURSE_STAFF_WALKMERGE, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d),
+    MAGIC_STANDARD_VULNERABILITY_CURSE_WALK(AnimationID.HUMAN_CASTCURSE_WALKMERGE, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d),
+    MAGIC_STANDARD_WAVE(AnimationID.HUMAN_CASTWAVE, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d), // tested w/ wave spells
+    MAGIC_STANDARD_WAVE_STAFF(AnimationID.HUMAN_CASTWAVE_STAFF, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d), // tested many staves
+    MAGIC_STANDARD_WAVE_STAFF_WALK(AnimationID.HUMAN_CASTWAVE_STAFF_WALKMERGE, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d), // tested many staves
+    MAGIC_STANDARD_WAVE_WALK(AnimationID.HUMAN_CASTWAVE_WALKMERGE, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d), // tested w/ wave spells
+    MAGIC_STANDARD_WEAKEN(AnimationID.HUMAN_CASTWEAKEN, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d),
+    MAGIC_STANDARD_WEAKEN_STAFF(AnimationID.HUMAN_CASTWEAKEN_STAFF, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d),
+    MAGIC_STANDARD_WEAKEN_STAFF_WALK(AnimationID.HUMAN_CASTWEAKEN_STAFF_WALKMERGE, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d),
+    MAGIC_STANDARD_WEAKEN_WALK(AnimationID.HUMAN_CASTWEAKEN_WALKMERGE, AttackStyle.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d),
 
     MAGIC_ANCIENT_MULTI_TARGET(AnimationID.ZAROS_VERTICAL_CASTING_WALKMERGE, AttackStyle.MAGIC, Spellbook.ANCIENT, MetaData.NO_DATA.d), // Burst & Barrage animations (tested all 8, different weapons)
     MAGIC_ANCIENT_MULTI_TARGET_PVP(AnimationID.ZAROS_VERTICAL_CASTING, AttackStyle.MAGIC, Spellbook.ANCIENT, MetaData.NO_DATA.d), // Burst & Barrage animations (tested all 8, different weapons)
@@ -197,12 +211,11 @@ public enum AnimationData
     MAGIC_ARCEUUS_GRASP(AnimationID.HUMAN_SPELLCAST_GRASP, AttackStyle.MAGIC, Spellbook.ARCEUUS, MetaData.NO_DATA.d),
 
     MAGIC_ACCURSED_SCEPTRE_SPEC(AnimationID.HUMAN_SPECIAL_ACCURSED, AttackStyle.MAGIC, MetaData.SPECIAL_ATTACK.d),
-    MAGIC_TUMEKENS_SHADOW(AnimationID.TOA_SOT_CAST_B, AttackStyle.MAGIC, MetaData.NO_DATA.d),
-    MAGIC_WARPED_SCEPTRE(AnimationID.POG_WARPED_SCEPTRE_ATTACK, AttackStyle.MAGIC, MetaData.NO_DATA.d), // https://oldschool.runescape.wiki/w/Warped_sceptre
-    MAGIC_VOLATILE_NIGHTMARE_STAFF_SPEC(AnimationID.NIGHTMARE_STAFF_SPECIAL, AttackStyle.MAGIC, MetaData.SPECIAL_ATTACK.d), // assume 99 mage's base damage (does not rise when boosted).
-
     MAGIC_EYE_OF_AYAK(AnimationID.HUMAN_EYE_OF_AYAK_NORMAL, AttackStyle.MAGIC, MetaData.NO_DATA.d),
     MAGIC_EYE_OF_AYAK_SPEC(AnimationID.HUMAN_EYE_OF_AYAK_SPECIAL, AttackStyle.MAGIC, MetaData.SPECIAL_ATTACK.d), // https://github.com/ngraves95/attacktimer/issues/91
+    MAGIC_TUMEKENS_SHADOW(AnimationID.TOA_SOT_CAST_B, AttackStyle.MAGIC, MetaData.NO_DATA.d),
+    MAGIC_VOLATILE_NIGHTMARE_STAFF_SPEC(AnimationID.NIGHTMARE_STAFF_SPECIAL, AttackStyle.MAGIC, MetaData.SPECIAL_ATTACK.d), // assume 99 mage's base damage (does not rise when boosted).
+    MAGIC_WARPED_SCEPTRE(AnimationID.POG_WARPED_SCEPTRE_ATTACK, AttackStyle.MAGIC, MetaData.NO_DATA.d), // https://oldschool.runescape.wiki/w/Warped_sceptre
 
     // Misc
     MAGIC_IMBUE(AnimationID.HUMAN_CASTBONESTOBANANAS, AttackStyle.NON_ATTACK),
@@ -284,7 +297,9 @@ public enum AnimationData
 
     public final int animationId;
     public final long metaData;
+    @Getter
     public final AttackStyle attackStyle;
+    @Getter
     private final Spellbook spellbook;
 
     // Simple animation data constructor for all melee, range and non attacks

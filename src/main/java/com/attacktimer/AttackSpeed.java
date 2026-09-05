@@ -154,6 +154,20 @@ public class AttackSpeed
     // unfortunately doesn't work if the player has them disabled).
     private boolean matchesSpellbook(final Client client, final AnimationData curAnimation, final Spellbook currentSpellBook)
     {
+        // There's a nasty edge case here: see https://github.com/ngraves95/attacktimer/issues/181,
+        // https://github.com/ngraves95/attacktimer/issues/165,
+        // https://github.com/ngraves95/attacktimer/issues/126
+        //
+        // Since we encode some magic animations with a null spell book, they fall through to here and
+        // mistakenly match on re-used sound effect. E.g. the eye of ayak, has no spell book to match against
+        // (powered stave) but it re-uses the 178 sound effect (shadow spell), if not properly guarded this
+        // mistakenly makes the plugin think the player is actually casting a shadow spell instead of using
+        // the stave. Fortunately because we have an exact animation which doesn't line up with spell
+        // animation we know this must be the ayak attack and therefore cannot match a null spellbook.
+        if (curAnimation != null && curAnimation.getAttackStyle() == AnimationData.AttackStyle.MAGIC && curAnimation.getSpellbook() == null)
+        {
+            return false;
+        }
         if (curAnimation != null && curAnimation.matchesSpellbook(currentSpellBook))
         {
             return true;
