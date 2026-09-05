@@ -234,6 +234,7 @@ public class AttackTimerMetronomePlugin extends Plugin
             pendingEatDelayTicks += attackDelay;
         }
         VariableSpeed.onChatMessage(client, event);
+        pendingEatDelayTicks += VariableSpeed.MAGGOT_KING.onChatMessage(client, message);
     }
 
     // endregion
@@ -463,8 +464,11 @@ public class AttackTimerMetronomePlugin extends Plugin
                 attackState = AttackState.NOT_ATTACKING;
             }
         }
-        attackDelayHoldoffTicks = VariableSpeed.MAGGOT_KING.onRender(client, itemManager, attackDelayHoldoffTicks, currentSpellBook, config.debugLogs());
-        attackDelayHoldoffTicks = VariableSpeed.DOOM_OF_MOKHAIOTL.onRender(client, itemManager, attackDelayHoldoffTicks, currentSpellBook, config.debugLogs());
+        if (VariableSpeed.MAGGOT_KING.onRender(client, itemManager, config.debugLogs())
+            || VariableSpeed.DOOM_OF_MOKHAIOTL.onRender(client, itemManager, currentSpellBook, config.debugLogs()))
+        {
+            performAttack();
+        }
         checkForLateWeaponSwaps();
     }
 
