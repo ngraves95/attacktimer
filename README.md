@@ -9,9 +9,13 @@ Ticks until next attack may be enabled over your player's head.
 
 ## Updates
 
-## 1.3.0
+## 1.3.0 - 1.3.2
 
-* Support for Maggot King Larvae (overwrite attack cooldown if attacked with a bow whilst flying)
+* Fix bug with Guantlet Staves or Eye of Ayak being 5 tick when on the Ancient spellbook
+* Support for Maggot King
+  * Larvae (overwrite attack cooldown if attacked with a bow whilst flying)
+  * Bile slowing attacks
+  * Screech slowing attacks
 * Support for Doom of Mokhaiotl
   * Larvae (overwrite attack cooldown if non-demonbane)
   * Volatile Earth (overwrite attack cooldown if non-demonbane)
