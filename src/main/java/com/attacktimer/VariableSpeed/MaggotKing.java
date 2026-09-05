@@ -52,14 +52,11 @@ public class MaggotKing
 
     // https://oldschool.runescape.wiki/w/Maggot_King/Strategies#Ur-maggot_larvae
     //
-    // If the player attacks a maggot with a "standard bow" it doesn't matter what current cooldown is
-    // the
+    // If the player attacks a maggot with a "standard bow" it doesn't matter what current cooldown is the
     // player is immediately set to the cooldown of the bow they used.
     //
-    // Therefore this method returns `attackDelayHoldoffTicks` in all cases where this condition isn't
-    // met.
-    // But if the condition is met this method returns a brand new number which is the attack speed of
-    // the bow
+    // Therefore this method returns `attackDelayHoldoffTicks` in all cases where this condition isn't met.
+    // But if the condition is met this method returns a brand new number which is the attack speed of the bow
     // used. This number can be the same as the current delay and that's ok.
     public boolean onRender(final Client client, final ItemManager itemManager, final boolean debugLogs)
     {
@@ -93,14 +90,16 @@ public class MaggotKing
     {
         // https://oldschool.runescape.wiki/w/Maggot_King/Strategies#Fight_overview
         // Standing on the sticky bile will ... delay the player's next attack by one tick.
-        if (message.equals("The sticky acid hampers your ability to attack!"))
+        if (message.contains("The sticky acid hampers your ability to attack!"))
         {
             log.debug("MaggotKing sticky acid");
             return 1;
         }
         // this isn't in the wiki but being screeched at also slows down attack speed, more significantly than
         // the bile. Each screech instance causes the effect for a total of 9 extra ticks if all goes wrong.
-        else if (message.equals("The Maggot King's screech disrupts your concentration!"))
+        //
+        // note don't use equals colouring of messages breaks stuff: e.g.: '@mes_hl_red@The Maggot King's screech disrupts your concentration!' but it has also been <col=XXXXXX>
+        else if (message.contains("The Maggot King's screech disrupts your concentration!"))
         {
             log.debug("MaggotKing screech");
             return 3;
