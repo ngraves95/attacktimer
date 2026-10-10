@@ -25,6 +25,7 @@ package com.attacktimer;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.attacktimer.AnimationData.CombatSkill;
 import com.attacktimer.ClientUtils.Utils;
 import com.attacktimer.VariableSpeed.State.TickCount;
 import com.attacktimer.VariableSpeed.VariableSpeed;
@@ -105,6 +106,15 @@ public class AttackSpeed
         }
 
         isUsingMagic = false;
+
+        if (curAnimation != null && curAnimation.combatSkill == CombatSkill.SAILING)
+        {
+            // For now we assume the only sailing specific weapon is
+            // https://oldschool.runescape.wiki/w/Cannon_(facility) if they add other facilities which can
+            // "attack" that assumption obviously needs re-visiting. The cannons currently are all 7-tick.
+            return VariableSpeed.compute(client, curAnimation, AttackProcedure.MELEE_OR_RANGE, spellbook, dmgDealt, specDelta, 7);
+        }
+
         final int aspeed = Utils.getWeaponSpeed(client, itemManager, weaponId);
         // Deadline for next available attack.
         return VariableSpeed.compute(client, curAnimation, AttackProcedure.MELEE_OR_RANGE, spellbook, dmgDealt, specDelta, aspeed);
@@ -164,7 +174,7 @@ public class AttackSpeed
         // mistakenly makes the plugin think the player is actually casting a shadow spell instead of using
         // the stave. Fortunately because we have an exact animation which doesn't line up with spell
         // animation we know this must be the ayak attack and therefore cannot match a null spellbook.
-        if (curAnimation != null && curAnimation.getAttackStyle() == AnimationData.AttackStyle.MAGIC && curAnimation.getSpellbook() == null)
+        if (curAnimation != null && curAnimation.getCombatSkill() == CombatSkill.MAGIC && curAnimation.getSpellbook() == null)
         {
             return false;
         }
