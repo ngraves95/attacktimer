@@ -318,7 +318,6 @@ public enum AnimationData
 
     public final int animationId;
     public final long metaData;
-    @Getter
     public final CombatSkill combatSkill;
     @Getter
     private final Spellbook spellbook;

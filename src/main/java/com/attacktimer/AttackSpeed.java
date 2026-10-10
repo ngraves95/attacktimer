@@ -174,7 +174,7 @@ public class AttackSpeed
         // mistakenly makes the plugin think the player is actually casting a shadow spell instead of using
         // the stave. Fortunately because we have an exact animation which doesn't line up with spell
         // animation we know this must be the ayak attack and therefore cannot match a null spellbook.
-        if (curAnimation != null && curAnimation.getCombatSkill() == CombatSkill.MAGIC && curAnimation.getSpellbook() == null)
+        if (curAnimation != null && curAnimation.combatSkill == CombatSkill.MAGIC && curAnimation.getSpellbook() == null)
         {
             return false;
         }
