@@ -32,20 +32,29 @@ import com.attacktimer.ClientUtils.Utils;
 import com.attacktimer.VariableSpeed.State.TickCount;
 import com.attacktimer.VariableSpeed.VariableSpeed;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.inject.Provides;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Actor;
 import net.runelite.api.Client;
+import net.runelite.api.DynamicObject;
+import net.runelite.api.GameObject;
 import net.runelite.api.NPC;
 import net.runelite.api.Player;
+import net.runelite.api.Tile;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.FakeXpDrop;
+import net.runelite.api.events.GameObjectDespawned;
+import net.runelite.api.events.GameObjectSpawned;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.InteractingChanged;
 import net.runelite.api.events.NpcDespawned;
@@ -53,6 +62,7 @@ import net.runelite.api.events.NpcSpawned;
 import net.runelite.api.events.SoundEffectPlayed;
 import net.runelite.api.events.StatChanged;
 import net.runelite.api.events.VarbitChanged;
+import net.runelite.api.gameval.ObjectID;
 import net.runelite.api.gameval.VarPlayerID;
 import net.runelite.api.gameval.VarbitID;
 import net.runelite.client.config.ConfigManager;
@@ -120,6 +130,8 @@ public class AttackTimerMetronomePlugin extends Plugin
     private int lastUsedWeaponId = -1;
     private Actor lastTarget = null;
     private boolean isUsingMagic = false;
+
+    private Map<GameObject, Tile> sailingCannons = new HashMap<GameObject, Tile>();
 
     public int pendingEatDelayTicks = 0;
     public static final TickCount TC = new TickCount();
@@ -237,6 +249,34 @@ public class AttackTimerMetronomePlugin extends Plugin
         pendingEatDelayTicks += VariableSpeed.MAGGOT_KING.onChatMessage(client, message);
     }
 
+    private static final Set<Integer> SAILING_CANNON_IDS = new ImmutableSet.Builder<Integer>()
+            .add(ObjectID.SAILING_BRONZE_CANNON)
+            .add(ObjectID.SAILING_IRON_CANNON)
+            .add(ObjectID.SAILING_STEEL_CANNON)
+            .add(ObjectID.SAILING_MITHRIL_CANNON)
+            .add(ObjectID.SAILING_ADAMANT_CANNON)
+            .add(ObjectID.SAILING_RUNE_CANNON)
+            .add(ObjectID.SAILING_DRAGON_CANNON)
+            .build();
+
+    @Subscribe
+    public void onGameObjectSpawned(GameObjectSpawned event)
+    {
+        final var obj = event.getGameObject();
+        // only add `DynamicObject`s to the map, as we need the animation ID of the object, which only dynamic objects have.
+        if (SAILING_CANNON_IDS.contains(obj.getId()) && obj.getRenderable() instanceof DynamicObject)
+        {
+            sailingCannons.put(obj, event.getTile());
+        }
+    }
+
+    @Subscribe
+    public void onGameObjectDespawned(GameObjectDespawned event)
+    {
+        // its safe to call remove for keys we never added.
+        sailingCannons.remove(event.getGameObject());
+    }
+
     // endregion
 
     @Provides
@@ -324,7 +364,7 @@ public class AttackTimerMetronomePlugin extends Plugin
                 isUsingMagic = false;
                 // If not previously attacking, this action can result in a queued attack or
                 // an instant attack. If its queued, don't trigger the cooldown yet.
-                if (Attacking.isPlayerAttacking(client, npcManager))
+                if (Attacking.isPlayerAttacking(client, npcManager, sailingCannons))
                 {
                     logStateTrace("onInteractingChanged");
                     performAttack();
@@ -352,7 +392,7 @@ public class AttackTimerMetronomePlugin extends Plugin
     public void onGameTick(GameTick tick)
     {
         VariableSpeed.onGameTick(client, tick);
-        final boolean isAttacking = Attacking.isPlayerAttacking(client, npcManager);
+        final boolean isAttacking = Attacking.isPlayerAttacking(client, npcManager, sailingCannons);
         switch (attackState)
         {
         case NOT_ATTACKING:

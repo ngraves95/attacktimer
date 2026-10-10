@@ -28,13 +28,20 @@ package com.attacktimer.Attacking;
  */
 
 import com.attacktimer.AnimationData;
+import com.attacktimer.AnimationData.CombatSkill;
 import com.google.common.collect.ImmutableSet;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Set;
 import net.runelite.api.Actor;
 import net.runelite.api.Client;
+import net.runelite.api.DynamicObject;
+import net.runelite.api.GameObject;
 import net.runelite.api.NPC;
 import net.runelite.api.Player;
+import net.runelite.api.Tile;
+import net.runelite.api.coords.WorldPoint;
+import net.runelite.api.gameval.AnimationID;
 import net.runelite.api.gameval.NpcID;
 import net.runelite.api.gameval.SpotanimID;
 import net.runelite.client.game.NPCManager;
@@ -57,7 +64,7 @@ public class Attacking
                     NpcID.NIGHTMARE_TOTEM_3_READY, NpcID.NIGHTMARE_TOTEM_4_READY)
             .build();
 
-    public static boolean isPlayerAttacking(final Client client, final NPCManager npcManager)
+    public static boolean isPlayerAttacking(final Client client, final NPCManager npcManager, final Map<GameObject, Tile> sailingCannons)
     {
         final Player localPlayer = client.getLocalPlayer();
         final int animationId = localPlayer.getAnimation();
@@ -66,12 +73,21 @@ public class Attacking
             return false;
         }
 
+        final AnimationData fromId = AnimationData.fromId(animationId);
+        // Unlike normal interactions sailing combat from a facility does in fact not set `getInteracting`,
+        // the usual techniques of inspecting for health and combat level therefore also don't apply because
+        // the client doesn't really know which NPC we could be interacting with. This is also because the NPC
+        // being attacked interacts with the boat itself (dmg).
+        if (sailingAttack(client, sailingCannons, fromId))
+        {
+            return true;
+        }
+
         // Not walking is either ANY player animation or the edge cases which don't trigger an animation,
         // e.g Salamander.
         final boolean notWalking = animationId != -1 || getSalamanderAttack(client);
 
-        // Testing if we are attacking by checking the target is more future proof to new weapons which
-        // don't
+        // Testing if we are attacking by checking the target is more future proof to new weapons which don't
         // need custom code and the weapon stats are enough.
         final Actor target = localPlayer.getInteracting();
         if (target != null && (target instanceof NPC))
@@ -98,7 +114,6 @@ public class Attacking
         }
 
         // Do not use any animations from this set
-        final AnimationData fromId = AnimationData.fromId(animationId);
         if (UNRELIABLE_ANIMATIONS.contains(fromId))
         {
             return false;
@@ -118,5 +133,56 @@ public class Attacking
     private static boolean getSalamanderAttack(final Client client)
     {
         return client.getLocalPlayer().hasSpotAnim(SpotanimID.FIREBREATH);
+    }
+
+    private static boolean sailingAttack(final Client client, final Map<GameObject, Tile> sailingCannons, final AnimationData anim)
+    {
+        // Normal combat (e.g. shooting a bow) from a boat does follow all the normal rules and therefore
+        // should not be handled by this function.
+
+        // The naive approach gets pretty close (is the animation `CombatSkill.SAILING`), the player is only
+        // in sailing animations when the player is attacking. However there's one on main edge case, the
+        // final shot of the cannon the player will remain the in animation even past the point where the
+        // attacking has stopped.
+        final var sailingAnimation = anim != null && anim.combatSkill == CombatSkill.SAILING;
+        if (!sailingAnimation)
+        {
+            // don't check cannon stuff, early return
+            return false;
+        }
+
+        // To improve the naive approach we inspect the game objects (tracked by the plugin and passed in the
+        // map), the actual cannon blast effect has a specific animation versus the idle animation so we can
+        // use that. This animation can only occur on the exact first tick the player starts an attack.
+
+        final var playerLoc = client.getLocalPlayer().getWorldLocation();
+        for (final var entry : sailingCannons.entrySet())
+        {
+            // If the cannon isn't *exactly* adjacent to the player then it is be a crewmate manning the
+            // cannon in which case the animation isn't useful.
+            if (!isAdjacent(playerLoc, entry.getValue().getWorldLocation()))
+            {
+                continue;
+            }
+
+            final var cannon = entry.getKey();
+            // We only added DynamicObject's to the map so this cast is safe.
+            final var animation = ((DynamicObject) cannon.getRenderable()).getAnimation().getId();
+            if (animation == AnimationID.SAILING_CANNON01_SMALL01_ATTACK01)
+            {
+                // shared animation by all cannons so the player must be attacking with it (i.e. rune/bronze
+                // cannons are indistinguishable)
+                return true;
+            }
+        }
+
+        // We exhausted all the cannons the plugin knows about and couldn't find the animation so the player
+        // cannot be attacking with it.
+        return false;
+    }
+
+    private static boolean isAdjacent(final WorldPoint a , final WorldPoint b )
+    {
+        return a.distanceTo(b) == 1;
     }
 }
