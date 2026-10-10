@@ -152,13 +152,13 @@ public class Attacking
         }
 
         // To improve the naive approach we inspect the game objects (tracked by the plugin and passed in the
-        // map), the actual cannon blast effect has a specific animation ID versus the idle animation so we
-        // can use that. This animation can only occur on the exact first tick the player starts an attack.
+        // map), the actual cannon blast effect has a specific animation versus the idle animation so we can
+        // use that. This animation can only occur on the exact first tick the player starts an attack.
 
         final var playerLoc = client.getLocalPlayer().getWorldLocation();
         for (final var entry : sailingCannons.entrySet())
         {
-            // If the cannon isn't *exactly* adjacent to the player then it may be a crewmate manning the
+            // If the cannon isn't *exactly* adjacent to the player then it is be a crewmate manning the
             // cannon in which case the animation isn't useful.
             if (!isAdjacent(playerLoc, entry.getValue().getWorldLocation()))
             {
@@ -170,7 +170,8 @@ public class Attacking
             final var animation = ((DynamicObject) cannon.getRenderable()).getAnimation().getId();
             if (animation == AnimationID.SAILING_CANNON01_SMALL01_ATTACK01)
             {
-                // This the shared animation all cannons use so the player must be attacking with it
+                // shared animation by all cannons so the player must be attacking with it (i.e. rune/bronze
+                // cannons are indistinguishable)
                 return true;
             }
         }
