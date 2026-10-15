@@ -7,6 +7,27 @@ Ticks until next attack may be enabled over your player's head.
 
 ![attack_timer_screenshot.png](attack_timer_screenshot.png)
 
+## Lost-tick display
+
+Enable **Only Count Lost Ticks** to hide the cooldown number and display only late attack ticks,
+including when **Show Attack Cooldown Ticks** is off. The existing overhead font, size and position
+settings still apply. The attack bar is controlled separately; turn **Show Attack Bar** off for a
+number-only warning.
+
+**Maximum Lost Ticks** defaults to 2 and can be set from 1 to 20. With the default, a missed attack
+opportunity displays `+1`, followed by `+2` on the next tick, then hides until another attack is
+detected. This is an upper display limit, not a minimum warning threshold. **Lost Tick Color**
+defaults to red. Zero-based cooldown counting does not change the lost-tick numbers.
+
+For example, after a five-tick Shadow attack, the number stays hidden through the cooldown. If no
+new attack is detected on the first available attack tick, it shows `+1`. An on-time attack or
+resuming attacks clears the warning. Known food delays extend the cooldown rather than counting as
+lost ticks. Target death/despawn, player death, loading/logout, and plugin shutdown clear tracking.
+
+This uses the plugin's existing client-side attack and cooldown detection. It measures potential
+attack uptime lost, not whether waiting was a mistake: moving for mechanics, invulnerable targets,
+and other intentional pauses can also produce a warning. It does not automate attacks.
+
 ## Updates
 
 ## 1.3.0 - 1.3.3
