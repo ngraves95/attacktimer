@@ -1,7 +1,7 @@
 package com.attacktimer;
 
 /*
- * Copyright (c) 2026, Lexer747 <https://github.com/Lexer747>
+ * Copyright (c) 2026, Jalawoud <https://github.com/Jalawoud>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
