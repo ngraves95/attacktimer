@@ -68,7 +68,7 @@ public class LostTicksTest extends IntegrationTests
     private void setupShadow() throws Exception
     {
         player = pluginMockSetup();
-        when(mockedConfig.onlyCountLostTicks()).thenReturn(true);
+        when(mockedConfig.showLostTicks()).thenReturn(true);
         when(mockedConfig.maximumLostTicks()).thenReturn(2);
         lenient().when(mockedClient.getGameState()).thenReturn(GameState.LOGGED_IN);
         lenient().when(player.getInteracting().getHealthRatio()).thenReturn(-1);
@@ -111,9 +111,9 @@ public class LostTicksTest extends IntegrationTests
         assertNull(textOverlay.getTickText());
         ready();
         nextTick();
-        assertEquals("+1", textOverlay.getTickText());
+        assertEquals("-1", textOverlay.getTickText());
         nextTick();
-        assertEquals("+2", textOverlay.getTickText());
+        assertEquals("-2", textOverlay.getTickText());
         for (int i = 0; i < 30; i++)
         {
             nextTick();
@@ -121,7 +121,7 @@ public class LostTicksTest extends IntegrationTests
         }
         ready();
         nextTick();
-        assertEquals("+1", textOverlay.getTickText());
+        assertEquals("-1", textOverlay.getTickText());
     }
 
     @Test
@@ -140,7 +140,7 @@ public class LostTicksTest extends IntegrationTests
         setupShadow();
         ready();
         nextTick();
-        assertEquals("+1", textOverlay.getTickText());
+        assertEquals("-1", textOverlay.getTickText());
         attack();
         assertNull(textOverlay.getTickText());
     }
@@ -166,7 +166,7 @@ public class LostTicksTest extends IntegrationTests
         for (int i = 1; i <= 20; i++)
         {
             nextTick();
-            assertEquals("+" + i, textOverlay.getTickText());
+            assertEquals("-" + i, textOverlay.getTickText());
         }
         for (int i = 0; i < 5; i++)
         {
@@ -182,7 +182,7 @@ public class LostTicksTest extends IntegrationTests
         when(mockedConfig.maximumLostTicks()).thenReturn(1);
         ready();
         nextTick();
-        assertEquals("+1", textOverlay.getTickText());
+        assertEquals("-1", textOverlay.getTickText());
         nextTick();
         assertNull(textOverlay.getTickText());
     }
@@ -199,7 +199,7 @@ public class LostTicksTest extends IntegrationTests
             assertNull(textOverlay.getTickText());
         }
         nextTick();
-        assertEquals("+1", textOverlay.getTickText());
+        assertEquals("-1", textOverlay.getTickText());
     }
 
     @Test
@@ -268,17 +268,96 @@ public class LostTicksTest extends IntegrationTests
     }
 
     @Test
-    public void lostOnlyOverridesCooldownAndZeroBasedCounting() throws Exception
+    public void combinedDisplayCountsDownThenShowsBoundedNegativeTicks() throws Exception
     {
         setupShadow();
-        // These settings are deliberately ignored by lost-only mode.
-        lenient().when(mockedConfig.showTick()).thenReturn(true);
-        lenient().when(mockedConfig.useZeroBasedTickCount()).thenReturn(true);
-        ready();
+        when(mockedConfig.showTick()).thenReturn(true);
+        attack();
+        for (int remaining = 5; remaining >= 1; remaining--)
+        {
+            assertEquals(String.valueOf(remaining), textOverlay.getTickText());
+            nextTick();
+        }
+        assertEquals("-1", textOverlay.getTickText());
         nextTick();
-        assertEquals("+1", textOverlay.getTickText());
+        assertEquals("-2", textOverlay.getTickText());
+        for (int i = 0; i < 30; i++)
+        {
+            nextTick();
+            assertNull(textOverlay.getTickText());
+        }
+        attack();
+        assertEquals("5", textOverlay.getTickText());
     }
 
+    @Test
+    public void onTimeAttackRestartsCombinedCountdownWithoutNegativeTicks() throws Exception
+    {
+        setupShadow();
+        when(mockedConfig.showTick()).thenReturn(true);
+        for (int attacks = 0; attacks < 3; attacks++)
+        {
+            attack();
+            assertEquals("5", textOverlay.getTickText());
+            for (int i = 0; i < 4; i++)
+            {
+                nextTick();
+                assertEquals(String.valueOf(4 - i), textOverlay.getTickText());
+            }
+        }
+    }
+
+    @Test
+    public void zeroBasedCountdownDoesNotShiftLostTicks() throws Exception
+    {
+        setupShadow();
+        when(mockedConfig.showTick()).thenReturn(true);
+        when(mockedConfig.useZeroBasedTickCount()).thenReturn(true);
+        attack();
+        for (int remaining = 4; remaining >= 0; remaining--)
+        {
+            assertEquals(String.valueOf(remaining), textOverlay.getTickText());
+            nextTick();
+        }
+        assertEquals("-1", textOverlay.getTickText());
+    }
+
+    @Test
+    public void combinedDisplayUsesSeparateCooldownAndLostColors() throws Exception
+    {
+        setupShadow();
+        when(mockedConfig.showTick()).thenReturn(true);
+        when(mockedConfig.NumberColor()).thenReturn(Color.CYAN);
+        when(mockedConfig.LastColor()).thenReturn(Color.GREEN);
+        when(mockedConfig.lostTickColor()).thenReturn(Color.RED);
+        attack();
+        assertEquals(Color.CYAN, textOverlay.getTickColor());
+        for (int i = 0; i < 4; i++)
+        {
+            nextTick();
+        }
+        assertEquals("1", textOverlay.getTickText());
+        assertEquals(Color.GREEN, textOverlay.getTickColor());
+        nextTick();
+        assertEquals("-1", textOverlay.getTickText());
+        assertEquals(Color.RED, textOverlay.getTickColor());
+        attack();
+        assertEquals("5", textOverlay.getTickText());
+        assertEquals(Color.CYAN, textOverlay.getTickColor());
+    }
+
+    @Test
+    public void bothDisplaysOffHidesCooldownAndLostTicks() throws Exception
+    {
+        setupShadow();
+        when(mockedConfig.showLostTicks()).thenReturn(false);
+        ready();
+        for (int i = 0; i < 5; i++)
+        {
+            nextTick();
+            assertNull(textOverlay.getTickText());
+        }
+    }
 
     @Test
     public void lostTicksRenderWhenCooldownSettingIsOff() throws Exception
@@ -290,12 +369,12 @@ public class LostTicksTest extends IntegrationTests
         when(mockedConfig.fontSize()).thenReturn(15);
         when(mockedConfig.ticksPosition()).thenReturn(AttackTimerMetronomeConfig.TicksPosition.BOTTOM);
         when(mockedConfig.lostTickColor()).thenReturn(Color.RED);
-        when(player.getCanvasTextLocation(any(Graphics2D.class), eq("+1"), anyInt())).thenReturn(new Point(50, 50));
+        when(player.getCanvasTextLocation(any(Graphics2D.class), eq("-1"), anyInt())).thenReturn(new Point(50, 50));
         Graphics2D graphics = new BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB).createGraphics();
         try
         {
             textOverlay.render(graphics);
-            verify(player).getCanvasTextLocation(graphics, "+1", 10);
+            verify(player).getCanvasTextLocation(graphics, "-1", 10);
         }
         finally
         {
@@ -307,7 +386,7 @@ public class LostTicksTest extends IntegrationTests
     public void normalCooldownDisplayIsUnchanged() throws Exception
     {
         setupShadow();
-        when(mockedConfig.onlyCountLostTicks()).thenReturn(false);
+        when(mockedConfig.showLostTicks()).thenReturn(false);
         when(mockedConfig.showTick()).thenReturn(true);
         attack();
         assertEquals("5", textOverlay.getTickText());

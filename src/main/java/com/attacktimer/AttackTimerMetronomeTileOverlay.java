@@ -118,25 +118,32 @@ public class AttackTimerMetronomeTileOverlay extends Overlay
         }
         if (playerPoint != null)
         {
-            final Color color = config.onlyCountLostTicks() ? config.lostTickColor()
-                    : plugin.getTicksUntilNextAttack() == 1 ? config.LastColor() : config.NumberColor();
-            OverlayUtil.renderTextLocation(graphics, playerPoint, tickText, color);
+            OverlayUtil.renderTextLocation(graphics, playerPoint, tickText, getTickColor());
         }
         return null;
     }
 
     String getTickText()
     {
-        if (config.onlyCountLostTicks())
+        final int ticksRemaining = plugin.getTicksUntilNextAttack();
+        if (config.showLostTicks() && ticksRemaining <= 0)
         {
             final int lostTicks = plugin.getLostAttackTicks();
-            return lostTicks > 0 ? "+" + lostTicks : null;
+            return lostTicks > 0 ? "-" + lostTicks : null;
         }
         if (!config.showTick() || plugin.attackState == AttackTimerMetronomePlugin.AttackState.NOT_ATTACKING)
         {
             return null;
         }
-        final int ticksRemaining = plugin.getTicksUntilNextAttack();
         return String.valueOf(config.useZeroBasedTickCount() ? ticksRemaining - 1 : ticksRemaining);
+    }
+
+    Color getTickColor()
+    {
+        if (config.showLostTicks() && plugin.getLostAttackTicks() > 0)
+        {
+            return config.lostTickColor();
+        }
+        return plugin.getTicksUntilNextAttack() == 1 ? config.LastColor() : config.NumberColor();
     }
 }

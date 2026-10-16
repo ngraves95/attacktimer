@@ -176,11 +176,11 @@ public interface AttackTimerMetronomeConfig extends Config
     @ConfigItem(
             position = 100,
             keyName = "onlyCountLostTicks",
-            name = "Only Count Lost Ticks",
-            description = "Hide the cooldown number and show +1, +2, etc. when an attack is late. Works with Show Attack Cooldown Ticks off.",
+            name = "Show Lost Attack Ticks",
+            description = "Show -1, -2, etc. when an attack is late. Enable Show Attack Cooldown Ticks for a continuous countdown, or disable it to show only late ticks.",
             section = TICK_NUMBER_SETTINGS
     )
-    default boolean onlyCountLostTicks()
+    default boolean showLostTicks()
     {
         return false;
     }
