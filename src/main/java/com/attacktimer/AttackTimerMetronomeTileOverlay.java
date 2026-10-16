@@ -27,6 +27,7 @@ package com.attacktimer;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -67,61 +68,82 @@ public class AttackTimerMetronomeTileOverlay extends Overlay
     @Override
     public Dimension render(Graphics2D graphics)
     {
-        plugin.onRender();
         player = client.getLocalPlayer();
+        if (player == null)
+        {
+            return null;
+        }
+        plugin.onRender();
         plugin.renderedState = plugin.attackState;
-        if (plugin.attackState == AttackTimerMetronomePlugin.AttackState.NOT_ATTACKING)
+        final String tickText = getTickText();
+        if (tickText == null)
         {
             return null;
         }
 
-        if (config.showTick())
+        if (config.fontType() == FontTypes.REGULAR)
         {
-            if (config.fontType() == FontTypes.REGULAR)
-            {
-                graphics.setFont(new Font(FontManager.getRunescapeFont().getName(), Font.PLAIN, config.fontSize()));
-            }
-            else if (config.fontType() == FontTypes.BOLD)
-            {
-                graphics.setFont(new Font(config.fontType().toString(), Font.BOLD, config.fontSize()));
-            }
-            else
-            {
-                graphics.setFont(new Font(config.fontType().toString(), Font.PLAIN, config.fontSize()));
-            }
+            graphics.setFont(new Font(FontManager.getRunescapeFont().getName(), Font.PLAIN, config.fontSize()));
+        }
+        else if (config.fontType() == FontTypes.BOLD)
+        {
+            graphics.setFont(new Font(config.fontType().toString(), Font.BOLD, config.fontSize()));
+        }
+        else
+        {
+            graphics.setFont(new Font(config.fontType().toString(), Font.PLAIN, config.fontSize()));
+        }
 
-            // Countdown ticks instead of up.
-            // plugin.tickCounter => ticksRemaining
-            int ticksRemaining = plugin.getTicksUntilNextAttack();
+        final LocalPoint localLocation = client.getLocalPlayer().getLocalLocation();
+        Point playerPoint = null;
 
-            final LocalPoint localLocation = client.getLocalPlayer().getLocalLocation();
-            Point playerPoint = null;
+        switch (config.ticksPosition())
+        {
+            case TOP:
+                playerPoint = Perspective.localToCanvas(client, localLocation, client.getTopLevelWorldView().getPlane(), 214 + config.heightTickOffset());
+                break;
 
-            switch (config.ticksPosition())
-            {
-                case TOP:
-                    playerPoint = Perspective.localToCanvas(client, localLocation, client.getTopLevelWorldView().getPlane(), 214 + config.heightTickOffset());
-                    break;
+            case CENTERED:
+                playerPoint = Perspective.localToCanvas(client, localLocation, client.getTopLevelWorldView().getPlane(), 100 + config.heightTickOffset());
+                break;
 
-                case CENTERED:
-                    playerPoint = Perspective.localToCanvas(client, localLocation, client.getTopLevelWorldView().getPlane(), 100 + config.heightTickOffset());
-                    break;
+            case BOTTOM:
+                playerPoint = player.getCanvasTextLocation(graphics, tickText, 10 + config.heightTickOffset());
+                break;
 
-                case BOTTOM:
-                    playerPoint = player.getCanvasTextLocation(graphics, String.valueOf(ticksRemaining), 10 + config.heightTickOffset());
-                    break;
-
-                case DEFAULT:
-                    int height = client.getLocalPlayer().getLogicalHeight() + 20 + config.heightTickOffset();
-                    playerPoint = Perspective.localToCanvas(client, localLocation, client.getTopLevelWorldView().getPlane(), height);
-                    break;
-            }
-            if (playerPoint != null)
-            {
-                int displayTicksRemaining = config.useZeroBasedTickCount() ? ticksRemaining - 1 : ticksRemaining;
-                OverlayUtil.renderTextLocation(graphics, playerPoint, String.valueOf(displayTicksRemaining), ticksRemaining == 1 ? config.LastColor() : config.NumberColor());
-            }
+            case DEFAULT:
+                int height = client.getLocalPlayer().getLogicalHeight() + 20 + config.heightTickOffset();
+                playerPoint = Perspective.localToCanvas(client, localLocation, client.getTopLevelWorldView().getPlane(), height);
+                break;
+        }
+        if (playerPoint != null)
+        {
+            OverlayUtil.renderTextLocation(graphics, playerPoint, tickText, getTickColor());
         }
         return null;
+    }
+
+    String getTickText()
+    {
+        final int ticksRemaining = plugin.getTicksUntilNextAttack();
+        if (config.showLostTicks() && ticksRemaining <= 0)
+        {
+            final int lostTicks = plugin.getLostAttackTicks();
+            return lostTicks > 0 ? "-" + lostTicks : null;
+        }
+        if (!config.showTick() || plugin.attackState == AttackTimerMetronomePlugin.AttackState.NOT_ATTACKING)
+        {
+            return null;
+        }
+        return String.valueOf(config.useZeroBasedTickCount() ? ticksRemaining - 1 : ticksRemaining);
+    }
+
+    Color getTickColor()
+    {
+        if (config.showLostTicks() && plugin.getLostAttackTicks() > 0)
+        {
+            return config.lostTickColor();
+        }
+        return plugin.getTicksUntilNextAttack() == 1 ? config.LastColor() : config.NumberColor();
     }
 }

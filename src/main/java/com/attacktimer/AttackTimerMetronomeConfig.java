@@ -173,6 +173,43 @@ public interface AttackTimerMetronomeConfig extends Config
         return false;
     }
 
+    @ConfigItem(
+            position = 100,
+            keyName = "onlyCountLostTicks",
+            name = "Show Lost Attack Ticks",
+            description = "Show -1, -2, etc. when an attack is late. Enable Show Attack Cooldown Ticks for a continuous countdown, or disable it to show only late ticks.",
+            section = TICK_NUMBER_SETTINGS
+    )
+    default boolean showLostTicks()
+    {
+        return false;
+    }
+
+    @ConfigItem(
+            position = 110,
+            keyName = "maximumLostTicks",
+            name = "Maximum Lost Ticks",
+            description = "Hide the lost-tick number after this many ticks until another attack is detected. This is a display limit, not a minimum threshold.",
+            section = TICK_NUMBER_SETTINGS
+    )
+    @Range(min = 1, max = 20)
+    default int maximumLostTicks()
+    {
+        return 2;
+    }
+
+    @ConfigItem(
+            position = 120,
+            keyName = "lostTickColor",
+            name = "Lost Tick Color",
+            description = "Color of the late attack number",
+            section = TICK_NUMBER_SETTINGS
+    )
+    default Color lostTickColor()
+    {
+        return Color.RED;
+    }
+
     @ConfigSection(
             name = "Attack Bar",
             description = "Change the colors and number of colors to cycle through",
