@@ -52,7 +52,6 @@ import net.runelite.api.GameState;
 import net.runelite.api.NPC;
 import net.runelite.api.Player;
 import net.runelite.api.Tile;
-import net.runelite.api.events.ActorDeath;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.FakeXpDrop;
 import net.runelite.api.events.GameObjectDespawned;
@@ -214,20 +213,7 @@ public class AttackTimerMetronomePlugin extends Plugin
     public void onNpcDespawned(final NpcDespawned npcDespawned)
     {
         VariableSpeed.onNpcDespawned(client, npcDespawned);
-        if (npcDespawned.getNpc() == lastTarget)
-        {
-            trackingLostTicks = false;
-        }
     };
-
-    @Subscribe
-    public void onActorDeath(final ActorDeath event)
-    {
-        if (event.getActor() == lastTarget || event.getActor() == client.getLocalPlayer())
-        {
-            trackingLostTicks = false;
-        }
-    }
 
     @Subscribe
     public void onGameStateChanged(final GameStateChanged event)
@@ -326,9 +312,8 @@ public class AttackTimerMetronomePlugin extends Plugin
         tickPeriod = attackDelayHoldoffTicks;
         uiHideDebounceTickCount = UI_HIDE_DEBOUNCE_TICKS_MAX;
         lastTarget = client.getLocalPlayer().getInteracting();
-        // Require a detected attack and a target before counting idle ticks as lost ticks.
-        trackingLostTicks = lastTarget != null && lastTarget.getHealthRatio() != 0
-                && client.getGameState() == GameState.LOGGED_IN && attackDelayHoldoffTicks > 0;
+        // Use the existing attack detection, including NPCs without a normal health ratio.
+        trackingLostTicks = attackDelayHoldoffTicks > 0;
     }
 
     public int getTicksUntilNextAttack()
@@ -341,16 +326,19 @@ public class AttackTimerMetronomePlugin extends Plugin
         return tickPeriod;
     }
 
+    public boolean isTrackingLostTicks()
+    {
+        return trackingLostTicks;
+    }
+
     public int getLostAttackTicks()
     {
         final int lostTicks = -attackDelayHoldoffTicks;
-        return trackingLostTicks && lastTarget.getHealthRatio() != 0 && client.getGameState() == GameState.LOGGED_IN
-                && lostTicks > 0 && lostTicks <= getMaximumLostTicks() ? lostTicks : 0;
-    }
-
-    private int getMaximumLostTicks()
-    {
-        return Math.max(1, Math.min(20, config.maximumLostTicks()));
+        if (lostTicks > 0 && lostTicks <= config.maximumLostTicks())
+        {
+            return lostTicks;
+        }
+        return 0;
     }
 
     public boolean isAttackCooldownPending()
@@ -472,7 +460,7 @@ public class AttackTimerMetronomePlugin extends Plugin
         // This needs to come after performAttack as it's an additive affect
         applyAndClearEats();
         // Check before clamping: a limit of 20 must also expire rather than stay at +20 forever.
-        if (trackingLostTicks && 1 - attackDelayHoldoffTicks > getMaximumLostTicks())
+        if (trackingLostTicks && 1 - attackDelayHoldoffTicks > config.maximumLostTicks())
         {
             trackingLostTicks = false;
         }

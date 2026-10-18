@@ -1,0 +1,7 @@
+tickPeriod: 0, uiHideDebounceTickCount: 0, attackDelayHoldoffTicks: 0, dmgDealt: -1, attackState: NOT_ATTACKING, renderedState: NOT_ATTACKING, lastTarget: null
+pendingEatDelayTicks: 0, currentSpellBook: STANDARD, soundEffectTick: -1, soundEffectId: -1
+tickPeriod: 5, uiHideDebounceTickCount: 1, attackDelayHoldoffTicks: 4, dmgDealt: -1, attackState: DELAYED_FIRST_TICK, renderedState: NOT_ATTACKING, lastTarget: mockedNpc
+pendingEatDelayTicks: 0, currentSpellBook: STANDARD, soundEffectTick: -1, soundEffectId: -1
+[TEST MESSAGE] Overhead: 5
+[TEST MESSAGE] Overhead: 4
+[TEST MESSAGE] Overhead: hidden

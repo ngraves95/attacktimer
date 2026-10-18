@@ -123,11 +123,15 @@ public class AttackTimerMetronomeTileOverlay extends Overlay
         return null;
     }
 
-    String getTickText()
+    private String getTickText()
     {
         final int ticksRemaining = plugin.getTicksUntilNextAttack();
         if (config.showLostTicks() && ticksRemaining <= 0)
         {
+            if (!plugin.isTrackingLostTicks())
+            {
+                return null;
+            }
             final int lostTicks = plugin.getLostAttackTicks();
             return lostTicks > 0 ? "-" + lostTicks : null;
         }
@@ -138,9 +142,9 @@ public class AttackTimerMetronomeTileOverlay extends Overlay
         return String.valueOf(config.useZeroBasedTickCount() ? ticksRemaining - 1 : ticksRemaining);
     }
 
-    Color getTickColor()
+    private Color getTickColor()
     {
-        if (config.showLostTicks() && plugin.getLostAttackTicks() > 0)
+        if (config.showLostTicks() && plugin.isTrackingLostTicks() && plugin.getLostAttackTicks() > 0)
         {
             return config.lostTickColor();
         }
