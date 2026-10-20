@@ -9,6 +9,11 @@ Ticks until next attack may be enabled over your player's head.
 
 ## Updates
 
+## 1.3.4
+
+* New show lost ticks. Will show negative numbers when the player is **off** cooldown and is missing ticks.
+  * Can be turned off in settings.
+
 ## 1.3.0 - 1.3.3
 
 * Support for sailing cannons (7 tick)
