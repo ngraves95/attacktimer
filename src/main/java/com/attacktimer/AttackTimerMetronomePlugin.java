@@ -48,6 +48,7 @@ import net.runelite.api.Actor;
 import net.runelite.api.Client;
 import net.runelite.api.DynamicObject;
 import net.runelite.api.GameObject;
+import net.runelite.api.GameState;
 import net.runelite.api.NPC;
 import net.runelite.api.Player;
 import net.runelite.api.Tile;
@@ -55,6 +56,7 @@ import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.FakeXpDrop;
 import net.runelite.api.events.GameObjectDespawned;
 import net.runelite.api.events.GameObjectSpawned;
+import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.InteractingChanged;
 import net.runelite.api.events.NpcDespawned;
@@ -129,6 +131,7 @@ public class AttackTimerMetronomePlugin extends Plugin
     private Spellbook currentSpellBook = Spellbook.STANDARD;
     private int lastUsedWeaponId = -1;
     private Actor lastTarget = null;
+    private boolean trackingLostTicks = false;
     private boolean isUsingMagic = false;
 
     private Map<GameObject, Tile> sailingCannons = new HashMap<GameObject, Tile>();
@@ -213,11 +216,21 @@ public class AttackTimerMetronomePlugin extends Plugin
     };
 
     @Subscribe
+    public void onGameStateChanged(final GameStateChanged event)
+    {
+        if (event.getGameState() != GameState.LOGGED_IN)
+        {
+            trackingLostTicks = false;
+        }
+    }
+
+    @Subscribe
     public void onConfigChanged(ConfigChanged event)
     {
         if (event.getGroup().equals("attacktimermetronome"))
         {
             attackDelayHoldoffTicks = 0;
+            trackingLostTicks = false;
         }
     }
 
@@ -299,6 +312,8 @@ public class AttackTimerMetronomePlugin extends Plugin
         tickPeriod = attackDelayHoldoffTicks;
         uiHideDebounceTickCount = UI_HIDE_DEBOUNCE_TICKS_MAX;
         lastTarget = client.getLocalPlayer().getInteracting();
+        // Use the existing attack detection, including NPCs without a normal health ratio.
+        trackingLostTicks = attackDelayHoldoffTicks > 0;
     }
 
     public int getTicksUntilNextAttack()
@@ -309,6 +324,21 @@ public class AttackTimerMetronomePlugin extends Plugin
     public int getWeaponPeriod()
     {
         return tickPeriod;
+    }
+
+    public boolean isTrackingLostTicks()
+    {
+        return trackingLostTicks;
+    }
+
+    public int getLostAttackTicks()
+    {
+        final int lostTicks = -attackDelayHoldoffTicks;
+        if (lostTicks > 0 && lostTicks <= config.maximumLostTicks())
+        {
+            return lostTicks;
+        }
+        return 0;
     }
 
     public boolean isAttackCooldownPending()
@@ -429,6 +459,11 @@ public class AttackTimerMetronomePlugin extends Plugin
 
         // This needs to come after performAttack as it's an additive affect
         applyAndClearEats();
+        // Check before clamping: a limit of 20 must also expire rather than stay at +20 forever.
+        if (trackingLostTicks && 1 - attackDelayHoldoffTicks > config.maximumLostTicks())
+        {
+            trackingLostTicks = false;
+        }
         // clamp the attackDelayHoldoffTicks at -20, this is so we correctly account for eats even when not
         // attacking, but don't count down forever.
         attackDelayHoldoffTicks = Math.max(-20, attackDelayHoldoffTicks - 1);
@@ -438,6 +473,7 @@ public class AttackTimerMetronomePlugin extends Plugin
     @Override
     protected void startUp() throws Exception
     {
+        trackingLostTicks = false;
         overlayManager.add(overlay);
         overlay.setPreferredSize(DEFAULT_SIZE);
         overlayManager.add(barOverlay);
@@ -449,6 +485,7 @@ public class AttackTimerMetronomePlugin extends Plugin
         overlayManager.remove(overlay);
         overlayManager.remove(barOverlay);
         attackDelayHoldoffTicks = 0;
+        trackingLostTicks = false;
     }
 
     @VisibleForTesting
