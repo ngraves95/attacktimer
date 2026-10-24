@@ -15,6 +15,7 @@ Ticks until next attack may be enabled over your player's head.
   * Obligator (3 tick, 5 tick thrust)
   * Ascension crossbows (2 tick on rapid)
   * Zorya's tome (3 tick). A landed special attack makes the next 3 attacks 2 tick, or the next 5 if two specials in a row land
+* Fix the timer not showing with weapons from new weapon categories (e.g. Zorya's tome)
 
 ## 1.3.4
 
