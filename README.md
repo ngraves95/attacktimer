@@ -9,6 +9,13 @@ Ticks until next attack may be enabled over your player's head.
 
 ## Updates
 
+## 1.3.5
+
+* Support for The Fractured Archive weapons
+  * Obligator (3 tick, 5 tick thrust)
+  * Ascension crossbows (2 tick on rapid)
+  * Zorya's tome (3 tick). A landed special attack makes the next 3 attacks 2 tick, or the next 5 if two specials in a row land
+
 ## 1.3.4
 
 * New show lost ticks. Will show negative numbers when the player is **off** cooldown and is missing ticks.
