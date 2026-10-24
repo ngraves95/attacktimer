@@ -134,6 +134,10 @@ public enum AnimationData
     MELEE_HALLOWED_FLAIL(AnimationID.HUMAN_WEAPONS_HALLOWED_FLAIL01_ATTACK01, CombatSkill.MELEE), // https://oldschool.runescape.wiki/w/Hallowed_flail
     MELEE_FELLING_AXE(AnimationID.FORESTRY_2H_AXE_ATTACK, CombatSkill.MELEE), // https://oldschool.runescape.wiki/w/Crystal_felling_axe
     MELEE_HALLOWFELL(AnimationID.HUMAN_HALLOWFELL_SLASH, CombatSkill.MELEE),
+    MELEE_OBLIGATOR(AnimationID.TFA_HUMAN_OBLIGATOR_ATTACK, CombatSkill.MELEE), // The Fractured Archive, 3t
+    MELEE_OBLIGATOR_MULTIHIT(AnimationID.TFA_HUMAN_OBLIGATOR_MULTIHIT, CombatSkill.MELEE), // 5t
+    MELEE_OBLIGATOR_FEMALE(AnimationID.TFA_HUMAN_OBLIGATOR_ATTACK_FEMALE, CombatSkill.MELEE),
+    MELEE_OBLIGATOR_MULTIHIT_FEMALE(AnimationID.TFA_HUMAN_OBLIGATOR_MULTIHIT_FEMALE, CombatSkill.MELEE),
 
     // RANGED
     RANGED_CHINCHOMPA(AnimationID.HUMAN_CHINCHOMPA_ATTACK_PVN, CombatSkill.RANGED),
@@ -167,6 +171,10 @@ public enum AnimationData
     RANGED_WEBWEAVER_SPEC(AnimationID.HUMAN_SPECIAL01_WEBWEAVER, CombatSkill.RANGED, MetaData.STANDARD_BOW_ATTACK.d|MetaData.SPECIAL_ATTACK.d), // https://oldschool.runescape.wiki/w/Webweaver_bow#Charged
     RANGED_BONE_CROSSBOW_SPEC(AnimationID.DTTD_PLAYER_FIRE_BONE_CROSSBOW_PVN, CombatSkill.RANGED, MetaData.SPECIAL_ATTACK.d), // https://oldschool.runescape.wiki/w/Dorgeshuun_crossbow
     RANGED_SCORCHING_BOW_SPEC(AnimationID.HUMAN_WEAPON_BOW_SCORCHED_01_SPEC, CombatSkill.RANGED, MetaData.STANDARD_BOW_ATTACK.d|MetaData.SPECIAL_ATTACK.d), // https://oldschool.runescape.wiki/w/Scorching_bow
+    RANGED_ASCENSION_CROSSBOW_LEFT(AnimationID.TFA_HUMAN_ASCENSION_CROSSBOW_FIRE_LEFT, CombatSkill.RANGED), // The Fractured Archive, 3t (2t on rapid)
+    RANGED_ASCENSION_CROSSBOW_LEFT_PVN(AnimationID.TFA_HUMAN_ASCENSION_CROSSBOW_FIRE_LEFT_PVN, CombatSkill.RANGED),
+    RANGED_ASCENSION_CROSSBOW_RIGHT(AnimationID.TFA_HUMAN_ASCENSION_CROSSBOW_FIRE_RIGHT, CombatSkill.RANGED),
+    RANGED_ASCENSION_CROSSBOW_RIGHT_PVN(AnimationID.TFA_HUMAN_ASCENSION_CROSSBOW_FIRE_RIGHT_PVN, CombatSkill.RANGED),
 
     // MAGIC - Keep in spellbook order (staves last) then alphabetical order and oneline
     MAGIC_GOD_SPELL(AnimationID.HUMAN_CASTING, CombatSkill.MAGIC, Spellbook.STANDARD, MetaData.NO_DATA.d), // https://oldschool.runescape.wiki/w/God_spells
@@ -216,6 +224,10 @@ public enum AnimationData
     MAGIC_TUMEKENS_SHADOW(AnimationID.TOA_SOT_CAST_B, CombatSkill.MAGIC, MetaData.NO_DATA.d),
     MAGIC_VOLATILE_NIGHTMARE_STAFF_SPEC(AnimationID.NIGHTMARE_STAFF_SPECIAL, CombatSkill.MAGIC, MetaData.SPECIAL_ATTACK.d), // assume 99 mage's base damage (does not rise when boosted).
     MAGIC_WARPED_SCEPTRE(AnimationID.POG_WARPED_SCEPTRE_ATTACK, CombatSkill.MAGIC, MetaData.NO_DATA.d), // https://oldschool.runescape.wiki/w/Warped_sceptre
+    MAGIC_ZORYA_TOME(AnimationID.TFA_HUMAN_ZORYA_TOME_ATTACK, CombatSkill.MAGIC, MetaData.NO_DATA.d), // The Fractured Archive, 3t
+    MAGIC_ZORYA_TOME_FEMALE(AnimationID.TFA_HUMAN_ZORYA_TOME_ATTACK_FEMALE, CombatSkill.MAGIC, MetaData.NO_DATA.d),
+    MAGIC_ZORYA_TOME_SPEC(AnimationID.TFA_HUMAN_ZORYA_TOME_SPECIAL_ATTACK, CombatSkill.MAGIC, MetaData.SPECIAL_ATTACK.d), // next 3 attacks are 2t if the spec lands, 5 if two specs in a row land
+    MAGIC_ZORYA_TOME_SPEC_FEMALE(AnimationID.TFA_HUMAN_ZORYA_TOME_SPECIAL_ATTACK_FEMALE, CombatSkill.MAGIC, MetaData.SPECIAL_ATTACK.d),
 
     // Misc
     MAGIC_IMBUE(AnimationID.HUMAN_CASTBONESTOBANANAS, CombatSkill.NON_ATTACK),
@@ -285,6 +297,10 @@ public enum AnimationData
     TAKING_HIT_WHIP(AnimationID.SLAYER_ABYSSAL_WHIP_DEFEND, CombatSkill.NON_ATTACK),
     TAKING_HIT_KISTEN(AnimationID.HUMAN_WEAPONS_CRIMSON_KISTEN_DEF, CombatSkill.NON_ATTACK),
     TAKING_HIT_HALLOWFELL(AnimationID.HUMAN_HALLOWFELL_DEFEND, CombatSkill.NON_ATTACK),
+    TAKING_HIT_OBLIGATOR(AnimationID.TFA_HUMAN_OBLIGATOR_DEF, CombatSkill.NON_ATTACK),
+    TAKING_HIT_OBLIGATOR_FEMALE(AnimationID.TFA_HUMAN_OBLIGATOR_DEF_FEMALE, CombatSkill.NON_ATTACK),
+    TAKING_HIT_ZORYA_TOME(AnimationID.TFA_HUMAN_ZORYA_TOME_DEFEND, CombatSkill.NON_ATTACK),
+    TAKING_HIT_ZORYA_TOME_FEMALE(AnimationID.TFA_HUMAN_ZORYA_TOME_DEFEND_FEMALE, CombatSkill.NON_ATTACK),
 
     LOW_ALCH(AnimationID.HUMAN_CASTLOWLVLALCHEMY, CombatSkill.NON_ATTACK),
     HIGH_ALCH(AnimationID.HUMAN_CASTHIGHLVLALCHEMY, CombatSkill.NON_ATTACK),

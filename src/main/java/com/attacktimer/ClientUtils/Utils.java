@@ -82,7 +82,12 @@ public class Utils
     // returns ACCURATE for unknown weapons/styles
     public static AttackStyle getAttackStyle(final Client client)
     {
-        final AttackStyle[] attackStyles = getWeaponType(client).getAttackStyles(client);
+        final WeaponType weaponType = getWeaponType(client);
+        if (weaponType == null)
+        {
+            return AttackStyle.ACCURATE;
+        }
+        final AttackStyle[] attackStyles = weaponType.getAttackStyles(client);
         int currentAttackStyleVarbit = client.getVarpValue(VarPlayerID.COM_MODE);
         final int castingMode = client.getVarbitValue(VarbitID.AUTOCAST_DEFMODE);
         if (currentAttackStyleVarbit < attackStyles.length)
@@ -111,6 +116,10 @@ public class Utils
     public static AttackType getAttackType(final Client client)
     {
         final WeaponType weaponType = getWeaponType(client);
+        if (weaponType == null)
+        {
+            return null;
+        }
         final int currentAttackStyleVarbit = client.getVarpValue(VarPlayerID.COM_MODE);
         if (currentAttackStyleVarbit < weaponType.getAttackTypes().length)
         {
@@ -216,6 +225,8 @@ public class Utils
     // log.info("Speed {}", itemManager.getItemStats(<id_to_test>).getEquipment().getAspeed());
     private static final Map<Integer, Integer> NON_STANDARD_ATTACK_SPEEDS = new ImmutableMap.Builder<Integer, Integer>()
             .put(ItemID.HALLOWFELL, 6)
+            .put(ItemID.ZORYAS_TOME, 3)
+            .put(ItemID.ASCENSION_CROSSBOWS, 3)
             .build();
 
     public static int getWeaponId(final Client client)

@@ -130,6 +130,7 @@ public class VariableSpeed
         new RedKerisSpec(),
         new PurgingStaffSpec(YAMA),
         new EyeOfAyak(),
+        new FracturedArchive(AttackTimerMetronomePlugin.TC),
         new TormentedDemons(AttackTimerMetronomePlugin.TC),
         new RoyalTitans(),
 

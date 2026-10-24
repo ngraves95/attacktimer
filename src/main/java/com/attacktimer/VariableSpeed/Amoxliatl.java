@@ -51,7 +51,7 @@ public class Amoxliatl implements IVariableSpeed
         final WorldPoint location = Utils.getLocalLocation(client);
         final int targetId = Utils.getTargetId(client);
         final AttackType attkType = Utils.getAttackType(client);
-        if (location.getRegionID() == AMOXLIATL_REGION_ID && targetId == NpcID.AMOXLIATL_ICE_BLOCK && attkType.IsMelee())
+        if (location.getRegionID() == AMOXLIATL_REGION_ID && targetId == NpcID.AMOXLIATL_ICE_BLOCK && attkType != null && attkType.IsMelee())
         {
             return 1;
         }

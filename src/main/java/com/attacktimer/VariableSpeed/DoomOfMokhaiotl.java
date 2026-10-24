@@ -27,6 +27,7 @@ package com.attacktimer.VariableSpeed;
 
 import com.attacktimer.AnimationData;
 import com.attacktimer.AttackProcedure;
+import com.attacktimer.AttackType;
 import com.attacktimer.Attacking.Attacking;
 import com.attacktimer.ClientUtils.Utils;
 import com.attacktimer.Spellbook;
@@ -150,7 +151,8 @@ public class DoomOfMokhaiotl implements IVariableSpeed
             // delay of the weapon used, overwriting the current delay not addition.
             if (animId == AnimationID.DOM_BEAM_CHARGE_LOOP || animId == AnimationID.DOM_BEAM_CHARGE)
             {
-                if (Utils.getAttackType(client).IsMelee())
+                final AttackType attackType = Utils.getAttackType(client);
+                if (attackType != null && attackType.IsMelee())
                 {
                     if (debugLogs)
                     {
