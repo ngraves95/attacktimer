@@ -130,8 +130,14 @@ public enum WeaponType
     // still hardcoded.
     public AttackStyle[] getAttackStyles(Client client)
     {
+        return getAttackStyles(client, this.ordinal());
+    }
+
+    // Works for any weapon category the client knows about, including ones newer than this enum, as the styles
+    // are read from the client rather than from the enum.
+    public static AttackStyle[] getAttackStyles(Client client, int weaponType)
+    {
         // from script4525
-        int weaponType = this.ordinal();
         int weaponStyleEnum = client.getEnum(EnumID.WEAPON_STYLES).getIntValue(weaponType);
         if (weaponStyleEnum == -1)
         {

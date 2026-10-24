@@ -82,23 +82,22 @@ public class Utils
     // returns ACCURATE for unknown weapons/styles
     public static AttackStyle getAttackStyle(final Client client)
     {
-        final WeaponType weaponType = getWeaponType(client);
-        if (weaponType == null)
-        {
-            return AttackStyle.ACCURATE;
-        }
-        final AttackStyle[] attackStyles = weaponType.getAttackStyles(client);
+        // Use the raw category rather than WeaponType so that categories newer than WeaponType still work,
+        // like RuneLite's AttackStylesPlugin.
+        final int weaponType = client.getVarbitValue(VarbitID.COMBAT_WEAPON_CATEGORY);
+        final AttackStyle[] attackStyles = WeaponType.getAttackStyles(client, weaponType);
         int currentAttackStyleVarbit = client.getVarpValue(VarPlayerID.COM_MODE);
         final int castingMode = client.getVarbitValue(VarbitID.AUTOCAST_DEFMODE);
-        if (currentAttackStyleVarbit < attackStyles.length)
+        // from script4525
+        // Even though the client has 5 attack styles for Staffs, only attack styles 0-4 are used, with an additional
+        // casting mode set for defensive casting
+        if (currentAttackStyleVarbit == 4)
         {
-            // from script4525
-            // Even though the client has 5 attack styles for Staffs, only attack styles 0-4 are used, with an additional
-            // casting mode set for defensive casting
-            if (currentAttackStyleVarbit == 4)
-            {
-                currentAttackStyleVarbit += castingMode;
-            }
+            currentAttackStyleVarbit += castingMode;
+        }
+        if (currentAttackStyleVarbit >= 0 && currentAttackStyleVarbit < attackStyles.length
+                && attackStyles[currentAttackStyleVarbit] != null)
+        {
             return attackStyles[currentAttackStyleVarbit];
         }
 
