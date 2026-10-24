@@ -27,8 +27,10 @@ package com.attacktimer.VariableSpeed;
 
 import com.attacktimer.AnimationData;
 import com.attacktimer.AttackProcedure;
+import com.attacktimer.ClientUtils.Utils;
 import com.attacktimer.Spellbook;
 import net.runelite.api.Client;
+import net.runelite.api.gameval.ItemID;
 
 // Weapons from The Fractured Archive.
 public class FracturedArchive implements IVariableSpeed
@@ -44,28 +46,39 @@ public class FracturedArchive implements IVariableSpeed
         {
             return curSpeed;
         }
+        final int weaponId = Utils.getWeaponId(client);
         switch (curAnimation)
         {
             case MELEE_OBLIGATOR:
             case MELEE_OBLIGATOR_FEMALE:
-                return 3;
+                return isObligator(weaponId) ? 3 : curSpeed;
             case MELEE_OBLIGATOR_MULTIHIT:
             case MELEE_OBLIGATOR_MULTIHIT_FEMALE:
-                return 5;
+                return isObligator(weaponId) ? 5 : curSpeed;
             case RANGED_ASCENSION_CROSSBOW_LEFT:
             case RANGED_ASCENSION_CROSSBOW_LEFT_PVN:
             case RANGED_ASCENSION_CROSSBOW_RIGHT:
             case RANGED_ASCENSION_CROSSBOW_RIGHT_PVN:
-                return 2;
+                return weaponId == ItemID.ASCENSION_CROSSBOWS ? 2 : curSpeed;
             case MAGIC_ZORYA_TOME_SPEC:
             case MAGIC_ZORYA_TOME_SPEC_FEMALE:
-                return zoryaSpecAttackSpeed(damageDealt);
+                return isZoryasTome(weaponId) ? zoryaSpecAttackSpeed(damageDealt) : curSpeed;
             case MAGIC_ZORYA_TOME:
             case MAGIC_ZORYA_TOME_FEMALE:
-                return zoryaAttackSpeed();
+                return isZoryasTome(weaponId) ? zoryaAttackSpeed() : curSpeed;
             default:
                 return curSpeed;
         }
+    }
+
+    private static boolean isObligator(final int weaponId)
+    {
+        return weaponId == ItemID.OBLIGATOR || weaponId == ItemID.OBLIGATOR_UNCHARGED;
+    }
+
+    private static boolean isZoryasTome(final int weaponId)
+    {
+        return weaponId == ItemID.ZORYAS_TOME || weaponId == ItemID.ZORYAS_TOME_UNCHARGED;
     }
 
     private int zoryaSpecAttackSpeed(final int damageDealt)
