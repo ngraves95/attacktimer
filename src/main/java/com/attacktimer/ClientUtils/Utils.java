@@ -82,18 +82,22 @@ public class Utils
     // returns ACCURATE for unknown weapons/styles
     public static AttackStyle getAttackStyle(final Client client)
     {
-        final AttackStyle[] attackStyles = getWeaponType(client).getAttackStyles(client);
+        // Use the raw category rather than WeaponType so that categories newer than WeaponType still work,
+        // like RuneLite's AttackStylesPlugin.
+        final int weaponType = client.getVarbitValue(VarbitID.COMBAT_WEAPON_CATEGORY);
+        final AttackStyle[] attackStyles = WeaponType.getAttackStyles(client, weaponType);
         int currentAttackStyleVarbit = client.getVarpValue(VarPlayerID.COM_MODE);
         final int castingMode = client.getVarbitValue(VarbitID.AUTOCAST_DEFMODE);
-        if (currentAttackStyleVarbit < attackStyles.length)
+        // from script4525
+        // Even though the client has 5 attack styles for Staffs, only attack styles 0-4 are used, with an additional
+        // casting mode set for defensive casting
+        if (currentAttackStyleVarbit == 4)
         {
-            // from script4525
-            // Even though the client has 5 attack styles for Staffs, only attack styles 0-4 are used, with an additional
-            // casting mode set for defensive casting
-            if (currentAttackStyleVarbit == 4)
-            {
-                currentAttackStyleVarbit += castingMode;
-            }
+            currentAttackStyleVarbit += castingMode;
+        }
+        if (currentAttackStyleVarbit >= 0 && currentAttackStyleVarbit < attackStyles.length
+                && attackStyles[currentAttackStyleVarbit] != null)
+        {
             return attackStyles[currentAttackStyleVarbit];
         }
 
@@ -111,6 +115,10 @@ public class Utils
     public static AttackType getAttackType(final Client client)
     {
         final WeaponType weaponType = getWeaponType(client);
+        if (weaponType == null)
+        {
+            return null;
+        }
         final int currentAttackStyleVarbit = client.getVarpValue(VarPlayerID.COM_MODE);
         if (currentAttackStyleVarbit < weaponType.getAttackTypes().length)
         {
@@ -216,6 +224,8 @@ public class Utils
     // log.info("Speed {}", itemManager.getItemStats(<id_to_test>).getEquipment().getAspeed());
     private static final Map<Integer, Integer> NON_STANDARD_ATTACK_SPEEDS = new ImmutableMap.Builder<Integer, Integer>()
             .put(ItemID.HALLOWFELL, 6)
+            .put(ItemID.ZORYAS_TOME, 3)
+            .put(ItemID.ASCENSION_CROSSBOWS, 3)
             .build();
 
     public static int getWeaponId(final Client client)

@@ -312,7 +312,7 @@ public interface AttackTimerMetronomeConfig extends Config
     @ConfigItem(
             position = 10000,
             keyName = "attacktimerVersion",
-            name = "Plugin version:            v1.3.4",
+            name = "Plugin version:            v1.3.5",
             description = ""
     )
     default void version()

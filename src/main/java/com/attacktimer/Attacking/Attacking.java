@@ -54,6 +54,14 @@ public class Attacking
             .add(AnimationData.RANGED_BLOWPIPE).add(AnimationData.RANGED_BLAZING_BLOWPIPE)
             .add(AnimationData.MAGIC_EYE_OF_AYAK).add(AnimationData.MAGIC_EYE_OF_AYAK_SPEC).build();
 
+    // Attacks which can happen without the player interacting with a target. The Obligator thrust can hit
+    // several targets, and while using the Obligator (thrust or smash) the player is often not interacting with
+    // any of them. Both animations last 3 ticks, never longer than their cooldown (5t thrust, 3t smash), so they
+    // can't be mistaken for the end of the previous attack.
+    private static final Set<AnimationData> NO_TARGET_ATTACKS = new ImmutableSet.Builder<AnimationData>()
+            .add(AnimationData.MELEE_OBLIGATOR).add(AnimationData.MELEE_OBLIGATOR_FEMALE)
+            .add(AnimationData.MELEE_OBLIGATOR_MULTIHIT).add(AnimationData.MELEE_OBLIGATOR_MULTIHIT_FEMALE).build();
+
     // Combat Dummy + Nightmare Pillars
     private static final Set<Integer> SPECIAL_NPCS = new ImmutableSet.Builder<Integer>()
             .add(NpcID.POH_COMBAT_DUMMY_UPGRADED_UNDEADSLAYER_NPC, NpcID.POH_COMBAT_DUMMY_UPGRADED_ETHER_NPC,
@@ -109,8 +117,8 @@ public class Attacking
         }
         if (target == null)
         {
-            // Not attacking anything
-            return false;
+            // Not attacking anything, unless it's an attack which doesn't need a target
+            return NO_TARGET_ATTACKS.contains(fromId);
         }
 
         // Do not use any animations from this set

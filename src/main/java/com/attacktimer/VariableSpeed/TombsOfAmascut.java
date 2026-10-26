@@ -46,7 +46,7 @@ public class TombsOfAmascut implements IVariableSpeed
     {
         final int targetId = Utils.getTargetId(client);
         final AttackType attkType = Utils.getAttackType(client);
-        if (targetId == NpcID.WARDENS_P3_ORB_BLUE && attkType.IsMelee())
+        if (targetId == NpcID.WARDENS_P3_ORB_BLUE && attkType != null && attkType.IsMelee())
         {
             return 1;
         }
