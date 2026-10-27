@@ -72,7 +72,7 @@ class AttackTimerBarOverlay extends Overlay
 
         setPosition(OverlayPosition.DYNAMIC);
         setPriority(Overlay.PRIORITY_HIGH);
-        setLayer(OverlayLayer.UNDER_WIDGETS);
+        setLayer(OverlayLayer.ABOVE_SCENE);
     }
 
     @Override
