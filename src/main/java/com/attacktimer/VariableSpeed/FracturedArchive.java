@@ -2,6 +2,7 @@ package com.attacktimer.VariableSpeed;
 
 /*
  * Copyright (c) 2026, Richardant <https://github.com/Richardant>
+ * Copyright (c) 2026, Lexer747 <https://github.com/Lexer747>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,10 +28,13 @@ package com.attacktimer.VariableSpeed;
 
 import com.attacktimer.AnimationData;
 import com.attacktimer.AttackProcedure;
+import com.attacktimer.Attacking.Attacking;
 import com.attacktimer.ClientUtils.Utils;
 import com.attacktimer.Spellbook;
 import com.attacktimer.VariableSpeed.State.TickCount;
+import net.runelite.api.Actor;
 import net.runelite.api.Client;
+import net.runelite.api.NPC;
 import net.runelite.api.gameval.ItemID;
 
 // Weapons from The Fractured Archive.
@@ -63,23 +67,37 @@ public class FracturedArchive implements IVariableSpeed
             return curSpeed;
         }
         final int weaponId = Utils.getWeaponId(client);
-        switch (curAnimation)
+        if (isObligator(weaponId))
         {
-            case MELEE_OBLIGATOR:
-            case MELEE_OBLIGATOR_FEMALE:
-                return isObligator(weaponId) ? 3 : curSpeed;
-            case MELEE_OBLIGATOR_MULTIHIT:
-            case MELEE_OBLIGATOR_MULTIHIT_FEMALE:
-                return isObligator(weaponId) ? 5 : curSpeed;
-            case MAGIC_ZORYA_TOME_SPEC:
-            case MAGIC_ZORYA_TOME_SPEC_FEMALE:
-                return isZoryasTome(weaponId) ? zoryaAttackSpeed(true, damageDealt) : curSpeed;
-            case MAGIC_ZORYA_TOME:
-            case MAGIC_ZORYA_TOME_FEMALE:
-                return isZoryasTome(weaponId) ? zoryaAttackSpeed(false, damageDealt) : curSpeed;
-            default:
-                return curSpeed;
+            switch (curAnimation)
+            {
+                case MELEE_OBLIGATOR:
+                case MELEE_OBLIGATOR_FEMALE:
+                    return 3;
+                case MELEE_OBLIGATOR_MULTIHIT:
+                case MELEE_OBLIGATOR_MULTIHIT_FEMALE:
+                    return 5;
+                default:
+                    return curSpeed;
+            }
         }
+        else if (isZoryasTome(weaponId))
+        {
+            final boolean hit = successfulHit(client, damageDealt);
+            switch (curAnimation)
+            {
+                case MAGIC_ZORYA_TOME_SPEC:
+                case MAGIC_ZORYA_TOME_SPEC_FEMALE:
+                    return zoryaAttackSpeed(hit);
+                case MAGIC_ZORYA_TOME:
+                case MAGIC_ZORYA_TOME_FEMALE:
+                    return zoryaAttackSpeed(false);
+                default:
+                    return curSpeed;
+            }
+        }
+
+        return curSpeed;
     }
 
     private static boolean isObligator(final int weaponId)
@@ -92,7 +110,7 @@ public class FracturedArchive implements IVariableSpeed
         return weaponId == ItemID.ZORYAS_TOME || weaponId == ItemID.ZORYAS_TOME_UNCHARGED;
     }
 
-    private int zoryaAttackSpeed(final boolean isSpec, final int damageDealt)
+    private int zoryaAttackSpeed(final boolean isSpecAndHit)
     {
         // https://oldschool.runescape.wiki/w/Zorya%27s_tome
         // A landed spec buffs the next 3 attacks (2t instead of 3t). A spec used while buffed is itself a
@@ -110,11 +128,27 @@ public class FracturedArchive implements IVariableSpeed
             remaining--;
             speed = 2;
         }
-        if (isSpec && damageDealt > 0)
+        if (isSpecAndHit)
         {
             remaining += ZORYA_FAST_ATTACKS;
         }
         zoryaFastAttacksRemaining = remaining;
         return speed;
+    }
+
+    private boolean successfulHit(final Client client, final int damageDealt)
+    {
+        if (damageDealt > 0)
+        {
+            return true;
+        }
+        final Actor target = client.getLocalPlayer().getInteracting();
+        if (target != null && (target instanceof NPC))
+        {
+            final NPC npc = (NPC) target;
+            // These don't compute damage normally (zero exp)
+            return Attacking.COMBAT_DUMMY.contains(npc.getId());
+        }
+        return false;
     }
 }

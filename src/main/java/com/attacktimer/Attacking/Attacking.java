@@ -62,14 +62,20 @@ public class Attacking
             .add(AnimationData.MELEE_OBLIGATOR).add(AnimationData.MELEE_OBLIGATOR_FEMALE)
             .add(AnimationData.MELEE_OBLIGATOR_MULTIHIT).add(AnimationData.MELEE_OBLIGATOR_MULTIHIT_FEMALE).build();
 
-    // Combat Dummy + Nightmare Pillars
-    private static final Set<Integer> SPECIAL_NPCS = new ImmutableSet.Builder<Integer>()
+    // Combat Dummy
+    public static final Set<Integer> COMBAT_DUMMY = new ImmutableSet.Builder<Integer>()
             .add(NpcID.POH_COMBAT_DUMMY_UPGRADED_UNDEADSLAYER_NPC, NpcID.POH_COMBAT_DUMMY_UPGRADED_ETHER_NPC,
                     NpcID.POH_COMBAT_DUMMY_UPGRADED_KQ_NPC, NpcID.POH_COMBAT_DUMMY_UPGRADED_KURASK_NPC,
                     NpcID.POH_COMBAT_DUMMY_UPGRADED_VAMPIRE_NPC, NpcID.POH_COMBAT_DUMMY_UPGRADED_VORKATH_NPC,
                     NpcID.POH_COMBAT_DUMMY_NPC, NpcID.POH_COMBAT_DUMMY_UNDEADSLAYER_NPC,
-                    NpcID.POH_COMBAT_DUMMY_UPGRADED_NPC, NpcID.NIGHTMARE_TOTEM_1_READY, NpcID.NIGHTMARE_TOTEM_2_READY,
+                    NpcID.POH_COMBAT_DUMMY_UPGRADED_NPC)
+            .build();
+
+    // Combat Dummy + Nightmare Pillars
+    private static final Set<Integer> SPECIAL_NPCS = new ImmutableSet.Builder<Integer>()
+            .add(NpcID.NIGHTMARE_TOTEM_1_READY, NpcID.NIGHTMARE_TOTEM_2_READY,
                     NpcID.NIGHTMARE_TOTEM_3_READY, NpcID.NIGHTMARE_TOTEM_4_READY)
+            .addAll(COMBAT_DUMMY)
             .build();
 
     public static boolean isPlayerAttacking(final Client client, final NPCManager npcManager, final Map<GameObject, Tile> sailingCannons)
