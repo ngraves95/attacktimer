@@ -9,7 +9,7 @@ Ticks until next attack may be enabled over your player's head.
 
 ## Updates
 
-## 1.3.5
+## 1.3.5 - 1.3.6
 
 * Support for The Fractured Archive weapons
   * Obligator (3 tick, 5 tick thrust)
