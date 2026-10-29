@@ -33,14 +33,11 @@ public final class Attack
     @Getter
     private final int animationId;
     @Getter
-    private final boolean salamander;
-    @Getter
     private final Actor target;
 
-    public Attack(final int animationId, final boolean salamander, final Actor target)
+    public Attack(final int animationId, final Actor target)
     {
         this.animationId = animationId;
-        this.salamander = salamander;
         this.target = target;
     }
 }

@@ -82,7 +82,8 @@ public class Attacking
     {
         final Player localPlayer = client.getLocalPlayer();
         final int animationId = localPlayer.getAnimation();
-        if (AnimationData.isBlockListAnimation(animationId))
+        // Most weapons overwrite blockList animations, apart from the zorya tome, how odd.
+        if (AnimationData.isBlockListAnimation(animationId) && !getZoryaAttack(localPlayer))
         {
             return false;
         }
@@ -99,7 +100,7 @@ public class Attacking
 
         // Not walking is either ANY player animation or the edge cases which don't trigger an animation,
         // e.g Salamander.
-        final boolean notWalking = animationId != -1 || getSalamanderAttack(client);
+        final boolean notWalking = animationId != -1 || getSpotAnimAttack(localPlayer);
 
         // Testing if we are attacking by checking the target is more future proof to new weapons which don't
         // need custom code and the weapon stats are enough.
@@ -141,13 +142,32 @@ public class Attacking
         final Player localPlayer = client.getLocalPlayer();
         final int animationId = localPlayer.getAnimation();
         final Actor target = localPlayer.getInteracting();
-        return new Attack(animationId, getSalamanderAttack(client), target);
+        return new Attack(animationId, target);
     }
 
-    private static boolean getSalamanderAttack(final Client client)
+    private static boolean getSpotAnimAttack(final Player lp)
     {
-        return client.getLocalPlayer().hasSpotAnim(SpotanimID.FIREBREATH);
+        return getSalamanderAttack(lp) || getZoryaAttack(lp);
     }
+
+    private static boolean getSalamanderAttack(final Player lp)
+    {
+        return lp.hasSpotAnim(SpotanimID.FIREBREATH);
+    }
+
+    private static boolean getZoryaAttack(final Player lp)
+    {
+        return lp.hasSpotAnim(SpotanimID.VFX_ZORYA_TOME_STANDARD_SPOTANIM)
+                || lp.hasSpotAnim(SpotanimID.VFX_ZORYA_TOME_STANDARD_SPOTANIM_FEMALE)
+                || getZoryaSpecAttack(lp);
+    }
+
+    public static boolean getZoryaSpecAttack(final Player lp)
+    {
+        return lp.hasSpotAnim(SpotanimID.VFX_ZORYA_TOME_SPEC_SPOTANIM)
+                || lp.hasSpotAnim(SpotanimID.VFX_ZORYA_TOME_SPEC_SPOTANIM_FEMALE);
+    }
+
 
     private static boolean sailingAttack(final Client client, final Map<GameObject, Tile> sailingCannons, final AnimationData anim)
     {

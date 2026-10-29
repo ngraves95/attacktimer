@@ -35,6 +35,7 @@ import com.attacktimer.VariableSpeed.State.TickCount;
 import net.runelite.api.Actor;
 import net.runelite.api.Client;
 import net.runelite.api.NPC;
+import net.runelite.api.Player;
 import net.runelite.api.gameval.ItemID;
 
 // Weapons from The Fractured Archive.
@@ -71,14 +72,24 @@ public class FracturedArchive implements IVariableSpeed
         {
             switch (curAnimation)
             {
-                case MELEE_OBLIGATOR:
-                case MELEE_OBLIGATOR_FEMALE:
+            case MELEE_OBLIGATOR:
+            case MELEE_OBLIGATOR_FEMALE:
+                return 3;
+            case MELEE_OBLIGATOR_MULTIHIT:
+            case MELEE_OBLIGATOR_MULTIHIT_FEMALE:
+                return 5;
+            default:
+                // A player may be attacking but also summoning a thrall, (or some other way to hide the
+                // animation) in which case we should infer speed from the attack option.
+                final var option = Utils.getAttackStyle(client);
+                switch (option)
+                {
+                case ACCURATE:
                     return 3;
-                case MELEE_OBLIGATOR_MULTIHIT:
-                case MELEE_OBLIGATOR_MULTIHIT_FEMALE:
-                    return 5;
+                case AGGRESSIVE:
                 default:
-                    return curSpeed;
+                    return 5;
+                }
             }
         }
         else if (isZoryasTome(weaponId))
@@ -86,14 +97,20 @@ public class FracturedArchive implements IVariableSpeed
             final boolean hit = successfulHit(client, damageDealt);
             switch (curAnimation)
             {
-                case MAGIC_ZORYA_TOME_SPEC:
-                case MAGIC_ZORYA_TOME_SPEC_FEMALE:
-                    return zoryaAttackSpeed(hit);
-                case MAGIC_ZORYA_TOME:
-                case MAGIC_ZORYA_TOME_FEMALE:
-                    return zoryaAttackSpeed(false);
-                default:
-                    return curSpeed;
+            case MAGIC_ZORYA_TOME_SPEC:
+            case MAGIC_ZORYA_TOME_SPEC_FEMALE:
+                return zoryaAttackSpeed(hit);
+            case MAGIC_ZORYA_TOME:
+            case MAGIC_ZORYA_TOME_FEMALE:
+                return zoryaAttackSpeed(false);
+            default:
+                // A player may be attacking but also summoning a thrall, (or some other way to hide the
+                // animation) in which case we should infer speed/spec from delta
+                final Player localPlayer = client.getLocalPlayer();
+                final boolean specAndHit = hit && (lastSpecDelta == -500 || Attacking.getZoryaSpecAttack(localPlayer));
+                return zoryaAttackSpeed(specAndHit);
+                // Since we know the weapon ID we should always use `zoryaAttackSpeed` to track fast attacks
+                // accurately
             }
         }
 
