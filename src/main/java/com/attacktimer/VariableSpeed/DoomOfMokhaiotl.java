@@ -51,18 +51,28 @@ public class DoomOfMokhaiotl implements IVariableSpeed
             .add(13668) // Delve 2 - 5
             .add(14180) // Delve 5+
             .build();
-    // All larvae and the volatile earth work the same:
+    // All larvae work the same:
     // - if you attack them with demon bane you get no CD.
     // - else non demonbane overwrites you're current CD
     // - you can attack them whilst on CD.
-    private static final Set<Integer> COOLDOWN_OVERWRITES_IDS = new ImmutableSet.Builder<Integer>()
+    private static final Set<Integer> LARVAE = new ImmutableSet.Builder<Integer>()
             .add(NpcID.DOM_DEMONIC_ENERGY)
             .add(NpcID.DOM_DEMONIC_ENERGY_GIANT_MAGE)
             .add(NpcID.DOM_DEMONIC_ENERGY_GIANT_RANGE)
             .add(NpcID.DOM_DEMONIC_ENERGY_MAGE)
             .add(NpcID.DOM_DEMONIC_ENERGY_RANGE)
             .add(NpcID.DOM_DEMONIC_ENERGY_MELEE)
+            .build();
+    // Volatile earth work similar to larvae:
+    // - you can attack them whilst on CD.
+    private static final Set<Integer> VOLATILE_EARTH = new ImmutableSet.Builder<Integer>()
             .add(NpcID.DOM_SHOCKWAVE_PATH_NODE)
+            .build();
+
+    // These NPCs can all interrupt normal cooldown setting your current hit delay to some new value even if on cooldown.
+    private static final Set<Integer> COOLDOWN_OVERWRITES_IDS = new ImmutableSet.Builder<Integer>()
+            .addAll(LARVAE)
+            .addAll(VOLATILE_EARTH)
             .build();
 
     // There's no actual demonbane stat anywhere in the runelite API so this list has to be hardcoded
@@ -118,15 +128,18 @@ public class DoomOfMokhaiotl implements IVariableSpeed
                 return false;
             }
             final int weaponId = Utils.getWeaponId(client);
-            final boolean isDemonbaneSpell = spellbook == Spellbook.ARCEUUS && AnimationData.isManualCasting(anim) && anim == AnimationData.MAGIC_ARCEUUS_DEMONBANE;
-            if (NO_COOLDOWN_WEAPON.contains(weaponId) || isDemonbaneSpell)
+            if (LARVAE.contains(npcId))
             {
-                return false;
+                if (NO_COOLDOWN_WEAPON.contains(weaponId) || isDemonbaneSpell(anim, spellbook))
+                {
+                    return false;
+                }
             }
-
+            // Volatile earth or grub with normal weapon
             if (debugLogs)
             {
-                log.debug("DoomOfMokhaiotl success, attacking larvae with normal weapon");
+                final var target = LARVAE.contains(npcId) ? "larvae" : "volatile earth";
+                log.debug("DoomOfMokhaiotl success, attacking "+target+" with normal weapon");
             }
             larvaeConsumed = tickCount.get();
             return true;
@@ -177,16 +190,22 @@ public class DoomOfMokhaiotl implements IVariableSpeed
     {
         final int targetId = Utils.getTargetId(client);
         final boolean inDoom = Utils.isInRegionId(client, DOOM_REGION_IDS);
-        if (inDoom && COOLDOWN_OVERWRITES_IDS.contains(targetId))
+        if (inDoom && LARVAE.contains(targetId))
         {
             final int weaponId = Utils.getWeaponId(client);
-            final boolean isDemonbaneSpell = spellbook == Spellbook.ARCEUUS && AnimationData.isManualCasting(curAnimation) && curAnimation == AnimationData.MAGIC_ARCEUUS_DEMONBANE;
-            if (NO_COOLDOWN_WEAPON.contains(weaponId) || isDemonbaneSpell)
+            if (NO_COOLDOWN_WEAPON.contains(weaponId) || isDemonbaneSpell(curAnimation, spellbook))
             {
                 log.debug("DoomOfMokhaiotl success, zero delay grub");
                 return 1;
             }
         }
         return curSpeed;
+    }
+
+    private boolean isDemonbaneSpell(final AnimationData curAnimation, final Spellbook spellbook)
+    {
+        return spellbook == Spellbook.ARCEUUS &&
+            AnimationData.isManualCasting(curAnimation) &&
+            curAnimation == AnimationData.MAGIC_ARCEUUS_DEMONBANE;
     }
 }
