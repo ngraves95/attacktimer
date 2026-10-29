@@ -62,21 +62,28 @@ public class Attacking
             .add(AnimationData.MELEE_OBLIGATOR).add(AnimationData.MELEE_OBLIGATOR_FEMALE)
             .add(AnimationData.MELEE_OBLIGATOR_MULTIHIT).add(AnimationData.MELEE_OBLIGATOR_MULTIHIT_FEMALE).build();
 
-    // Combat Dummy + Nightmare Pillars
-    private static final Set<Integer> SPECIAL_NPCS = new ImmutableSet.Builder<Integer>()
+    // Combat Dummy
+    public static final Set<Integer> COMBAT_DUMMY = new ImmutableSet.Builder<Integer>()
             .add(NpcID.POH_COMBAT_DUMMY_UPGRADED_UNDEADSLAYER_NPC, NpcID.POH_COMBAT_DUMMY_UPGRADED_ETHER_NPC,
                     NpcID.POH_COMBAT_DUMMY_UPGRADED_KQ_NPC, NpcID.POH_COMBAT_DUMMY_UPGRADED_KURASK_NPC,
                     NpcID.POH_COMBAT_DUMMY_UPGRADED_VAMPIRE_NPC, NpcID.POH_COMBAT_DUMMY_UPGRADED_VORKATH_NPC,
                     NpcID.POH_COMBAT_DUMMY_NPC, NpcID.POH_COMBAT_DUMMY_UNDEADSLAYER_NPC,
-                    NpcID.POH_COMBAT_DUMMY_UPGRADED_NPC, NpcID.NIGHTMARE_TOTEM_1_READY, NpcID.NIGHTMARE_TOTEM_2_READY,
+                    NpcID.POH_COMBAT_DUMMY_UPGRADED_NPC)
+            .build();
+
+    // Combat Dummy + Nightmare Pillars
+    private static final Set<Integer> SPECIAL_NPCS = new ImmutableSet.Builder<Integer>()
+            .add(NpcID.NIGHTMARE_TOTEM_1_READY, NpcID.NIGHTMARE_TOTEM_2_READY,
                     NpcID.NIGHTMARE_TOTEM_3_READY, NpcID.NIGHTMARE_TOTEM_4_READY)
+            .addAll(COMBAT_DUMMY)
             .build();
 
     public static boolean isPlayerAttacking(final Client client, final NPCManager npcManager, final Map<GameObject, Tile> sailingCannons)
     {
         final Player localPlayer = client.getLocalPlayer();
         final int animationId = localPlayer.getAnimation();
-        if (AnimationData.isBlockListAnimation(animationId))
+        // Most weapons overwrite blockList animations, apart from the zorya tome, how odd.
+        if (AnimationData.isBlockListAnimation(animationId) && !getZoryaAttack(localPlayer))
         {
             return false;
         }
@@ -93,7 +100,7 @@ public class Attacking
 
         // Not walking is either ANY player animation or the edge cases which don't trigger an animation,
         // e.g Salamander.
-        final boolean notWalking = animationId != -1 || getSalamanderAttack(client);
+        final boolean notWalking = animationId != -1 || getSpotAnimAttack(localPlayer);
 
         // Testing if we are attacking by checking the target is more future proof to new weapons which don't
         // need custom code and the weapon stats are enough.
@@ -135,13 +142,32 @@ public class Attacking
         final Player localPlayer = client.getLocalPlayer();
         final int animationId = localPlayer.getAnimation();
         final Actor target = localPlayer.getInteracting();
-        return new Attack(animationId, getSalamanderAttack(client), target);
+        return new Attack(animationId, target);
     }
 
-    private static boolean getSalamanderAttack(final Client client)
+    private static boolean getSpotAnimAttack(final Player lp)
     {
-        return client.getLocalPlayer().hasSpotAnim(SpotanimID.FIREBREATH);
+        return getSalamanderAttack(lp) || getZoryaAttack(lp);
     }
+
+    private static boolean getSalamanderAttack(final Player lp)
+    {
+        return lp.hasSpotAnim(SpotanimID.FIREBREATH);
+    }
+
+    private static boolean getZoryaAttack(final Player lp)
+    {
+        return lp.hasSpotAnim(SpotanimID.VFX_ZORYA_TOME_STANDARD_SPOTANIM)
+                || lp.hasSpotAnim(SpotanimID.VFX_ZORYA_TOME_STANDARD_SPOTANIM_FEMALE)
+                || getZoryaSpecAttack(lp);
+    }
+
+    public static boolean getZoryaSpecAttack(final Player lp)
+    {
+        return lp.hasSpotAnim(SpotanimID.VFX_ZORYA_TOME_SPEC_SPOTANIM)
+                || lp.hasSpotAnim(SpotanimID.VFX_ZORYA_TOME_SPEC_SPOTANIM_FEMALE);
+    }
+
 
     private static boolean sailingAttack(final Client client, final Map<GameObject, Tile> sailingCannons, final AnimationData anim)
     {
