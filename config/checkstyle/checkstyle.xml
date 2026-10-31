@@ -10,7 +10,7 @@
   </module>
 
   <module name="FileTabCharacter"/>
-
+  <module name="SuppressWarningsFilter" />
   <module name="TreeWalker">
     <module name="ArrayTrailingComma"/>
     <module name="AvoidNestedBlocks"/>
@@ -34,6 +34,7 @@
     <module name="OneTopLevelClass"/>
     <module name="OuterTypeFilename"/>
     <module name="RedundantImport"/>
+    <module name="SuppressWarningsHolder" />
     <module name="UnusedImports"/>
   </module>
 </module>

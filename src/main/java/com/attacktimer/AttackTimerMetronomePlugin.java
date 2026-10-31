@@ -101,7 +101,11 @@ public class AttackTimerMetronomePlugin extends Plugin
     private AttackTimerMetronomeTileOverlay overlay;
 
     @Inject
-    private AttackTimerBarOverlay barOverlay;
+    private AttackTimerBarOverlayAboveScene barOverlayAboveScene;
+    @Inject
+    private AttackTimerBarOverlayUnderWidgets barOverlayUnderWidgets;
+    @Inject
+    private AttackTimerBarOverlayAboveWidgets barOverlayAboveWidgets;
 
     @Inject
     private AttackTimerMetronomeConfig config;
@@ -476,14 +480,18 @@ public class AttackTimerMetronomePlugin extends Plugin
         trackingLostTicks = false;
         overlayManager.add(overlay);
         overlay.setPreferredSize(DEFAULT_SIZE);
-        overlayManager.add(barOverlay);
+        overlayManager.add(barOverlayAboveScene);
+        overlayManager.add(barOverlayUnderWidgets);
+        overlayManager.add(barOverlayAboveWidgets);
     }
 
     @Override
     protected void shutDown() throws Exception
     {
         overlayManager.remove(overlay);
-        overlayManager.remove(barOverlay);
+        overlayManager.remove(barOverlayAboveScene);
+        overlayManager.remove(barOverlayUnderWidgets);
+        overlayManager.remove(barOverlayAboveWidgets);
         attackDelayHoldoffTicks = 0;
         trackingLostTicks = false;
     }
