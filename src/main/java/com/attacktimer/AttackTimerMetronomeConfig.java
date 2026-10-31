@@ -302,6 +302,19 @@ public interface AttackTimerMetronomeConfig extends Config
         return AttackBarStyle.AUTO;
     }
 
+    @ConfigItem(
+            position = 70,
+            keyName = "attackBarHeight",
+            name = "Bar Height",
+            description = "Thickness of the attack bar in pixels. 0 uses the default height for the selected style.",
+            section = ATTACK_BAR_SETTINGS
+    )
+    @Range(min = 0, max = 20)
+    default int barHeight()
+    {
+        return 0;
+    }
+
     @ConfigSection(
             name = "Attack Timer Debug Settings",
             description = "Debug",

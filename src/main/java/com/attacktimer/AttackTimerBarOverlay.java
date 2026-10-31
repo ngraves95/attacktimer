@@ -115,7 +115,7 @@ abstract class AttackTimerBarOverlay extends Overlay
         if (useHD)
         {
             final int barWidth = HD_FRONT_BAR.getWidth();
-            final int barHeight = HD_FRONT_BAR.getHeight();
+            final int barHeight = config.barHeight() > 0 ? config.barHeight() : HD_FRONT_BAR.getHeight();
             final int barX = canvasPoint.getX() - barWidth / 2;
             final int barY = canvasPoint.getY() + 7;
 
@@ -130,7 +130,8 @@ abstract class AttackTimerBarOverlay extends Overlay
                 return null;
             }
             // else draw a smaller bar as the "filler" image
-            var subImage = HD_FRONT_BAR.getSubimage(0, 0, progressFill, barHeight);
+            // the sub-image is taken at the sprite's own height, drawImage then scales it to barHeight
+            var subImage = HD_FRONT_BAR.getSubimage(0, 0, progressFill, HD_FRONT_BAR.getHeight());
             graphics.drawImage(subImage, barX, barY, progressFill, barHeight, null);
             return null;
         }
@@ -138,7 +139,7 @@ abstract class AttackTimerBarOverlay extends Overlay
         final int barX = canvasPoint.getX() - 15;
         final int barY = canvasPoint.getY() + 7;
         final int barWidth = ATTACK_BAR_SIZE.width;
-        final int barHeight = ATTACK_BAR_SIZE.height;
+        final int barHeight = config.barHeight() > 0 ? config.barHeight() : ATTACK_BAR_SIZE.height;
 
         // Restricted by the width to prevent the bar from being too long while you are boosted above your
         // real prayer level.
