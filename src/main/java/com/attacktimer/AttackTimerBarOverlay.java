@@ -47,8 +47,7 @@ import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.util.ImageUtil;
 
-@Singleton
-class AttackTimerBarOverlay extends Overlay
+abstract class AttackTimerBarOverlay extends Overlay
 {
     private static final Color BAR_FILL_COLOR = new Color(201, 161, 28);
     private static final Color BAR_BG_COLOR = Color.black;
@@ -63,8 +62,7 @@ class AttackTimerBarOverlay extends Overlay
 
     private boolean shouldShowBar = false;
 
-    @Inject
-    private AttackTimerBarOverlay(final Client client, final AttackTimerMetronomeConfig config, final AttackTimerMetronomePlugin plugin)
+    protected AttackTimerBarOverlay(final Client client, final AttackTimerMetronomeConfig config, final AttackTimerMetronomePlugin plugin, OverlayLayer layer)
     {
         this.client = client;
         this.config = config;
@@ -72,14 +70,13 @@ class AttackTimerBarOverlay extends Overlay
 
         setPosition(OverlayPosition.DYNAMIC);
         setPriority(Overlay.PRIORITY_HIGH);
-        setLayer(OverlayLayer.ABOVE_SCENE);
+        setLayer(layer);
     }
 
     @Override
     public Dimension render(Graphics2D graphics)
     {
         onTick();
-
         if (!shouldShowBar)
         {
             return null;
@@ -104,7 +101,8 @@ class AttackTimerBarOverlay extends Overlay
 
         int denomMod = (config.barEmpties()) ? 1 : 0;
         int numerMod = (config.barFills()) ? 1 : 0;
-        float ratio = (float) (plugin.getTicksUntilNextAttack() - numerMod) / (float) (plugin.getWeaponPeriod() - denomMod);
+        float ratio = (float) (plugin.getTicksUntilNextAttack() - numerMod)
+                / (float) (plugin.getWeaponPeriod() - denomMod);
         // barDirection:
         // true  -> drain -> moves right to left  each tick
         // false -> fills -> move  left  to right each tick
@@ -161,7 +159,16 @@ class AttackTimerBarOverlay extends Overlay
 
     private void onTick()
     {
-        shouldShowBar = true;
+        // We have a bar per layer as setting getLayer outside the constructor doesn't do anything. Therefore
+        // this will be true for exactly ONE of the actual implementation classes and never more.
+        //
+        // cite: https://discord.com/channels/301497432909414422/419891709883973642/1538366632265519124
+        //      Seebs: "Can I call setPosition and setLayer post constructor?"
+        //      Abex: "iirc no"
+        //      Abex: "you should have 2 overlays"
+        //
+        // So for our case we have one per enum we support.
+        shouldShowBar = config.BarOverlayLayer().ToOverlayLayer() == getLayer();
 
         if (!config.showBar())
         {
@@ -172,5 +179,43 @@ class AttackTimerBarOverlay extends Overlay
         {
             shouldShowBar = false;
         }
+    }
+}
+
+// These classes are very small and don't really deserve a file each.
+
+@SuppressWarnings("checkstyle:OneTopLevelClass")
+@Singleton
+class AttackTimerBarOverlayAboveScene extends AttackTimerBarOverlay
+{
+    @Inject
+    private AttackTimerBarOverlayAboveScene(Client client, AttackTimerMetronomeConfig config,
+            AttackTimerMetronomePlugin plugin)
+    {
+        super(client, config, plugin, OverlayLayer.ABOVE_SCENE);
+    }
+}
+
+@SuppressWarnings("checkstyle:OneTopLevelClass")
+@Singleton
+class AttackTimerBarOverlayUnderWidgets extends AttackTimerBarOverlay
+{
+    @Inject
+    private AttackTimerBarOverlayUnderWidgets(Client client, AttackTimerMetronomeConfig config,
+            AttackTimerMetronomePlugin plugin)
+    {
+        super(client, config, plugin, OverlayLayer.UNDER_WIDGETS);
+    }
+}
+
+@SuppressWarnings("checkstyle:OneTopLevelClass")
+@Singleton
+class AttackTimerBarOverlayAboveWidgets extends AttackTimerBarOverlay
+{
+    @Inject
+    private AttackTimerBarOverlayAboveWidgets(Client client, AttackTimerMetronomeConfig config,
+            AttackTimerMetronomePlugin plugin)
+    {
+        super(client, config, plugin, OverlayLayer.ABOVE_WIDGETS);
     }
 }

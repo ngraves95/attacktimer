@@ -243,6 +243,18 @@ public interface AttackTimerMetronomeConfig extends Config
     }
 
     @ConfigItem(
+            position = 21,
+            keyName = "attackBarOverlayLayer",
+            name = "Draw",
+            description = "Change where bar is drawn order. Runelite layer mapping | Below Overheads: ABOVE_SCENE | Above Overheads: UNDER_WIDGETS | Above Widgets: ABOVE_WIDGETS",
+            section = ATTACK_BAR_SETTINGS
+    )
+    default BarOverlayLayer BarOverlayLayer()
+    {
+        return BarOverlayLayer.UNDER_WIDGETS;
+    }
+
+    @ConfigItem(
             position = 30,
             keyName = "attackBarEmpties",
             name = "Empties Before Attack",
