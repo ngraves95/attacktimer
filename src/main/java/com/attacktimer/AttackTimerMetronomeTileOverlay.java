@@ -94,7 +94,8 @@ public class AttackTimerMetronomeTileOverlay extends Overlay
             graphics.setFont(new Font(config.fontType().toString(), Font.PLAIN, config.fontSize()));
         }
 
-        final LocalPoint localLocation = client.getLocalPlayer().getLocalLocation();
+        final LocalPoint modelLocation = plugin.getTrueTileModelLocation();
+        final LocalPoint localLocation = modelLocation != null ? modelLocation : client.getLocalPlayer().getLocalLocation();
         Point playerPoint = null;
 
         switch (config.ticksPosition())
@@ -108,7 +109,9 @@ public class AttackTimerMetronomeTileOverlay extends Overlay
                 break;
 
             case BOTTOM:
-                playerPoint = player.getCanvasTextLocation(graphics, tickText, 10 + config.heightTickOffset());
+                playerPoint = modelLocation != null
+                    ? Perspective.getCanvasTextLocation(client, graphics, modelLocation, tickText, 10 + config.heightTickOffset())
+                    : player.getCanvasTextLocation(graphics, tickText, 10 + config.heightTickOffset());
                 break;
 
             case DEFAULT:

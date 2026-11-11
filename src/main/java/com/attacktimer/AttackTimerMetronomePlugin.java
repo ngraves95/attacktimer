@@ -52,6 +52,7 @@ import net.runelite.api.GameState;
 import net.runelite.api.NPC;
 import net.runelite.api.Player;
 import net.runelite.api.Tile;
+import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.FakeXpDrop;
 import net.runelite.api.events.GameObjectDespawned;
@@ -70,6 +71,7 @@ import net.runelite.api.gameval.VarbitID;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
+import net.runelite.client.events.PluginMessage;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.game.NPCManager;
 import net.runelite.client.plugins.Plugin;
@@ -472,6 +474,76 @@ public class AttackTimerMetronomePlugin extends Plugin
         // attacking, but don't count down forever.
         attackDelayHoldoffTicks = Math.max(-20, attackDelayHoldoffTicks - 1);
         ATTACK_SPEED.onTick();
+    }
+
+    // True Tile Movement Animations hides the player and draws its own model that follows the true tile.
+    // It publishes where that model is so overhead overlays can follow it instead of the hidden player.
+    private static final String TRUE_TILE_MOVEMENT_NAMESPACE = "true-tile-movement-animation";
+    private static final String TRUE_TILE_MOVEMENT_MODEL_LOCATION = "local-player-model-location";
+    private LocalPoint trueTileModelLocation = null;
+    private int trueTileModelTick = -1;
+
+    @Subscribe
+    public void onPluginMessage(PluginMessage message)
+    {
+        if (!TRUE_TILE_MOVEMENT_NAMESPACE.equals(message.getNamespace())
+                || !TRUE_TILE_MOVEMENT_MODEL_LOCATION.equals(message.getName()))
+        {
+            return;
+        }
+
+        final Map<String, Object> data = message.getData();
+        final Object x = data.get("x");
+        final Object y = data.get("y");
+        final Object worldView = data.get("worldView");
+        if (Boolean.TRUE.equals(data.get("active"))
+                && x instanceof Integer && y instanceof Integer && worldView instanceof Integer)
+        {
+            trueTileModelLocation = new LocalPoint((Integer) x, (Integer) y, (Integer) worldView);
+            trueTileModelTick = client.getTickCount();
+        }
+        else
+        {
+            trueTileModelLocation = null;
+        }
+    }
+
+    /**
+     * Where True Tile Movement Animations is currently drawing the local player's model, or null when
+     * that plugin is not drawing one (not installed, turned off, or the real player is being shown).
+     */
+    public LocalPoint getTrueTileModelLocation()
+    {
+        final LocalPoint modelLocation = trueTileModelLocation;
+        // The location is re-sent at least once per game tick, anything older is stale.
+        if (modelLocation == null || client.getTickCount() - trueTileModelTick > 2)
+        {
+            return null;
+        }
+
+        final Player player = client.getLocalPlayer();
+        final LocalPoint playerLocation = player == null ? null : player.getLocalLocation();
+        if (playerLocation == null || playerLocation.getWorldView() != modelLocation.getWorldView())
+        {
+            return null;
+        }
+        return modelLocation;
+    }
+
+    /**
+     * Where overlays attached to the local player should be drawn: the True Tile Movement Animations
+     * model while that plugin is drawing one, otherwise the player itself.
+     */
+    public LocalPoint getLocalPlayerOverlayLocation()
+    {
+        final LocalPoint modelLocation = getTrueTileModelLocation();
+        if (modelLocation != null)
+        {
+            return modelLocation;
+        }
+
+        final Player player = client.getLocalPlayer();
+        return player == null ? null : player.getLocalLocation();
     }
 
     @Override
