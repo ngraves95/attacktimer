@@ -68,10 +68,8 @@ import net.runelite.api.gameval.ObjectID;
 import net.runelite.api.gameval.VarPlayerID;
 import net.runelite.api.gameval.VarbitID;
 import net.runelite.client.config.ConfigManager;
-import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
-import net.runelite.client.events.PluginMessage;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.game.NPCManager;
 import net.runelite.client.plugins.Plugin;
@@ -120,9 +118,6 @@ public class AttackTimerMetronomePlugin extends Plugin
 
     @Inject
     private NPCManager npcManager;
-
-    @Inject
-    private EventBus eventBus;
 
     public int tickPeriod = 0;
 
@@ -476,10 +471,6 @@ public class AttackTimerMetronomePlugin extends Plugin
         // clamp the attackDelayHoldoffTicks at -20, this is so we correctly account for eats even when not
         // attacking, but don't count down forever.
         attackDelayHoldoffTicks = Math.max(-20, attackDelayHoldoffTicks - 1);
-
-        final int ticksRemaining = getTicksUntilNextAttack();
-        eventBus.post(new PluginMessage("attacktimer", "cooldown", Map.of("ticksRemaining", ticksRemaining)));
-
         ATTACK_SPEED.onTick();
     }
 
