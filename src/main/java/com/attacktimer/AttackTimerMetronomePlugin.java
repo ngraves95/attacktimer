@@ -119,6 +119,9 @@ public class AttackTimerMetronomePlugin extends Plugin
     @Inject
     private NPCManager npcManager;
 
+    @Inject
+    private AttackTimerEventPublisher eventPublisher;
+
     public int tickPeriod = 0;
 
     private int uiHideDebounceTickCount = 0;
@@ -472,12 +475,19 @@ public class AttackTimerMetronomePlugin extends Plugin
         // attacking, but don't count down forever.
         attackDelayHoldoffTicks = Math.max(-20, attackDelayHoldoffTicks - 1);
         ATTACK_SPEED.onTick();
+        publishState();
+    }
+
+    private void publishState()
+    {
+        eventPublisher.publish(getTicksUntilNextAttack(), getWeaponPeriod(), isAttackCooldownPending(), lastTarget);
     }
 
     @Override
     protected void startUp() throws Exception
     {
         trackingLostTicks = false;
+        eventPublisher.start();
         overlayManager.add(overlay);
         overlay.setPreferredSize(DEFAULT_SIZE);
         overlayManager.add(barOverlayAboveScene);
@@ -492,6 +502,7 @@ public class AttackTimerMetronomePlugin extends Plugin
         overlayManager.remove(barOverlayAboveScene);
         overlayManager.remove(barOverlayUnderWidgets);
         overlayManager.remove(barOverlayAboveWidgets);
+        eventPublisher.stop();
         attackDelayHoldoffTicks = 0;
         trackingLostTicks = false;
     }
@@ -555,6 +566,7 @@ public class AttackTimerMetronomePlugin extends Plugin
             performAttack();
         }
         checkForLateWeaponSwaps();
+        publishState();
     }
 
     public void checkForLateWeaponSwaps()
