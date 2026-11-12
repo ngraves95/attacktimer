@@ -61,7 +61,7 @@ class AttackTimerEventPublisher
     private static final String THREAD_NAME = "attacktimer-event-publisher";
 
     // Debug: set true to enable a subscriber inside this plugin that listens to what is posted and logs it
-    static final boolean TEST_SUBSCRIBER_ENABLED = true;
+    static final boolean TEST_SUBSCRIBER_ENABLED = false;
 
     private final EventBus eventBus;
     private final TestSubscriber testSubscriber = new TestSubscriber();
