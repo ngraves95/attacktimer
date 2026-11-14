@@ -119,7 +119,7 @@ public class FracturedArchive implements IVariableSpeed
                 // A player may be attacking but also summoning a thrall, (or some other way to hide the
                 // animation) in which case we should infer speed/spec from delta
                 final Player localPlayer = client.getLocalPlayer();
-                // Ensure the delta was with a tick, otherwise consecutive attacks all look like specs.
+                // Ensure the delta was within a tick, otherwise consecutive attacks all look like specs.
                 final boolean fromDelta = lastSpecDelta == -500 && tickCount.isWithinNTicks(specChangedTick, 1);
                 final boolean specAndHit = hit && (fromDelta || Attacking.getZoryaSpecAttack(localPlayer));
                 return zoryaAttackSpeed(specAndHit);
@@ -154,7 +154,6 @@ public class FracturedArchive implements IVariableSpeed
         }
         if (specExpired(tick))
         {
-            // attacks have expired
             zoryaFastAttacksRemaining = 0;
             zoryaFastAttacksBeforeAttack = 0;
             zoryaSpecTick = -1;
