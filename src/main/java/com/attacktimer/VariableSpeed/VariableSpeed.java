@@ -31,6 +31,7 @@ import com.attacktimer.AttackTimerMetronomePlugin;
 import com.attacktimer.Spellbook;
 import com.attacktimer.VariableSpeed.State.IStateTracker;
 import com.attacktimer.VariableSpeed.State.MarkOfDarkness;
+import com.attacktimer.VariableSpeed.State.Teleported;
 import com.attacktimer.VariableSpeed.State.Yama;
 import net.runelite.api.Client;
 import net.runelite.api.events.ChatMessage;
@@ -105,6 +106,7 @@ public class VariableSpeed
 
     private static final Yama YAMA = new Yama();
     private static final MarkOfDarkness MARK_OF_DARKNESS = new MarkOfDarkness();
+    private static final Teleported TELEPORTED = new Teleported(AttackTimerMetronomePlugin.TC);
 
     // Variable speed that doesn't neatly fit in to the IVariable speed pattern (it's not weapon related
     // but boss related).
@@ -118,6 +120,7 @@ public class VariableSpeed
         AttackTimerMetronomePlugin.TC,
         YAMA,
         MARK_OF_DARKNESS,
+        TELEPORTED,
     };
     private static final IVariableSpeed[] TO_APPLY = {
         // Order matters, apply leagues first, then any incremental modifications like rapid, or set
@@ -130,7 +133,7 @@ public class VariableSpeed
         new RedKerisSpec(),
         new PurgingStaffSpec(YAMA),
         new EyeOfAyak(),
-        new FracturedArchive(AttackTimerMetronomePlugin.TC),
+        new FracturedArchive(AttackTimerMetronomePlugin.TC, TELEPORTED),
         new TormentedDemons(AttackTimerMetronomePlugin.TC),
         new RoyalTitans(),
 

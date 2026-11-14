@@ -31,6 +31,7 @@ import com.attacktimer.AttackProcedure;
 import com.attacktimer.Attacking.Attacking;
 import com.attacktimer.ClientUtils.Utils;
 import com.attacktimer.Spellbook;
+import com.attacktimer.VariableSpeed.State.Teleported;
 import com.attacktimer.VariableSpeed.State.TickCount;
 import net.runelite.api.Actor;
 import net.runelite.api.Client;
@@ -45,8 +46,16 @@ import net.runelite.api.gameval.ItemID;
 public class FracturedArchive implements IVariableSpeed
 {
     private static final int ZORYA_FAST_ATTACKS = 3;
+    // The buff only last for 30 seconds after landing (30 * 0.6 = 50)
+    private static final int ZORYA_TIMEOUT_TICKS = 50;
 
     private final TickCount tickCount;
+    // Tome attacks expire when the player teleports so use the tracker
+    private final Teleported tp;
+
+    // In order to track if the buff has timed out store when the spec lands (or is refreshed).
+    private int zoryaSpecTick = -1;
+
     // Buffed (2t) Zorya's tome attacks left after the current attack.
     private int zoryaFastAttacksRemaining = 0;
     // The speed can be computed more than once for the same attack (again when the xp drop arrives), so the
@@ -54,9 +63,10 @@ public class FracturedArchive implements IVariableSpeed
     private int zoryaAttackTick = -1;
     private int zoryaFastAttacksBeforeAttack = 0;
 
-    FracturedArchive(final TickCount tc)
+    FracturedArchive(final TickCount tc, final Teleported tp)
     {
         this.tickCount = tc;
+        this.tp = tp;
     }
 
     public int apply(final Client client, final AnimationData curAnimation, final AttackProcedure atkType,
@@ -138,16 +148,26 @@ public class FracturedArchive implements IVariableSpeed
             zoryaAttackTick = tick;
             zoryaFastAttacksBeforeAttack = zoryaFastAttacksRemaining;
         }
+        if (specExpired(tick))
+        {
+            // attacks have expired
+            zoryaFastAttacksRemaining = 0;
+            zoryaFastAttacksBeforeAttack = 0;
+            zoryaSpecTick = -1;
+        }
         int remaining = zoryaFastAttacksBeforeAttack;
         int speed = 3;
         if (remaining > 0)
         {
             remaining--;
             speed = 2;
+            // the 30 second window is refreshed each time it's used
+            zoryaSpecTick = tick;
         }
         if (isSpecAndHit)
         {
             remaining += ZORYA_FAST_ATTACKS;
+            zoryaSpecTick = tick; // note when the spec happened to time it out properly
         }
         zoryaFastAttacksRemaining = remaining;
         return speed;
@@ -167,5 +187,11 @@ public class FracturedArchive implements IVariableSpeed
             return Attacking.COMBAT_DUMMY.contains(npc.getId());
         }
         return false;
+    }
+
+    private boolean specExpired(final int tick)
+    {
+        final int end = zoryaSpecTick + ZORYA_TIMEOUT_TICKS;
+        return tick > end || tp.TeleportedInWindow(zoryaSpecTick, end);
     }
 }
