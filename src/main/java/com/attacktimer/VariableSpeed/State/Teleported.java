@@ -71,6 +71,12 @@ public class Teleported implements IStateTracker
         return teleported;
     }
 
+    /**
+     * TeleportedInWindow returns true if the player has teleported within the given tick window
+     * @param start the starting tick to check
+     * @param stop the final tick to check
+     * @return true if the player teleported within the window, false otherwise.
+     */
     public boolean TeleportedInWindow(final int start, final int stop)
     {
         return tpTick >= start && tpTick <= stop;
