@@ -34,8 +34,8 @@ import net.runelite.api.gameval.SpotanimID;
 public class BloodMoonSet implements IVariableSpeed
 {
     public int apply(final Client client, final AnimationData curAnimation, final AttackProcedure atkType,
-            final Spellbook spellbook, final int damageDealt, final int lastSpecDelta, final int baseSpeed,
-            final int curSpeed)
+            final Spellbook spellbook, final int damageDealt, final int lastSpecDelta, final int specChangedTick,
+            final int baseSpeed, final int curSpeed)
     {
         if (client.getLocalPlayer().hasSpotAnim(SpotanimID.SPECIAL_DUAL_MACUAHUITL_SPOTANIM))
         {

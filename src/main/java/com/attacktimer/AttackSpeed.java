@@ -55,6 +55,7 @@ public class AttackSpeed
     }
 
     private ArrayDeque<Integer> specialPercentageEvents = new ArrayDeque<Integer>();
+    private int specChangedTick = -1;
     private final Damage damage = new Damage();
     @Getter
     private int dmgDealt = -1;
@@ -94,7 +95,7 @@ public class AttackSpeed
             // We are currently dealing with a staves in which case we can make decisions based on the
             // spellbook flag. We can only improve this by using a deprecated API to check the projectile
             // matches the stave rather than a manual spell, but this is good enough for now.
-            return VariableSpeed.compute(client, curAnimation, AttackProcedure.POWERED_STAVE, spellbook, dmgDealt, specDelta, 4);
+            return VariableSpeed.compute(client, curAnimation, AttackProcedure.POWERED_STAVE, spellbook, dmgDealt, specDelta, specChangedTick, 4);
         }
 
         if (matchesSpellbook(client, curAnimation, spellbook)
@@ -102,7 +103,7 @@ public class AttackSpeed
         {
             isUsingMagic = true;
             // You can cast with anything equipped in which case we shouldn't look to invent for speed.
-            return VariableSpeed.compute(client, curAnimation, AttackProcedure.MANUAL_AUTO_CAST, spellbook, dmgDealt, specDelta, getMagicBaseSpeed(weaponId));
+            return VariableSpeed.compute(client, curAnimation, AttackProcedure.MANUAL_AUTO_CAST, spellbook, dmgDealt, specDelta, specChangedTick, getMagicBaseSpeed(weaponId));
         }
 
         isUsingMagic = false;
@@ -112,12 +113,12 @@ public class AttackSpeed
             // For now we assume the only sailing specific weapon is
             // https://oldschool.runescape.wiki/w/Cannon_(facility) if they add other facilities which can
             // "attack" that assumption obviously needs re-visiting. The cannons currently are all 7-tick.
-            return VariableSpeed.compute(client, curAnimation, AttackProcedure.MELEE_OR_RANGE, spellbook, dmgDealt, specDelta, 7);
+            return VariableSpeed.compute(client, curAnimation, AttackProcedure.MELEE_OR_RANGE, spellbook, dmgDealt, specDelta, specChangedTick, 7);
         }
 
         final int aspeed = Utils.getWeaponSpeed(client, itemManager, weaponId);
         // Deadline for next available attack.
-        return VariableSpeed.compute(client, curAnimation, AttackProcedure.MELEE_OR_RANGE, spellbook, dmgDealt, specDelta, aspeed);
+        return VariableSpeed.compute(client, curAnimation, AttackProcedure.MELEE_OR_RANGE, spellbook, dmgDealt, specDelta, specChangedTick, aspeed);
     }
 
     public void onTick()
@@ -132,6 +133,7 @@ public class AttackSpeed
     public void varbitSpecialAttackChanged(final int value)
     {
         specialPercentageEvents.addLast(value);
+        specChangedTick = tickCount.get();
     }
 
     public boolean onXpDrop(final FakeXpDrop event)
@@ -197,6 +199,7 @@ public class AttackSpeed
         soundEffectTick = -1;
         isUsingMagic = false;
         specialPercentageEvents.clear();
+        specChangedTick = -1;
         damage.reset();
     }
 }

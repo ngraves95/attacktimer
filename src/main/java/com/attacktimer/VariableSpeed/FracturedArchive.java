@@ -70,17 +70,19 @@ public class FracturedArchive implements IVariableSpeed
     }
 
     public int apply(final Client client, final AnimationData curAnimation, final AttackProcedure atkType,
-            final Spellbook spellbook, final int damageDealt, final int lastSpecDelta, final int baseSpeed,
-            final int curSpeed)
+            final Spellbook spellbook, final int damageDealt, final int lastSpecDelta, final int specChangedTick,
+            final int baseSpeed, final int curSpeed)
     {
-        if (curAnimation == null)
-        {
-            return curSpeed;
-        }
+        // There is a specific edge case with the tome if you attack on the tick that the death charge (other
+        // spells may also trigger this) animation ends, you end on a null animation and the attack for the
+        // tome only has spot anim. Therefore to ensure that the later switch statements can fall into the
+        // `default` cases, we set some arbitrary animation here. With java21 we could do this a bit nicer
+        // with `case null ->` alas.
+        final var safeCurAnimation = curAnimation == null ? AnimationData.MAGIC_WARPED_SCEPTRE : curAnimation;
         final int weaponId = Utils.getWeaponId(client);
         if (isObligator(weaponId))
         {
-            switch (curAnimation)
+            switch (safeCurAnimation)
             {
             case MELEE_OBLIGATOR:
             case MELEE_OBLIGATOR_FEMALE:
@@ -105,7 +107,7 @@ public class FracturedArchive implements IVariableSpeed
         else if (isZoryasTome(weaponId))
         {
             final boolean hit = successfulHit(client, damageDealt);
-            switch (curAnimation)
+            switch (safeCurAnimation)
             {
             case MAGIC_ZORYA_TOME_SPEC:
             case MAGIC_ZORYA_TOME_SPEC_FEMALE:
@@ -117,7 +119,9 @@ public class FracturedArchive implements IVariableSpeed
                 // A player may be attacking but also summoning a thrall, (or some other way to hide the
                 // animation) in which case we should infer speed/spec from delta
                 final Player localPlayer = client.getLocalPlayer();
-                final boolean specAndHit = hit && (lastSpecDelta == -500 || Attacking.getZoryaSpecAttack(localPlayer));
+                // Ensure the delta was with a tick, otherwise consecutive attacks all look like specs.
+                final boolean fromDelta = lastSpecDelta == -500 && tickCount.isWithinNTicks(specChangedTick, 1);
+                final boolean specAndHit = hit && (fromDelta || Attacking.getZoryaSpecAttack(localPlayer));
                 return zoryaAttackSpeed(specAndHit);
                 // Since we know the weapon ID we should always use `zoryaAttackSpeed` to track fast attacks
                 // accurately

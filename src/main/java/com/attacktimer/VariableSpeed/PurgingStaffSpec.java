@@ -46,8 +46,8 @@ public class PurgingStaffSpec implements IVariableSpeed
 
     // https://oldschool.runescape.wiki/w/Purging_staff#Special_attack
     public int apply(final Client client, final AnimationData curAnimation, final AttackProcedure atkType,
-            final Spellbook spellbook, final int damageDealt, final int lastSpecDelta, final int baseSpeed,
-            final int curSpeed)
+            final Spellbook spellbook, final int damageDealt, final int lastSpecDelta, final int specChangedTick,
+            final int baseSpeed, final int curSpeed)
     {
         // For now the plugin only works for yama
         if (!this.yama.inYamaRegion)

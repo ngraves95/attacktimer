@@ -37,8 +37,8 @@ import net.runelite.api.gameval.VarPlayerID;
 public class RapidAttackStyle implements IVariableSpeed
 {
     public int apply(final Client client, final AnimationData curAnimation, final AttackProcedure atkType,
-            final Spellbook spellbook, final int damageDealt, final int lastSpecDelta, final int baseSpeed,
-            final int curSpeed)
+            final Spellbook spellbook, final int damageDealt, final int lastSpecDelta, final int specChangedTick,
+            final int baseSpeed, final int curSpeed)
     {
         // index 1 == rapid
         final boolean isRapid = client.getVarpValue(VarPlayerID.COM_MODE) == 1;

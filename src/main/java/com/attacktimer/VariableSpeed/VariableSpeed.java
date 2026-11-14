@@ -46,12 +46,12 @@ public class VariableSpeed
      * classes which can affect the base speed of a weapon. See implementations of IVariableSpeed.
      */
     public static int compute(final Client client, final AnimationData curAnimation, final AttackProcedure atkType,
-            final Spellbook spellbook, final int damageDealt, final int lastSpecDelta, final int baseSpeed)
+            final Spellbook spellbook, final int damageDealt, final int lastSpecDelta, final int specChangedTick, final int baseSpeed)
     {
         int newSpeed = baseSpeed;
         for (final IVariableSpeed i : TO_APPLY)
         {
-            newSpeed = i.apply(client, curAnimation, atkType, spellbook, damageDealt, lastSpecDelta, baseSpeed, newSpeed);
+            newSpeed = i.apply(client, curAnimation, atkType, spellbook, damageDealt, lastSpecDelta, specChangedTick, baseSpeed, newSpeed);
         }
         return newSpeed;
     }

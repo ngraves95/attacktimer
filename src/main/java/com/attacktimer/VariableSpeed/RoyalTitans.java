@@ -75,8 +75,8 @@ public class RoyalTitans implements IVariableSpeed
 
     @Override
     public int apply(final Client client, final AnimationData curAnimation, final AttackProcedure atkType,
-            final Spellbook spellbook, final int damageDealt, final int lastSpecDelta, final int baseSpeed,
-            final int curSpeed)
+            final Spellbook spellbook, final int damageDealt, final int lastSpecDelta, final int specChangedTick,
+            final int baseSpeed, final int curSpeed)
     {
         if (earlyExit(client, atkType, damageDealt, spellbook))
         {
