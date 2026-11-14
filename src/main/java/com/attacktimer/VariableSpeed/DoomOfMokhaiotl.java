@@ -185,8 +185,8 @@ public class DoomOfMokhaiotl implements IVariableSpeed
 
     // Take care here to ensure no infinite loop or affect on the speed as the onRender does call this via variable speed
     public int apply(final Client client, final AnimationData curAnimation, final AttackProcedure atkType,
-            final Spellbook spellbook, final int damageDealt, final int lastSpecDelta, final int baseSpeed,
-            final int curSpeed)
+            final Spellbook spellbook, final int damageDealt, final int lastSpecDelta, final int specChangedTick,
+            final int baseSpeed, final int curSpeed)
     {
         final int targetId = Utils.getTargetId(client);
         final boolean inDoom = Utils.isInRegionId(client, DOOM_REGION_IDS);

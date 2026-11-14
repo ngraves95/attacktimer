@@ -41,8 +41,8 @@ import net.runelite.api.gameval.NpcID;
 public class TombsOfAmascut implements IVariableSpeed
 {
     public int apply(final Client client, final AnimationData curAnimation, final AttackProcedure atkType,
-            final Spellbook spellbook, final int damageDealt, final int lastSpecDelta, final int baseSpeed,
-            final int curSpeed)
+            final Spellbook spellbook, final int damageDealt, final int lastSpecDelta, final int specChangedTick,
+            final int baseSpeed, final int curSpeed)
     {
         final int targetId = Utils.getTargetId(client);
         final AttackType attkType = Utils.getAttackType(client);

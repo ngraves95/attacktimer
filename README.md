@@ -9,12 +9,13 @@ Ticks until next attack may be enabled over your player's head.
 
 ## Updates
 
-## 1.3.5 - 1.3.7
+## 1.3.5 - 1.3.8
 
 * Support for The Fractured Archive weapons
   * Obligator (3 tick, 5 tick thrust)
   * Ascension crossbows (2 tick on rapid)
   * Zorya's tome (3 tick). A landed special attack makes the next 3 attacks 2 tick, or the next 5 if two specials in a row land
+    * Buffed attacks expiry after 30 seconds or if the player teleports.
 * Fix the timer not showing with weapons from new weapon categories (e.g. Zorya's tome)
 * Fixes for Doom and Volatile earth with demonbane weapons setting cooldown to 1 incorrectly
 * Support more than one overlay layer for the attack bar (see [#202](https://github.com/ngraves95/attacktimer/issues/202))
