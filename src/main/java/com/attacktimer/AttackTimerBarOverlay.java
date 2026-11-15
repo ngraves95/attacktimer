@@ -87,7 +87,7 @@ abstract class AttackTimerBarOverlay extends Overlay
         }
 
         final int height = client.getLocalPlayer().getLogicalHeight() + config.heightOffset() + 5;
-        final LocalPoint localLocation = client.getLocalPlayer().getLocalLocation();
+        final LocalPoint localLocation = plugin.getLocalPlayerOverlayLocation();
         if (localLocation == null)
         {
             return null;
