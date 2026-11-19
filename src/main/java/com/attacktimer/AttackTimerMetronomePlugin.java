@@ -119,6 +119,9 @@ public class AttackTimerMetronomePlugin extends Plugin
     @Inject
     private NPCManager npcManager;
 
+    @Inject
+    private AttackTimerEventPublisher eventPublisher;
+
     public int tickPeriod = 0;
 
     private int uiHideDebounceTickCount = 0;
@@ -135,6 +138,7 @@ public class AttackTimerMetronomePlugin extends Plugin
     private Spellbook currentSpellBook = Spellbook.STANDARD;
     private int lastUsedWeaponId = -1;
     private Actor lastTarget = null;
+    private AttackTimerEventPublisher.Target lastTargetSnapshot = null;
     private boolean trackingLostTicks = false;
     private boolean isUsingMagic = false;
 
@@ -316,6 +320,7 @@ public class AttackTimerMetronomePlugin extends Plugin
         tickPeriod = attackDelayHoldoffTicks;
         uiHideDebounceTickCount = UI_HIDE_DEBOUNCE_TICKS_MAX;
         lastTarget = client.getLocalPlayer().getInteracting();
+        lastTargetSnapshot = AttackTimerEventPublisher.Target.of(lastTarget);
         // Use the existing attack detection, including NPCs without a normal health ratio.
         trackingLostTicks = attackDelayHoldoffTicks > 0;
     }
@@ -394,21 +399,21 @@ public class AttackTimerMetronomePlugin extends Plugin
         {
             switch (attackState)
             {
-            case NOT_ATTACKING:
-                isUsingMagic = false;
-                // If not previously attacking, this action can result in a queued attack or
-                // an instant attack. If its queued, don't trigger the cooldown yet.
-                if (Attacking.isPlayerAttacking(client, npcManager, sailingCannons))
-                {
-                    logStateTrace("onInteractingChanged");
-                    performAttack();
-                }
-                break;
-            case DELAYED_FIRST_TICK:
-                // fallthrough
-            case DELAYED:
-                // Don't reset tick counter or tick period.
-                break;
+                case NOT_ATTACKING:
+                    isUsingMagic = false;
+                    // If not previously attacking, this action can result in a queued attack or
+                    // an instant attack. If its queued, don't trigger the cooldown yet.
+                    if (Attacking.isPlayerAttacking(client, npcManager, sailingCannons))
+                    {
+                        logStateTrace("onInteractingChanged");
+                        performAttack();
+                    }
+                    break;
+                case DELAYED_FIRST_TICK:
+                    // fallthrough
+                case DELAYED:
+                    // Don't reset tick counter or tick period.
+                    break;
             }
         }
 
@@ -429,36 +434,36 @@ public class AttackTimerMetronomePlugin extends Plugin
         final boolean isAttacking = Attacking.isPlayerAttacking(client, npcManager, sailingCannons);
         switch (attackState)
         {
-        case NOT_ATTACKING:
-            if (isAttacking)
-            {
-                logStateTrace("onGameTick");
-                performAttack(); // Sets state to DELAYED_FIRST_TICK.
-            }
-            else
-            {
-                uiHideDebounceTickCount = Math.max(-20, uiHideDebounceTickCount - 1);
-            }
-            break;
-        case DELAYED_FIRST_TICK:
-            // we stay in this state for one tick to allow for 0-ticking
-            logStateTrace("onGameTick DELAYED_FIRST_TICK");
-            attackState = AttackState.DELAYED;
-            // fallthrough
-        case DELAYED:
-            logStateTrace("onGameTick DELAYED");
-            if (attackDelayHoldoffTicks <= 0)
-            { // Eligible for a new attack
+            case NOT_ATTACKING:
                 if (isAttacking)
                 {
                     logStateTrace("onGameTick");
-                    performAttack();
+                    performAttack(); // Sets state to DELAYED_FIRST_TICK.
                 }
                 else
                 {
-                    attackState = AttackState.NOT_ATTACKING;
+                    uiHideDebounceTickCount = Math.max(-20, uiHideDebounceTickCount - 1);
                 }
-            }
+                break;
+            case DELAYED_FIRST_TICK:
+                // we stay in this state for one tick to allow for 0-ticking
+                logStateTrace("onGameTick DELAYED_FIRST_TICK");
+                attackState = AttackState.DELAYED;
+                // fallthrough
+            case DELAYED:
+                logStateTrace("onGameTick DELAYED");
+                if (attackDelayHoldoffTicks <= 0)
+                { // Eligible for a new attack
+                    if (isAttacking)
+                    {
+                        logStateTrace("onGameTick");
+                        performAttack();
+                    }
+                    else
+                    {
+                        attackState = AttackState.NOT_ATTACKING;
+                    }
+                }
         }
 
         // This needs to come after performAttack as it's an additive affect
@@ -472,12 +477,19 @@ public class AttackTimerMetronomePlugin extends Plugin
         // attacking, but don't count down forever.
         attackDelayHoldoffTicks = Math.max(-20, attackDelayHoldoffTicks - 1);
         ATTACK_SPEED.onTick();
+        publishState();
+    }
+
+    private void publishState()
+    {
+        eventPublisher.publish(getTicksUntilNextAttack(), getWeaponPeriod(), isAttackCooldownPending(), lastTargetSnapshot);
     }
 
     @Override
     protected void startUp() throws Exception
     {
         trackingLostTicks = false;
+        eventPublisher.start();
         overlayManager.add(overlay);
         overlay.setPreferredSize(DEFAULT_SIZE);
         overlayManager.add(barOverlayAboveScene);
@@ -492,6 +504,7 @@ public class AttackTimerMetronomePlugin extends Plugin
         overlayManager.remove(barOverlayAboveScene);
         overlayManager.remove(barOverlayUnderWidgets);
         overlayManager.remove(barOverlayAboveWidgets);
+        eventPublisher.stop();
         attackDelayHoldoffTicks = 0;
         trackingLostTicks = false;
     }
@@ -555,6 +568,7 @@ public class AttackTimerMetronomePlugin extends Plugin
             performAttack();
         }
         checkForLateWeaponSwaps();
+        publishState();
     }
 
     public void checkForLateWeaponSwaps()
